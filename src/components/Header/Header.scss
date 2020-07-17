@@ -1,0 +1,45 @@
+$color: #3161B8;
+
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 30px;
+  height: 102px;
+  background: $color;
+  font-weight: 500;
+  color: #fff;
+  display: flex;
+  div:nth-child(1) {
+    display: flex;
+    align-items: center;
+    img {
+      width: 190px;
+      height: auto;
+    }
+  }
+  div:nth-child(2) {
+    flex: 1;
+    font-size: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  div:nth-child(3) {
+    display: flex;
+    width: 190px;
+    justify-content: flex-end;
+    align-items: center;
+    a {
+      font-size: 30px;
+      font-weight: 500;
+      color: #fff;
+    }
+    .anticon-wifi {
+      font-size: 45px;
+    }
+  }
+}

@@ -1,0 +1,110 @@
+body {
+  background: #f5f5f8;
+}
+
+.center {
+  text-align: center;
+}
+
+.container {
+  font-size: 20px;
+}
+
+.ant-skeleton {
+  padding: 20px;
+  background: #fff;
+}
+
+.wrapper {
+  width: 1200px;
+  margin: 20px auto;
+}
+
+.print-page {
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 0px 10px #e0e0e0;
+  page-break-after: always;
+}
+
+.header {
+  margin-bottom: 50px;
+}
+
+.header-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+h1,h2 {
+  text-align: center;
+}
+
+h2 {
+  margin-top: 30px;
+}
+
+.short-line {
+  line-height: 0;
+}
+
+.short-line span {
+  width: 50px;
+  border-top: 3px solid #FF5722;
+  display: inline-block;
+}
+
+.table-data {
+  width: 100%;
+  padding: 20px 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+.table-data>span{
+  display: inline-block;
+  text-align: center;
+}
+
+.table-data>span span {
+  display: block;
+}
+
+.table-data>span span:nth-child(odd) {
+  font-size: 28px;
+}
+
+.table-data>span span:nth-child(even) {
+  font-size: 16px;
+}
+
+.option {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.option .right button {
+  margin-left: 20px;
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+  .container {
+    background: #fff; 
+    font-size: 20px;
+  }
+  
+  .print-page {
+    background: #fff;
+    border-radius: 0;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 0 #fff;
+    page-break-after: always;
+  }
+}

@@ -1,0 +1,67 @@
+.card-title {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+  padding-left: 10px;
+}
+
+.card-item {
+  min-height: 0;
+  font-size: 24px;
+  color: #000;
+  background-image: url('../../assets/right.png');
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  background-size: 24px;
+}
+
+.card-item.log-out {
+  color: #FF1D1D;
+  background-image: none;
+}
+
+.card-btn {
+  height: 50px;
+  background: none;
+  border: none;
+  border: 1px solid rgba(49,97,184,1);
+  border-radius: 8px;
+  font-size: 18px;
+  color: #3161B8;
+  // padding: 8px 20px;
+  padding: 0 20px;
+  margin-right: 10px;
+}
+
+.card-btn.change-user {
+  background: #3161B8;
+  color: #fff;
+  margin-left: 10px;
+}
+
+.device-detail table {
+  width: 100%;
+  background: rgba(248,248,248,1);
+  margin-top: 10px;
+}
+
+.device-detail table thead tr{
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.device-detail table thead tr th {
+  padding: 20px 0 20px 20px;
+}
+
+.device-detail table tbody tr {
+  font-size: 20px;
+  font-weight: 400;
+  color: #333;
+  border-bottom: 0!important;
+}
+
+.device-detail table tbody tr td{
+  padding: 0 0 20px 20px;
+}

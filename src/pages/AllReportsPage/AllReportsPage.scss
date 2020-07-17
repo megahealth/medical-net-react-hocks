@@ -1,0 +1,74 @@
+.content-loading {
+  flex: 1;
+  background: #F8F8F8;
+}
+
+.content-r {
+  .content-r-c {
+    padding: 20px;
+    background: #ffffff;
+    table {
+      width: 100%;
+      tr {
+        height: 74px;
+        background: #F8F8F8;
+        font-size: 22px;
+        color: #333333;
+        td {
+          text-align: center;
+        }
+      }
+      tr:nth-child(odd) {
+        background: #fff;
+      }
+      tr.table-header {
+        height: 80px;
+        background: #ffffff;
+        border-bottom: 0;
+        font-size: 24px;
+        color: #333333;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.content-filter {
+  overflow: hidden;
+}
+
+.content-filter>div {
+  float: left;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #666666;
+  border-radius: 6px;
+  padding: 0 2px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.content-filter>div.filter-button {
+  padding: 0 16px;
+  border: 1px solid #3161B8;
+  background: #3161B8;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.content-filter>div>span {
+  margin-left: 8px;
+}
+
+.am-list-item .am-list-line .am-list-extra {
+  flex-basis: auto;
+  margin-left: 8px;
+}
+
+// 分页器等比例放大
+.ant-pagination.ant-table-pagination {
+  transform: scale(1.4);
+  transform-origin: right top;
+  margin: 30px 0;
+}
