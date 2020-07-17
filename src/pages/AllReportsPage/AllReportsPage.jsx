@@ -78,10 +78,6 @@ const selectItem = [
 ];
 
 class AllReportsPage extends Component {
-
-  componentWillMount() {
-  }
-
   componentDidMount() {
     const { allReports, getAllReportsData, getDateRange } = this.props;
     getAllReportsData(10, 0, allReports.filter);
