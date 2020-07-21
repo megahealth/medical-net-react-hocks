@@ -4,6 +4,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import ReactEcharts from 'echarts-for-react';
 import { Typography } from 'antd';
+import './index.scss'
 
 const { Title } = Typography;
 
@@ -375,13 +376,13 @@ class BreathWave extends Component {
       series: [
         {
           name: '呼吸波',
-          type: 'bar',
-          // showSymbol: false,
-          // hoverAnimation: false,
-          // lineStyle: {
-          //   width: 1
-          // },
-          barWidth: 1,
+          type: 'line',
+          showSymbol: false,
+          hoverAnimation: false,
+          lineStyle: {
+            width: 1
+          },
+          // barWidth: 1,
           itemStyle: {
             normal: {
               color: '#7367F0',
