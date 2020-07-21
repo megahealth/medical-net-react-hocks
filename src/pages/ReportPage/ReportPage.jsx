@@ -19,6 +19,7 @@ import SpoChart from './SpoChart/SpoChart';
 import PrChart from './PrChart/PrChart';
 import EventsChart from './EventsChart/EventsChart';
 import StageChart from './StageChart/StageChart';
+import BreathWave from './BreathWave/BreathWave';
 
 import Creator from '../../actions/Creator';
 
@@ -84,6 +85,9 @@ class ReportPage extends Component {
               <PrChart></PrChart>
               <EventsChart></EventsChart>
               <StageChart></StageChart>
+            </div>
+            <div className="print-page">
+              <BreathWave></BreathWave>
             </div>
           </Skeleton>
         </div>

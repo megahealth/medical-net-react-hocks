@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
-// import { Redirect } from 'react-router-dom';
 import AV from 'leancloud-storage';
-// import axios from 'axios';
-// import hexSha1 from 'hex-sha1';
-import Creator from '../../actions/Creator';
-import './LoginPage.scss';
-import LOGO from '../../assets/megahealth.png';
 import { Toast } from 'antd-mobile';
+import { createHashHistory } from 'history';
+import Creator from '../../actions/Creator';
+
+import LOGO from '../../assets/megahealth.png';
+import './LoginPage.scss';
 
 class LoginPage extends Component {
   constructor(props) {
@@ -22,9 +21,6 @@ class LoginPage extends Component {
     };
   }
 
-  componentDidMount() {
-  }
-
   showOrHidePw() {
     const { showPw } = this.state;
     this.setState({
@@ -33,14 +29,12 @@ class LoginPage extends Component {
   }
 
   usernameInput(e) {
-    console.log(e.target.value);
     this.setState({
       username: e.target.value
     });
   }
 
   passwordInput(e) {
-    console.log(e.target.value);
     this.setState({
       password: e.target.value
     });
@@ -55,13 +49,9 @@ class LoginPage extends Component {
       return Toast.info('请输入密码');
     }
 
-    // const t = new Date();
-    // const webtime = t.getTime();
-    // const timezone = -t.getTimezoneOffset() / 60 *100;
-
     AV.User.logIn(username, password).then(user => {
-      // 登录成功
-      window.location.hash = '/allreports';
+      const history = createHashHistory();
+      history.push('/allreports');
     }, err => {
       // 登录失败（可能是密码错误）
       let errMsg = '登录失败';
@@ -81,8 +71,6 @@ class LoginPage extends Component {
 
   render() {
     const { showPw } = this.state;
-    // const currentUser = AV.User.current();
-    // if (currentUser) return <Redirect to="/allreports" />;
     return (
       <div className="login-container">
         <div className="login-1">

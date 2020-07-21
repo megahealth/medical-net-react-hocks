@@ -66,22 +66,25 @@ Creator.getAllReportsData = asyncActionFactory(
       Reports.lessThan('createdAt', filter.endDate);
     }
 
-    const total = await Reports.count();
+    const user = AV.User.current();
+    const idBaseOrg = user.attributes.idBaseOrg;
+
     if (limit) Reports.limit(limit);
     if (current) Reports.skip(limit * (current - 1));
+    if (idBaseOrg) Reports.equalTo('idBaseOrg', idBaseOrg);
     Reports.descending('createdAt');
     Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'patientInfo', 'extraCheckTimeMinute']);
+    const total = await Reports.count();
     Reports.find().then((result) => {
       const arr = result.map((item, index) => {
         return {
           'id': item.id,
           'key': index,
           '序号': index + 1,
-          '姓名': item.get('patientInfo')[0],
+          '姓名': item.get('patientInfo') && item.get('patientInfo')[0],
           '日期': moment(item.createdAt).format('YYYY-MM-DD'),
           'AHI': item.get('AHI').toFixed(1),
           '总记录时间': `${(item.get('extraCheckTimeMinute') / 60).toFixed(1)}h`,
-          '同步': item.get('isSync')
         }
       });
       console.log(arr);
@@ -117,10 +120,21 @@ Creator.setFilter = filter => ({
 });
 
 // 适用云端报告
-function decodeRingData(id, ringData) {
-  let data = {};
+function decodeRingData(id, ringData, tempSleepId, fileid) {
   return new Promise((resolve, reject) => {
-    if (ringData) {
+    let data = {};
+    if(tempSleepId && fileid) {
+      const ringDataUrl = 'https://raw.megahealth.cn/webApi/ringData?fileId=' + fileid + '&tempSleepId=' + tempSleepId;
+      axios.get(ringDataUrl).then(res => {
+        if(res.data.code===1){
+          resolve(res.data.data)
+        }else{
+          reject();
+        }
+      }, err => {
+        reject(err);
+      })
+    } else if (ringData) {
       const buf = window.atob(ringData);
       const a = pako.inflate(buf, { to: 'string' });
       if (a.length > 0) {
@@ -140,23 +154,32 @@ function decodeRingData(id, ringData) {
 
 Creator.getReportData = asyncActionFactory(
   ['GET_REPORT_DATA', 'GET_REPORT_DATA_SUCCESS', 'GET_REPORT_DATA_FAILED'],
-  (getting, success, fail, id) => (dispatch) => {
+  (getting, success, fail, id) => async (dispatch) => {
     dispatch(getting());
 
     const Reports = new AV.Query('Reports');
-    Reports.get(id).then((result) => {
-      const data = result.attributes;
-      // eslint-disable-next-line no-nested-ternary
-      const SPOVER = data.ringData ? 'NEW' : (data.ringOriginalData ? 'OLD' : 'NONE');
-      data.SPOVER = SPOVER;
-      const { ringData } = data;
-      delete data.ringData;
-      delete data.ringOriginalData;
-      decodeRingData(id, ringData).then((alreadyDecodedData) => {
-        dispatch(success({ data, alreadyDecodedData }));
-      }, (err) => {
-        dispatch(fail({ errorcode: err }));
-      });
+    const result = await Reports.get(id)
+
+    let data = result.attributes;
+    const { ringData, tempSleepId, idRingReportFile } = data;
+    const fileid = idRingReportFile && idRingReportFile.id;
+
+    const SPOVER = ( ringData || fileid ) ? 'NEW' : 'NONE';
+    data.SPOVER = SPOVER;
+    delete data.ringData;
+    delete data.ringOriginalData;
+
+    const waveUrl = 'https://raw.megahealth.cn/webApi/breathWave?id=' + id;
+    let waveRes;
+    try {
+      waveRes = await axios.get(waveUrl);
+    } catch (err) {
+      dispatch(fail({ errorcode: err }));
+      return;
+    }
+    const waveData = waveRes && waveRes.data;
+    decodeRingData(id, ringData, tempSleepId, fileid).then((alreadyDecodedData) => {
+      dispatch(success({ data, alreadyDecodedData, waveData }));
     }, (err) => {
       dispatch(fail({ errorcode: err }));
     });

@@ -17,14 +17,16 @@ class EventsChart extends Component {
       startStatusTimeMinute,
       endStatusTimeMinute,
       breathList,
+      breathEvent
     } = this.props;
     const sleepStageStart = startSleepTime + startStatusTimeMinute * 60 * 1000;
     const sleepStageEnd = startSleepTime + endStatusTimeMinute * 60 * 1000;
 
     const breathEventChartData = [];
-    for (let i = 0; i < breathList.length; i++) {
-      const breathEventTime = new Date(sleepStageStart + breathList[i][0] * 1000);
-      const breathEventData = breathList[i][1];
+    const data = breathList && breathEvent;
+    for (let i = 0; i < data.length; i++) {
+      const breathEventTime = new Date(data[i][0] * 1000);
+      const breathEventData = data[i][1];
       breathEventChartData.push([breathEventTime, breathEventData]);
     }
 
@@ -126,6 +128,7 @@ const mapStateToProps = state => (
     startStatusTimeMinute: state.report.data.startStatusTimeMinute,
     endStatusTimeMinute: state.report.data.endStatusTimeMinute,
     breathList: state.report.data.breathList,
+    breathEvent: state.report.alreadyDecodedData.BreathEventVect,
   }
 );
 

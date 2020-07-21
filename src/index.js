@@ -20,8 +20,8 @@ import ReportPage from './pages/ReportPage/ReportPage';
 
 AV.applicationId = undefined;
 AV.init({
-  appId: 'YsnQt4b9FQB8hFtb6SUiDoo6-gzGzoHsz',
-  appKey: 'DljedxaXayLmjJhodzhqkfGK',
+  appId: 'F9tyT5VsLXLCAqxKvTHqzmvP-gzGzoHsz',
+  appKey: '17eIyz42rRL1YubtKE5MgLHm',
 });
 
 const App = () => (

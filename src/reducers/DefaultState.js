@@ -70,7 +70,7 @@ const DefaultState = {
       somniloquyList: [],
       startSnoreTime: 0,
       endSnoreDuration: 0,
-      waveFiled: '',
+      waveFileId: '',
     },
     alreadyDecodedData: {
       AHI: 0,
@@ -122,7 +122,8 @@ const DefaultState = {
       spo2Less95Time: 0,
       spo2Less95TimePercent: 0,
       timeStart: 0,
-    }
+    },
+    waveData: {}
   }
 };
 

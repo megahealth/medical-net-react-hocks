@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './Header.scss';
-// import { Icon } from '@ant-design/compatible';
-import { SmileOutlined } from '@ant-design/icons';
-// import { Link } from 'react-router-dom';
+import { createHashHistory } from 'history';
+import AV from 'leancloud-storage';
 
+import './Header.scss';
 import LOGO from '../../assets/megahealth.png';
 
 class Header extends Component {
 
-  componentDidMount() {
+  logOut = () => {
+    const history = createHashHistory();
+    AV.User.logOut();
+    history.push('/');
   }
 
   render() {
     const { title } = this.props;
+    const user = AV.User.current();
+    const { name } = user.attributes;
     return (
       <div className="header-container">
         <div>
@@ -21,9 +25,7 @@ class Header extends Component {
         </div>
         <div>{ title }</div>
         <div>
-          {/* <Link to="/">登出</Link> */}
-          {/* <Icon type="wifi" /> */}
-          <SmileOutlined />
+          <div onClick={this.logOut}>（{name}）登出</div>
         </div>
       </div>
     );

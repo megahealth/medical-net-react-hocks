@@ -76,6 +76,7 @@ const report = (state = DefaultState.report, action) => {
         loading: false,
         data: action.payload.data,
         alreadyDecodedData: action.payload.alreadyDecodedData,
+        waveData: action.payload.waveData
       };
     case TYPES.GET_REPORT_DATA_FAILED:
       return {

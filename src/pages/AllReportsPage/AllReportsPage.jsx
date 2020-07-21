@@ -1,20 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import classnames from 'classnames';
-import './AllReportsPage.scss';
 import { connect } from 'react-redux';
-// import { Redirect } from 'react-router-dom';
-// import moment from 'moment';
-// import AV from 'leancloud-storage';
+import { Table, Skeleton } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
+import { DatePicker, List, Picker, Toast } from 'antd-mobile';
+
 import Creator from '../../actions/Creator';
 import Header from '../../components/Header/Header';
 import Sidebar from '../../components/Sidebar/Sidebar';
-
 import SidebarTabs from '../../common/SidebarTabs';
-import { Table, Skeleton } from 'antd';
-// import { Icon } from '@ant-design/compatible';
-import { SmileOutlined } from '@ant-design/icons';
-import { DatePicker, List, Picker, Toast } from 'antd-mobile';
+import './AllReportsPage.scss';
 
 const columns = [
   {
@@ -41,25 +36,7 @@ const columns = [
     title: '总记录时间',
     dataIndex: '总记录时间',
     align: 'center'
-  },
-  {
-    title: '同步',
-    dataIndex: '同步',
-    align: 'center',
-    render: isSync => (
-      <span>
-        {
-          isSync
-          ?
-          // <Icon style={{ color: '#52c41a' }} type="file-done" />
-          <SmileOutlined />
-          :
-          // <Icon style={{ color: 'grey' }} type="file-sync" />
-          <SmileOutlined />
-        }
-      </span>
-    )
-  },
+  }
 ];
 
 const selectItem = [
@@ -81,7 +58,7 @@ class AllReportsPage extends Component {
   componentDidMount() {
     const { allReports, getAllReportsData, getDateRange } = this.props;
     getAllReportsData(10, 0, allReports.filter);
-    getDateRange();
+    // getDateRange();
   }
 
   toReport(id) {
@@ -163,12 +140,10 @@ class AllReportsPage extends Component {
                     <List.Item arrow="horizontal">结束日期</List.Item>
                   </DatePicker>
                   <div className="filter-button" onClick={this.onFilter.bind(this)}>
-                    {/* <Icon type="filter" /> */}
                     <SmileOutlined />
                     <span>筛选</span>
                   </div>
                   <div className="filter-button" onClick={this.resetFilter.bind(this)}>
-                    {/* <Icon type="undo" /> */}
                     <SmileOutlined />
                     <span>重置</span>
                   </div>
@@ -182,28 +157,6 @@ class AllReportsPage extends Component {
                   pagination={allReports.pagination}
                   onChange={res => getAllReportsData(10, res.current, allReports.filter)}
                 ></Table>
-                {/* <table>
-                  <tbody>
-                    <tr className="table-header">
-                      <td>序号</td>
-                      <td>姓名</td>
-                      <td>日期</td>
-                      <td>AHI</td>
-                      <td>总记录时间</td>
-                    </tr>
-                    {
-                      allReports.reportsData.map((item, index) => (
-                        <tr key={item.id} onClick={this.toReport.bind(this, item.id)}>
-                          <td>{index + 1}</td>
-                          <td>{item.patientInfo[0]}</td>
-                          <td>{moment(item.createdAt).format('YYYY-MM-DD')}</td>
-                          <td>{item.AHI.toFixed(1)}</td>
-                          <td>{(item.extraCheckTimeMinute / 60).toFixed(1)}H</td>
-                        </tr>
-                      ))
-                    }
-                  </tbody>
-                </table> */}
               </div>
             </div>
           }
@@ -234,9 +187,9 @@ const mapDispatchToProps = dispatch => ({
   getAllReportsData(limit, current, filter) {
     dispatch(Creator.getAllReportsData(limit, current, filter));
   },
-  getDateRange() {
-    dispatch(Creator.getDateRange());
-  },
+  // getDateRange() {
+  //   dispatch(Creator.getDateRange());
+  // },
   setFilter(filter) {
     dispatch(Creator.setFilter(filter));
   }
