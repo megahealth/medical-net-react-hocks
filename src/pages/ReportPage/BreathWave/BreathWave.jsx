@@ -87,13 +87,21 @@ class BreathWave extends Component {
     }
 
     let breathEventChartData = [];
+    let areas = [];
+
     const data = breathList && breathEvent;
 
     for (let i = 0; i < data.length; i++) {
       const breathEventTime = new Date(data[i][0] * 1000);
       const breathEventData = data[i][1];
       breathEventChartData.push([breathEventTime, breathEventData]);
+      areas.push( [{ 
+        xAxis: data[i][0]*1000,
+      },{
+        xAxis: (data[i][0] + data[i][1])*1000 
+      }] )
     }
+    console.log(areas)
 
     let waveChartData = [];
     for (let i = 0; i < waveData.length; i++) {
@@ -389,7 +397,10 @@ class BreathWave extends Component {
               // width: 1
             }
           },
-          data: waveChartData
+          data: waveChartData,
+          markArea: {
+            data: areas
+          }
         },
         {
           name: '呼吸事件',
