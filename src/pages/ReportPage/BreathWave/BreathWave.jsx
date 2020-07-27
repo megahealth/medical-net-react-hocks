@@ -101,7 +101,6 @@ class BreathWave extends Component {
         xAxis: (data[i][0] + data[i][1])*1000 
       }] )
     }
-    console.log(areas)
 
     let waveChartData = [];
     for (let i = 0; i < waveData.length; i++) {
@@ -138,6 +137,9 @@ class BreathWave extends Component {
             }
           },
         }
+      },
+      axisPointer: {
+        link: {xAxisIndex: 'all'}
       },
       xAxis: [
         {

@@ -166,6 +166,7 @@ Creator.getReportData = asyncActionFactory(
 
     const SPOVER = ( ringData || fileid ) ? 'NEW' : 'NONE';
     data.SPOVER = SPOVER;
+    data.patientInfo = data.patientInfo || [];
     delete data.ringData;
     delete data.ringOriginalData;
 
