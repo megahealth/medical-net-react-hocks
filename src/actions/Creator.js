@@ -74,24 +74,30 @@ Creator.getAllReportsData = asyncActionFactory(
     if (idBaseOrg) Reports.equalTo('idBaseOrg', idBaseOrg);
     Reports.descending('createdAt');
     Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'patientInfo', 'extraCheckTimeMinute']);
-    const total = await Reports.count();
-    Reports.find().then((result) => {
+    let total, result;
+    try {
+      total = await Reports.count();
+    } catch (error) {
+      dispatch(fail({ errorcode: error }));
+      return;
+    }
+    try {
+      result = await Reports.find();
       const arr = result.map((item, index) => {
         return {
           'id': item.id,
           'key': index,
-          '序号': index + 1,
-          '姓名': item.get('patientInfo') && item.get('patientInfo')[0],
-          '日期': moment(item.createdAt).format('YYYY-MM-DD'),
+          'index': index + 1,
+          'name': item.get('patientInfo') ? item.get('patientInfo')[0] : '--',
+          'date': moment(item.createdAt).format('YYYY-MM-DD'),
           'AHI': item.get('AHI').toFixed(1),
-          '总记录时间': `${(item.get('extraCheckTimeMinute') / 60).toFixed(1)}h`,
+          'time': `${(item.get('extraCheckTimeMinute') / 60).toFixed(1)}h`,
         }
       });
-      console.log(arr);
       dispatch(success({ reports: arr, total, current }));
-    }, (err) => {
-      dispatch(fail({ errorcode: err }));
-    });
+    } catch (error) {
+      dispatch(fail({ errorcode: error }));
+    }
   }
 );
 // 获取所有报告的日期范围
@@ -124,7 +130,7 @@ function decodeRingData(id, ringData, tempSleepId, fileid) {
   return new Promise((resolve, reject) => {
     let data = {};
     if(tempSleepId && fileid) {
-      const ringDataUrl = 'https://raw.megahealth.cn/webApi/ringData?fileId=' + fileid + '&tempSleepId=' + tempSleepId;
+      const ringDataUrl = 'https://webapi.megahealth.cn/webApi/ringData?fileId=' + fileid + '&tempSleepId=' + tempSleepId;
       axios.get(ringDataUrl).then(res => {
         if(res.data.code===1){
           resolve(res.data.data)
@@ -170,7 +176,7 @@ Creator.getReportData = asyncActionFactory(
     delete data.ringData;
     delete data.ringOriginalData;
 
-    const waveUrl = 'https://raw.megahealth.cn/webApi/breathWave?id=' + id;
+    const waveUrl = 'https://webapi.megahealth.cn/webApi/breathWave?id=' + id;
     let waveRes;
     try {
       waveRes = await axios.get(waveUrl);

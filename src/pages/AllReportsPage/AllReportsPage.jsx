@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { createHashHistory } from 'history';
 import { connect } from 'react-redux';
 import { Table, Skeleton } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
@@ -14,17 +15,17 @@ import './AllReportsPage.scss';
 const columns = [
   {
     title: '序号',
-    dataIndex: '序号',
+    dataIndex: 'index',
     align: 'center'
   },
   {
     title: '姓名',
-    dataIndex: '姓名',
+    dataIndex: 'name',
     align: 'center'
   },
   {
     title: '日期',
-    dataIndex: '日期',
+    dataIndex: 'date',
     align: 'center'
   },
   {
@@ -34,7 +35,7 @@ const columns = [
   },
   {
     title: '总记录时间',
-    dataIndex: '总记录时间',
+    dataIndex: 'time',
     align: 'center'
   }
 ];
@@ -56,13 +57,13 @@ const selectItem = [
 
 class AllReportsPage extends Component {
   componentDidMount() {
-    const { allReports, getAllReportsData, getDateRange } = this.props;
-    getAllReportsData(10, 0, allReports.filter);
-    // getDateRange();
+    const { allReports, getAllReportsData } = this.props;
+    getAllReportsData(10, 1, allReports.filter);
   }
 
   toReport(id) {
-    window.location.hash = `/report/${id}`;
+    const history = createHashHistory();
+    history.push(`/report/${id}`);
   }
 
   onFilter() {
@@ -86,17 +87,18 @@ class AllReportsPage extends Component {
 
   render() {
     const { allReports, getAllReportsData, setFilter } = this.props;
+    console.log(allReports.loading)
     return (
       <div className="container">
         <Header />
         <div className="content">
-          <Sidebar tabs={SidebarTabs} />
+          {/* <Sidebar tabs={SidebarTabs} /> */}
           {
             allReports.loading
             ? <div className="content-loading"><Skeleton /></div>
             : <div className="content-r">
               <div className="content-r-c">
-                <div className="content-filter">
+                {/* <div className="content-filter">
                   <Picker
                     cols={1}
                     data={selectItem}
@@ -147,7 +149,7 @@ class AllReportsPage extends Component {
                     <SmileOutlined />
                     <span>重置</span>
                   </div>
-                </div>
+                </div> */}
                 <Table
                   onRow={item => {
                     return { onClick: this.toReport.bind(this, item.id) };
