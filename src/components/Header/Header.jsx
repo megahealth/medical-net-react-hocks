@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createHashHistory } from 'history';
 import AV from 'leancloud-storage';
+import { Translation } from 'react-i18next';
+import ChangeLang from '../ChangeLang/ChangeLang'
 
 import './Header.scss';
 import LOGO from '../../assets/megahealth.png';
@@ -15,7 +17,6 @@ class Header extends Component {
   }
 
   render() {
-    const { title } = this.props;
     const user = AV.User.current();
     const { name } = user.attributes;
     return (
@@ -23,9 +24,18 @@ class Header extends Component {
         <div>
           <img src={LOGO} alt="" />
         </div>
-        <div>{ title }</div>
+        <Translation>
+          {
+            t => <div>{t('App Title')}</div>
+          }
+        </Translation>    
         <div>
-          <div onClick={this.logOut}>（{name}）登出</div>
+          <Translation>
+            {
+              t => <div onClick={this.logOut}>（{name}）{t('Log Out')}</div>
+            }
+          </Translation>
+          <ChangeLang></ChangeLang>
         </div>
       </div>
     );

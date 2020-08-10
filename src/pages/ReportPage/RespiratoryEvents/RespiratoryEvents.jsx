@@ -3,17 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { Typography } from 'antd';
-// import Creator from '../../../actions/Creator';
-// import '../../ReportPage.scss';
+import { withTranslation } from 'react-i18next';
 import './RespiratoryEvents.scss';
 
 const { Title } = Typography;
 
 
 class RespiratoryEvents extends Component {
-  componentDidMount() {
-
-  }
 
   countRespiratoryEvents() {
     const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute, breathList } = this.props;
@@ -72,7 +68,7 @@ class RespiratoryEvents extends Component {
   }
 
   render() {
-    const { BECCnt, BECnt, BEMCnt, BEMaxlen, BEMaxlentime, BEMeanlen, BEOHCnt, BETotalTime, BETotalrate, SPOVER } = this.props;
+    const { BECCnt, BECnt, BEMCnt, BEMaxlen, BEMaxlentime, BEMeanlen, BEOHCnt, BETotalTime, BETotalrate, SPOVER, t } = this.props;
     const events = {};
     if (SPOVER === 'NONE') {
       console.log(this.countRespiratoryEvents());
@@ -99,34 +95,34 @@ class RespiratoryEvents extends Component {
 
     return (
       <div className="block">
-        <Title level={2}>呼吸事件</Title>
+        <Title level={2}>{t('Sleep Respiratory Event')}</Title>
         <div className="short-line center">
           <span></span>
         </div>
         <div className="table-data table-event">
           <span>
             <span>{ events.BEMeanlen }</span>
-            <span>平均暂停和低通气时间(秒)</span>
+            <span>{t('BEMeanlen')}</span>
             <span>{ events.BECnt }</span>
-            <span>总呼吸事件数(次)</span>
+            <span>{t('BECnt')}</span>
             <span>{ events.BEOHCnt }</span>
-            <span>阻塞及低通气事件数(次)</span>
+            <span>{t('BEOHCnt')}</span>
           </span>
           <span>
             <span>{ events.BEMaxlen }</span>
-            <span>最长暂停和低通气时间(秒)</span>
+            <span>{t('BEMaxlen')}</span>
             <span>{ events.BETotalTime }</span>
-            <span>总呼吸事件时间(分钟)</span>
+            <span>{t('BETotalTime')}</span>
             <span>{ events.BECCnt }</span>
-            <span>中枢性呼吸事件数(次)</span>
+            <span>{t('BECCnt')}</span>
           </span>
           <span>
             <span>{ moment(events.BEMaxlentime).format('HH:mm') }</span>
-            <span>该事件发生于</span>
+            <span>{t('BEMaxlentime')}</span>
             <span>{ events.BETotalrate }</span>
-            <span>占总记录时间(%)</span>
+            <span>{t('BETotalrate')}</span>
             <span>{ events.BEMCnt }</span>
-            <span>混合性呼吸事件数(次)</span>
+            <span>{t('BEMCnt')}</span>
           </span>
         </div>
       </div>
@@ -176,4 +172,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(RespiratoryEvents);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(RespiratoryEvents));

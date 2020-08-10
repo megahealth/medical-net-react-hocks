@@ -3,19 +3,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Typography, Tooltip } from 'antd';
-// import Creator from '../../../actions/Creator';
+import { Typography } from 'antd';
+import { withTranslation } from 'react-i18next';
 
 const { Title } = Typography;
 
 class SleepTime extends Component {
 
-  componentDidMount() {
-
-  }
-
   getSleepPercent() {
-    const { sleepData } = this.props;
+    const { sleepData, t } = this.props;
     let wakeTime = 0;
     let remSleep = 0;
     let lightSleep = 0;
@@ -45,13 +41,13 @@ class SleepTime extends Component {
     const totalSleepMilliseconds = moment.duration((lightSleep + remSleep + deepSleep) * 60 * 1000);
 
     return {
-      totalSleepTime: `${totalSleepMilliseconds.hours()}时${totalSleepMilliseconds.minutes()}分`,
+      totalSleepTime: `${totalSleepMilliseconds.hours()} ${t('Hour')} ${totalSleepMilliseconds.minutes()} ${t('Minute')}`,
       sleepPercent: 100 - wakeTimePer,
     };
   }
 
   getSleepTime() {
-    const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute, extraCheckTimeMinute } = this.props;
+    const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute, extraCheckTimeMinute, t } = this.props;
     const start = startSleepTime;
     const sleepStageStart = start + (startStatusTimeMinute === -1 ? 0 : startStatusTimeMinute) * 60 * 1000;
     const sleepStageEnd = start + (endStatusTimeMinute === -1 ? 0 : endStatusTimeMinute) * 60 * 1000;
@@ -63,40 +59,42 @@ class SleepTime extends Component {
       end: moment(end).format('HH:mm'),
       sleepStageStart: moment(sleepStageStart).format('HH:mm'),
       sleepStageEnd: moment(sleepStageEnd).format('HH:mm'),
-      totalRecordTime: `${totalMilliseconds.hours()}时${totalMilliseconds.minutes()}分`,
+      totalRecordTime: `${totalMilliseconds.hours()} ${t('Hour')} ${totalMilliseconds.minutes()} ${t('Minute')}`,
       totalSleepTime: this.getSleepPercent().totalSleepTime,
       sleepPercent: this.getSleepPercent().sleepPercent,
     };
   }
 
   render() {
+    const { t } = this.props;
+
     return (
       <div className="block">
-        <Title level={2}>睡眠时间统计</Title>
+        <Title level={2}>{t('Sleep Time Statistics')}</Title>
         <div className="short-line center">
           <span></span>
         </div>
         <div className="table-data">
-          <Tooltip title="设备监测到用户并开始记录监测数据">
+          <span>
             <span>{ this.getSleepTime().sleepStageStart }</span>
-            <span>记录开始时间</span>
-          </Tooltip>
-          <Tooltip title="设备停止记录监测数据">
+            <span>{t('Recording Start Time')}</span>
+          </span>
+          <span>
             <span>{ this.getSleepTime().sleepStageEnd }</span>
-            <span>记录结束时间</span>
-          </Tooltip>
-          <Tooltip title="设备监测总时长">
+            <span>{t('Recording End Time')}</span>
+          </span>
+          <span>
             <span>{ this.getSleepTime().totalRecordTime }</span>
-            <span>总记录时间</span>
-          </Tooltip>
-          <Tooltip title="监测到用户入睡总时长">
+            <span>{t('Total Tecord Duration')}</span>
+          </span>
+          <span>
             <span>{ this.getSleepTime().totalSleepTime }</span>
-            <span>总睡眠时间</span>
-          </Tooltip>
-          <Tooltip title="浅睡期眼动期和深睡期占总睡眠时长的比例">
+            <span>{t('Total Sleep Duration')}</span>
+          </span>
+          <span>
             <span>{ this.getSleepTime().sleepPercent }</span>
-            <span>睡眠效率(%)</span>
-          </Tooltip>
+            <span>{t('Sleep Efficiency')}(%)</span>
+          </span>
         </div>
       </div>
     );
@@ -127,4 +125,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(SleepTime);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(SleepTime));

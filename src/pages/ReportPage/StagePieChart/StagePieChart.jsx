@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactEcharts from 'echarts-for-react';
-// import Creator from '../../../actions/Creator';
+import { withTranslation } from 'react-i18next';
 
 class StagePieChart extends Component {
-  componentDidMount() {
-
-  }
 
   getSleepPercent() {
     const { sleepData } = this.props;
@@ -54,6 +51,7 @@ class StagePieChart extends Component {
   }
 
   getOption = () => {
+    const { t } = this.props;
     const {
       wakeTime,
       wakeTimePer,
@@ -95,22 +93,30 @@ class StagePieChart extends Component {
               return `浅睡期：${lightSleep}分钟(${lightSleepPer}%)`;
             case '深睡期':
               return `深睡期：${deepSleep}分钟(${deepSleepPer}%)`;
+            case 'Awake':
+              return `Awake: ${wakeTime} min (${wakeTimePer}%)`;
+            case 'REM':
+              return `REM: ${remSleep} min (${remSleepPer}%)`;
+            case 'Light':
+              return `Light: ${lightSleep} min (${lightSleepPer}%)`;
+            case 'Deep':
+              return `Deep: ${deepSleep} min (${deepSleepPer}%)`;
             default:
               break;
           }
         },
         data: [
-          '清醒期',
-          '眼动期',
-          '浅睡期',
-          '深睡期'
+          t('Awake'),
+          t('REM'),
+          t('Light'),
+          t('Deep')
         ]
       },
       tooltip: {
         trigger: 'item'
       },
       series: [{
-        name: '睡眠分期',
+        name: t('Sleep Stage'),
         type: 'pie',
         center: ['30%', '50%'],
         radius: [0, '75%'],
@@ -126,7 +132,7 @@ class StagePieChart extends Component {
         },
         data: [{
           value: wakeTime,
-          name: '清醒期',
+          name: t('Awake'),
           itemStyle: {
             normal: {
               color: '#cff09e'
@@ -135,7 +141,7 @@ class StagePieChart extends Component {
         },
         {
           value: lightSleep,
-          name: '浅睡期',
+          name: t('Light'),
           itemStyle: {
             normal: {
               color: '#a8dba8'
@@ -144,7 +150,7 @@ class StagePieChart extends Component {
         },
         {
           value: deepSleep,
-          name: '深睡期',
+          name: t('Deep'),
           itemStyle: {
             normal: {
               color: '#3b8686'
@@ -153,7 +159,7 @@ class StagePieChart extends Component {
         },
         {
           value: remSleep,
-          name: '眼动期',
+          name: t('REM'),
           itemStyle: {
             normal: {
               color: '#79bd9a'
@@ -191,4 +197,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(StagePieChart);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(StagePieChart));

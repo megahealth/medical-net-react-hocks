@@ -3,13 +3,9 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import ReactEcharts from 'echarts-for-react';
-// import Creator from '../../../actions/Creator';
+import { withTranslation } from 'react-i18next';
 
 class EventsChart extends Component {
-
-  componentDidMount() {
-
-  }
 
   getOption = () => {
     const {
@@ -17,7 +13,8 @@ class EventsChart extends Component {
       startStatusTimeMinute,
       endStatusTimeMinute,
       breathList,
-      breathEvent
+      breathEvent,
+      t
     } = this.props;
     const sleepStageStart = startSleepTime + startStatusTimeMinute * 60 * 1000;
     const sleepStageEnd = startSleepTime + endStatusTimeMinute * 60 * 1000;
@@ -68,7 +65,7 @@ class EventsChart extends Component {
         }
       ],
       yAxis: [{
-        name: '持续时间(s)',
+        name: t('Chart Sec Duration'),
         type: 'value',
         nameRotate: '0.1',
         splitLine: {
@@ -89,7 +86,7 @@ class EventsChart extends Component {
       }],
       series: [
         {
-          name: '呼吸事件曲线',
+          name: t('Sleep Respiratory Event Chart'),
           type: 'bar',
           barWidth: 1,
           itemStyle: {
@@ -138,4 +135,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(EventsChart);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(EventsChart));

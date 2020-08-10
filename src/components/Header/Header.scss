@@ -13,7 +13,7 @@ $color: #3161B8;
   font-weight: 500;
   color: #fff;
   display: flex;
-  div:nth-child(1) {
+  >div:nth-child(1) {
     display: flex;
     align-items: center;
     img {
@@ -21,16 +21,16 @@ $color: #3161B8;
       height: auto;
     }
   }
-  div:nth-child(2) {
+  >div:nth-child(2) {
     flex: 1;
     font-size: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  div:nth-child(3) {
+  >div:nth-child(3) {
     display: flex;
-    width: 190px;
+    width: 300px;
     justify-content: flex-end;
     align-items: center;
     a {

@@ -2,40 +2,38 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography } from 'antd';
-// import Creator from '../../../actions/Creator';
+import { withTranslation } from 'react-i18next';
 
 const { Title } = Typography;
 
 class PrAbstract extends Component {
-  componentDidMount() {
-
-  }
 
   render() {
     const {
       prAvg,
       prMax,
       prMin,
+      t
     } = this.props;
 
     return (
       <div className="block">
-        <Title level={2}>心率统计</Title>
+        <Title level={2}>{t('HR analysis')}</Title>
         <div className="short-line center">
           <span></span>
         </div>
         <div className="table-data">
           <span>
             <span>{ prAvg }</span>
-            <span>平均心率(bpm)</span>
+            <span>{t('Average HR')}</span>
           </span>
           <span>
             <span>{ prMax }</span>
-            <span>最大心率(bpm)</span>
+            <span>{t('Highest HR')}</span>
           </span>
           <span>
             <span>{ prMin }</span>
-            <span>最小心率(bpm)</span>
+            <span>{t('Lowest HR')}</span>
           </span>
         </div>
       </div>
@@ -63,4 +61,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(PrAbstract);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(PrAbstract));

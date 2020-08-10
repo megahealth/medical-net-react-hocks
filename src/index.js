@@ -6,6 +6,8 @@ import { HashRouter, Route, Switch } from 'react-router-dom';
 import Store from './store';
 import AV from 'leancloud-storage';
 // import 'babel-polyfill';
+import './i18n';
+
 import './common/common.scss';
 
 import 'antd/dist/antd.css';

@@ -3,13 +3,9 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import ReactEcharts from 'echarts-for-react';
-// import Creator from '../../../actions/Creator';
+import { withTranslation } from 'react-i18next';
 
 class StageChart extends Component {
-
-  componentDidMount() {
-
-  }
 
   getOption = () => {
     const {
@@ -17,6 +13,7 @@ class StageChart extends Component {
       startStatusTimeMinute,
       endStatusTimeMinute,
       sleepData,
+      t
     } = this.props;
     const sleepStageStart = startSleepTime + startStatusTimeMinute * 60 * 1000;
     const sleepStageEnd = startSleepTime + endStatusTimeMinute * 60 * 1000;
@@ -85,19 +82,19 @@ class StageChart extends Component {
           let str = '';
           switch (params[0].value[1]) {
             case 1:
-              str = '深睡期';
+              str = t('Deep');
               break;
             case 2:
-              str = '浅睡期';
+              str = t('Light');
               break;
             case 3:
-              str = '眼动期';
+              str = t('REM');
               break;
             case 4:
-              str = '清醒期';
+              str = t('Awake');
               break;
             case null:
-              str = '离床';
+              str = t('Out of Bed');
               break;
             default:
               break;
@@ -259,4 +256,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(StageChart);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(StageChart));

@@ -2,14 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography } from 'antd';
-// import Creator from '../../../actions/Creator';
+import { withTranslation } from 'react-i18next';
 
 const { Title } = Typography;
 
 class AbstractData extends Component {
-  componentDidMount() {
-
-  }
 
   getAHI() {
     const { AHI } = this.props;
@@ -17,16 +14,18 @@ class AbstractData extends Component {
   }
 
   render() {
+    const { t } = this.props;
+
     return (
       <div className="block">
-        <Title level={2}>数据摘要</Title>
+        <Title level={2}>{t('Data Summary')}</Title>
         <div className="short-line center">
           <span></span>
         </div>
         <div className="table-data">
           <span>
             <span>{ this.getAHI() }</span>
-            <span>AHI指数</span>
+            <span>AHI</span>
           </span>
         </div>
       </div>
@@ -50,4 +49,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(AbstractData);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(AbstractData));

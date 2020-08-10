@@ -4,14 +4,11 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { Typography } from 'antd';
 import ReactEcharts from 'echarts-for-react';
-// import Creator from '../../../actions/Creator';
+import { withTranslation } from 'react-i18next';
 
 const { Title } = Typography;
 
 class SpoChart extends Component {
-  componentDidMount() {
-
-  }
 
   getOption = () => {
     const {
@@ -20,6 +17,7 @@ class SpoChart extends Component {
       endStatusTimeMinute,
       spoStart,
       spoArr,
+      t
     } = this.props;
     const len = spoArr.length;
 
@@ -102,7 +100,7 @@ class SpoChart extends Component {
           },
         },
         yAxis: {
-          name: '血氧(%)',
+          name: t('Blood Oxygen BPM'),
           type: 'value',
           nameRotate: '0.1',
           min: 70,
@@ -149,9 +147,11 @@ class SpoChart extends Component {
   }
 
   render() {
+    const { t } = this.props;
+    
     return (
       <div className="block">
-        <Title level={2}>趋势图</Title>
+        <Title level={2}>{t('Trend Chart')}</Title>
         <div className="short-line center">
           <span></span>
         </div>
@@ -185,4 +185,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(SpoChart);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(SpoChart));

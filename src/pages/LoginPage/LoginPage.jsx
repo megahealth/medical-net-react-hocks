@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import AV from 'leancloud-storage';
 import { Toast } from 'antd-mobile';
 import { createHashHistory } from 'history';
+import ChangeLang from '../../components/ChangeLang/ChangeLang'
 import Creator from '../../actions/Creator';
+import { withTranslation } from 'react-i18next';
 
 import LOGO from '../../assets/megahealth.png';
 import './LoginPage.scss';
@@ -42,11 +44,13 @@ class LoginPage extends Component {
 
   login() {
     const { username, password } = this.state;
+    const { t } = this.props;
+    
     if (!username) {
-      return Toast.info('请输入用户名');
+      return Toast.info(t('Pls Enter Username'));
     }
     if (!password) {
-      return Toast.info('请输入密码');
+      return Toast.info(t('Pls Enter Password'));
     }
 
     AV.User.logIn(username, password).then(user => {
@@ -54,13 +58,13 @@ class LoginPage extends Component {
       history.push('/allreports');
     }, err => {
       // 登录失败（可能是密码错误）
-      let errMsg = '登录失败';
+      let errMsg = t('Login failed');
       switch (err.code) {
         case 210:
-          errMsg = '用户名或密码错误';
+          errMsg = t('Username or password mistack');
           break;
         case 211:
-          errMsg = '用户名不存在';
+          errMsg = t(`User doesn't exist`);
           break;
         default:
           break;
@@ -71,29 +75,34 @@ class LoginPage extends Component {
 
   render() {
     const { showPw } = this.state;
+    const { t } = this.props;
+
     return (
       <div className="login-container">
         <div className="login-1">
           <img src={LOGO} alt="" />
         </div>
+        <div className='trans-btn'>
+          <ChangeLang></ChangeLang>
+        </div>
         <div className="login-2">
           <div className="form">
-            <div>兆观呼吸睡眠初筛管理工作站</div>
+            <div>{t('App Title')}</div>
             <div>
               <span></span>
-              <input type="text" placeholder="用户名" onInput={this.usernameInput.bind(this)} />
+              <input type="text" placeholder={t('Username')} onInput={this.usernameInput.bind(this)} />
             </div>
             <div>
               <span></span>
-              <input type={showPw ? 'text' : 'password'} placeholder="密码" onInput={this.passwordInput.bind(this)} />
+              <input type={showPw ? 'text' : 'password'} placeholder={t('Password')} onInput={this.passwordInput.bind(this)} />
               <span className={classnames('eye', { show: showPw })} onClick={this.showOrHidePw.bind(this)}></span>
             </div>
             <div>
-              <button onClick={this.login.bind(this)}>登录</button>
+              <button onClick={this.login.bind(this)}>{t('Login')}</button>
             </div>
           </div>
         </div>
-        <div className="login-3">web: 1.7988</div>
+        <div className="login-3">v0.1.0</div>
       </div>
     );
   }
@@ -120,4 +129,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(LoginPage));

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography, Input } from 'antd';
-// import Creator from '../../../actions/Creator';
+import { withTranslation } from 'react-i18next';
 import './Advice.scss';
 
 const { Title } = Typography;
@@ -14,11 +14,11 @@ class Advice extends Component {
   }
 
   render() {
-    // const { prAvg, prMax, prMin } = this.props;
+    const { t } = this.props;
 
     return (
       <div className="block">
-        <Title level={2}>诊断意见</Title>
+        <Title level={2}>{t('Sleep Evaluation Recommendations')}</Title>
         <div className="short-line center">
           <span></span>
         </div>
@@ -50,4 +50,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(Advice);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(Advice));

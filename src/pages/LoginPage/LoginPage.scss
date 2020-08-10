@@ -29,6 +29,17 @@ $input-height: 60px;
       height: auto;
     }
   }
+  .trans-btn {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    div {
+      color: #fff;
+      font-size: 26px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
   .login-2 {
     flex: 1;
     display: flex;

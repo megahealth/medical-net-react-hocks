@@ -3,37 +3,31 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { Typography } from 'antd';
-// import Creator from '../../../actions/Creator';
-// import '../../ReportPage.scss';
-
+import { withTranslation } from 'react-i18next';
 
 const { Title } = Typography;
 
-
 class ReportHeader extends Component {
-  componentDidMount() {
-
-  }
 
   getReportDate() {
-    const { startSleepTime, endStatusTimeMinute } = this.props;
-    const t = startSleepTime + endStatusTimeMinute * 60 * 1000;
-    return moment(t).format('YYYY年MM月DD日');
+    const { startSleepTime, endStatusTimeMinute, t } = this.props;
+    const time = startSleepTime + endStatusTimeMinute * 60 * 1000;
+    return moment(time).format( t('YYYY-MM-DD') );
   }
 
   render() {
-    const { deviceSN } = this.props;
+    const { deviceSN, t } = this.props;
     return (
       <div className="header">
         <div className="header-info">
-          <span>病历号：2626543</span>
+          {/* <span>病历号：2626543</span> */}
           <span>
-            设备编号：
+            {t('Device SN')}：
             {deviceSN}
           </span>
         </div>
         <div className="center">
-          <Title>睡眠呼吸报告</Title>
+          <Title>{t('Report Title')}</Title>
           <span>
             {
               this.getReportDate()
@@ -65,4 +59,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReportHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(ReportHeader));

@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Skeleton, Button } from 'antd';
+import {
+  EditOutlined,
+  LeftOutlined,
+  PrinterOutlined,
+  SaveOutlined
+} from '@ant-design/icons';
+import { withTranslation } from 'react-i18next';
 import './ReportPage.scss';
 
 import ReportHeader from './Header/ReportHeader';
@@ -39,7 +46,7 @@ class ReportPage extends Component {
   }
 
   render() {
-    const { report } = this.props;
+    const { report, t } = this.props;
     const { size } = this.state;
 
     return (
@@ -49,20 +56,20 @@ class ReportPage extends Component {
             <div className="left">
               <Button
                 shape="round"
-                icon="left"
+                icon={<LeftOutlined />}
                 size={size}
                 onClick={() => this.props.history.goBack()}
               >
-                返回
+                {t('Back')} 
               </Button>
             </div>
             <div className="right">
-              <Button shape="round" icon="edit" size={size}>编辑</Button>
-              <Button shape="round" icon="save" size={size}>保存</Button>
-              <Button shape="round" icon="printer" size={size}>打印</Button>
+              <Button shape="round" icon={<EditOutlined />} size={size}> {t('Edit')} </Button>
+              <Button shape="round" icon={<SaveOutlined />} size={size}> {t('Save')} </Button>
+              <Button shape="round" icon={<PrinterOutlined />} size={size}> {t('Print')} </Button>
             </div>
           </div>
-          <Skeleton paragraph={{ rows: 50 }} loading={report.loading}>
+          <Skeleton paragraph={{ rows: 15 }} loading={report.loading}>
             <div className="print-page">
               <ReportHeader></ReportHeader>
               <UserInfo></UserInfo>
@@ -119,4 +126,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReportPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(ReportPage));

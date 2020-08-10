@@ -2,17 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography } from 'antd';
-// import Creator from '../../../actions/Creator';
-// import '../../ReportPage.scss';
+import { withTranslation } from 'react-i18next';
 import './SleepStage.scss';
 
 const { Title } = Typography;
 
 
 class SleepStage extends Component {
-  componentDidMount() {
-
-  }
 
   getSleepPercent() {
     const { sleepData } = this.props;
@@ -59,35 +55,37 @@ class SleepStage extends Component {
   }
 
   render() {
+    const { t } = this.props;
+
     return (
       <div className="block">
-        <Title level={2}>睡眠分期统计</Title>
+        <Title level={2}>{t('Sleep Stage Statistics')}</Title>
         <div className="short-line center">
           <span></span>
         </div>
         <div className="table-data stage-table">
           <span>
-            <span>睡眠阶段</span>
-            <span>持续时间(分钟)</span>
-            <span>总占比(%)</span>
+            <span>{t('Sleep Stage')}</span>
+            <span>{t('Sleep Stage Duration')}</span>
+            <span>{t('Total proportion (%)')}</span>
           </span>
           <span>
-            <span>清醒期</span>
+            <span>{t('Awake')}</span>
             <span className="table-value">{ this.getSleepPercent().wakeTime }</span>
             <span className="table-value">{ this.getSleepPercent().wakeTimePer }</span>
           </span>
           <span>
-            <span>眼动期</span>
+            <span>{t('REM')}</span>
             <span className="table-value">{ this.getSleepPercent().remSleep }</span>
             <span className="table-value">{ this.getSleepPercent().remSleepPer }</span>
           </span>
           <span>
-            <span>浅睡期</span>
+            <span>{t('Light')}</span>
             <span className="table-value">{ this.getSleepPercent().lightSleep }</span>
             <span className="table-value">{ this.getSleepPercent().lightSleepPer }</span>
           </span>
           <span>
-            <span>深睡期</span>
+            <span>{t('Deep')}</span>
             <span className="table-value">{ this.getSleepPercent().deepSleep }</span>
             <span className="table-value">{ this.getSleepPercent().deepSleepPer }</span>
           </span>
@@ -113,4 +111,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(SleepStage);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(SleepStage));

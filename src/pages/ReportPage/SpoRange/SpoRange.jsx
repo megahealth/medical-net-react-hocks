@@ -2,16 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography } from 'antd';
-// import Creator from '../../../actions/Creator';
+import { withTranslation } from 'react-i18next';
 import './SpoRange.scss';
 
 const { Title } = Typography;
 
 
 class SpoRange extends Component {
-  componentDidMount() {
-
-  }
 
   render() {
     const {
@@ -23,19 +20,20 @@ class SpoRange extends Component {
       spo2Less90Time,
       spo2Less85Time,
       spo2Less80Time,
+      t
     } = this.props;
 
     return (
       <div className="block">
-        <Title level={2}>血氧饱和度</Title>
+        <Title level={2}>{t('SpO2')}</Title>
         <div className="short-line center">
           <span></span>
         </div>
         <div className="table-data stage-table">
           <span>
-            <span>范围</span>
-            <span>时长(分钟)</span>
-            <span>百分比(%)</span>
+            <span>{t('SpO2 Range')}</span>
+            <span>{t('SpO2 Dur')}</span>
+            <span>{t('SpO2 Per')}</span>
           </span>
           <span>
             <span>&lt;95%</span>
@@ -94,4 +92,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(SpoRange);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(SpoRange));

@@ -4,6 +4,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import ReactEcharts from 'echarts-for-react';
 import { Typography } from 'antd';
+import { withTranslation } from 'react-i18next';
 import './index.scss'
 
 const { Title } = Typography;
@@ -27,8 +28,7 @@ class BreathWave extends Component {
       } else if (document.msExitFullscreen) {
         document.msExitFullscreen();
       }
-      console.log('已还原！');
-    } else {    // 否则，进入全屏
+    } else {
       if (element.requestFullscreen) {
         element.requestFullscreen();
       } else if (element.webkitRequestFullScreen) {
@@ -36,10 +36,8 @@ class BreathWave extends Component {
       } else if (element.mozRequestFullScreen) {
         element.mozRequestFullScreen();
       } else if (element.msRequestFullscreen) {
-        // IE11
         element.msRequestFullscreen();
       }
-      console.log('已全屏！');
     }
     this.setState({
       fullscreen: !fullscreen
@@ -56,7 +54,8 @@ class BreathWave extends Component {
       spoStart,
       spoArr,
       prArr,
-      waveData
+      waveData,
+      t
     } = this.props;
     const sleepStageStart = startSleepTime + startStatusTimeMinute * 60 * 1000;
     const sleepStageEnd = startSleepTime + endStatusTimeMinute * 60 * 1000;
@@ -119,7 +118,7 @@ class BreathWave extends Component {
     const option = {
       animation: false,
       legend: {
-        data: ['呼吸波', '呼吸事件', '血氧', '脉率'],
+        data: [t('Breath Wave'), t('Sleep Respiratory Event'), t('Blood Oxygen'), t('Heart Rate')],
         top: 20
       },
       tooltip: {
@@ -130,7 +129,7 @@ class BreathWave extends Component {
         feature: {
           myTool1: {
             show: true,
-            title: '全屏',
+            title: t('Fullscreen'),
             icon: 'path://M128 384h85.33V213.33H384V128H128zM640 128v85.33h170.67V384H896V128zM810.67 810.67H640V896h256V640h-85.33zM213.33 640H128v256h256v-85.33H213.33z',
             onclick: () => {
               this.setFullscreen()
@@ -255,7 +254,7 @@ class BreathWave extends Component {
       ],
       yAxis: [
         {
-          name: '呼吸波',
+          name: t('Breath Wave'),
           nameLocation: 'center',
           nameGap: '50',
           type: 'value',
@@ -277,7 +276,7 @@ class BreathWave extends Component {
           },
         },
         {
-          name: '呼吸事件',
+          name: t('Sleep Respiratory Event'),
           nameLocation: 'center',
           nameGap: '50',
           // nameRotate: '90',
@@ -302,7 +301,7 @@ class BreathWave extends Component {
           gridIndex: 1
         },
         {
-          name: '血氧(%)',
+          name: t('Blood Oxygen Per'),
           nameLocation: 'center',
           nameGap: '50',
           type: 'value',
@@ -328,7 +327,7 @@ class BreathWave extends Component {
           gridIndex: 2
         },
         {
-          name: '脉率(bpm)',
+          name: t('Heart Rate BPM'),
           nameLocation: 'center',
           nameGap: '50',
           type: 'value',
@@ -385,7 +384,7 @@ class BreathWave extends Component {
       ],
       series: [
         {
-          name: '呼吸波',
+          name: t('Breath Wave'),
           type: 'line',
           showSymbol: false,
           hoverAnimation: false,
@@ -405,7 +404,7 @@ class BreathWave extends Component {
           }
         },
         {
-          name: '呼吸事件',
+          name: t('Sleep Respiratory Event'),
           type: 'bar',
           barWidth: 1,
           itemStyle: {
@@ -420,7 +419,7 @@ class BreathWave extends Component {
         },
         {
           type: 'line',
-          name: '血氧',
+          name: t('Blood Oxygen'),
           // smooth: true,
           // sampling: 'average',
           showSymbol: false,
@@ -440,7 +439,7 @@ class BreathWave extends Component {
         },
         {
           type: 'line',
-          name: '脉率',
+          name: t('Heart Rate'),
           // smooth: true,
           // sampling: 'average',
           showSymbol: false,
@@ -465,12 +464,12 @@ class BreathWave extends Component {
   }
 
   render() { 
-
     const { fullscreen } = this.state;
+    const { t } = this.props;
 
     return (
       <div className={`block  ${fullscreen?'full-screen':''}`}>
-        <Title level={2}>呼吸波趋势图</Title>
+        <Title level={2}>{t('Breath Wave Trend')}</Title>
         <div className="short-line center">
           <span></span>
         </div>
@@ -511,4 +510,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
  
-export default connect(mapStateToProps, mapDispatchToProps)(BreathWave);;
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(BreathWave));;

@@ -3,13 +3,9 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import ReactEcharts from 'echarts-for-react';
-// import Creator from '../../../actions/Creator';
+import { withTranslation } from 'react-i18next';
 
 class PrChart extends Component {
-
-  componentDidMount() {
-
-  }
 
   getOption = () => {
     const {
@@ -18,6 +14,7 @@ class PrChart extends Component {
       endStatusTimeMinute,
       spoStart,
       prArr,
+      t
     } = this.props;
     const len = prArr.length;
 
@@ -100,7 +97,7 @@ class PrChart extends Component {
           },
         },
         yAxis: {
-          name: '脉率(bpm)',
+          name: t('Heart Rate BPM'),
           type: 'value',
           nameRotate: '0.1',
           min: 40,
@@ -179,4 +176,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(PrChart);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(PrChart));
