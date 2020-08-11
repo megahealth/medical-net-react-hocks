@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Skeleton, Button } from 'antd';
 import {
-  EditOutlined,
   LeftOutlined,
-  PrinterOutlined,
-  SaveOutlined
+  // EditOutlined,
+  // PrinterOutlined,
+  // SaveOutlined
 } from '@ant-design/icons';
 import { withTranslation } from 'react-i18next';
 import './ReportPage.scss';
@@ -27,6 +27,7 @@ import PrChart from './PrChart/PrChart';
 import EventsChart from './EventsChart/EventsChart';
 import StageChart from './StageChart/StageChart';
 import BreathWave from './BreathWave/BreathWave';
+import BodyMoveTimeChart from './BodyMoveTimeChart/BodyMoveTimeChart';
 
 import Creator from '../../actions/Creator';
 
@@ -63,11 +64,11 @@ class ReportPage extends Component {
                 {t('Back')} 
               </Button>
             </div>
-            <div className="right">
+            {/* <div className="right">
               <Button shape="round" icon={<EditOutlined />} size={size}> {t('Edit')} </Button>
               <Button shape="round" icon={<SaveOutlined />} size={size}> {t('Save')} </Button>
               <Button shape="round" icon={<PrinterOutlined />} size={size}> {t('Print')} </Button>
-            </div>
+            </div> */}
           </div>
           <Skeleton paragraph={{ rows: 15 }} loading={report.loading}>
             <div className="print-page">
@@ -92,6 +93,7 @@ class ReportPage extends Component {
               <PrChart></PrChart>
               <EventsChart></EventsChart>
               <StageChart></StageChart>
+              <BodyMoveTimeChart></BodyMoveTimeChart>
             </div>
             <div className="print-page">
               <BreathWave></BreathWave>

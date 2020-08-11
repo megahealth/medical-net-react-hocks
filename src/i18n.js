@@ -86,6 +86,9 @@ const resources = {
       "Breath Wave": "Breath Wave",
       "Fullscreen": "Fullscreen",
       "Breath Wave Trend": "Breath Wave Trend",
+      "Chart Ratio": "Ratio",
+      "Sleep Body Movement Ratio": "Sleep Body Movement Ratio",
+      "Body Movement": "Body Movement"
     }
   },
   'zh-CN': {
@@ -171,6 +174,9 @@ const resources = {
       "Breath Wave": "呼吸波",
       "Fullscreen": "全屏",
       "Breath Wave Trend": "呼吸波趋势图",
+      "Chart Ratio": "占比",
+      "Sleep Body Movement Ratio": "睡眠体动时长",
+      "Body Movement": "体动"
     }
   }
 };

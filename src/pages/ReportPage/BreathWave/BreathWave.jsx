@@ -55,6 +55,8 @@ class BreathWave extends Component {
       spoArr,
       prArr,
       waveData,
+      bodyMoveListInfo,
+      bodyMoveList,
       t
     } = this.props;
     const sleepStageStart = startSleepTime + startStatusTimeMinute * 60 * 1000;
@@ -115,10 +117,20 @@ class BreathWave extends Component {
       }
     }
 
+    const bodyMoveStart = bodyMoveListInfo && bodyMoveListInfo.startTime * 1000;
+    const bodyMoveInterval = bodyMoveListInfo && bodyMoveListInfo.interval;
+
+    const bodyMoveTimeChartData = [];
+    for (let i = 0; i < bodyMoveList.length; i++) {
+      const bodyMoveTimeTime = new Date(bodyMoveStart + i * bodyMoveInterval * 1000);
+      const bodyMoveTimeData = bodyMoveList[i][0];
+      bodyMoveTimeChartData.push([bodyMoveTimeTime, bodyMoveTimeData]);
+    }
+
     const option = {
       animation: false,
       legend: {
-        data: [t('Breath Wave'), t('Sleep Respiratory Event'), t('Blood Oxygen'), t('Heart Rate')],
+        data: [t('Breath Wave'), t('Sleep Respiratory Event'), t('Blood Oxygen'), t('Heart Rate'), t('Body Movement')],
         top: 20
       },
       tooltip: {
@@ -251,6 +263,33 @@ class BreathWave extends Component {
           },
           gridIndex: 3
         },
+        {
+          type: 'time',
+          splitNumber: 12,
+          min: sleepStageStart,
+          max: sleepStageEnd,
+          axisTick: {
+            show: false,
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#aaa'
+            }
+          },
+          axisLabel: {
+            showMinLabel: true,
+            showMaxLabel: true,
+            formatter: (value, index) => moment(value).format('HH:mm')
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: '#efefef',
+              type: 'solid'
+            }
+          },
+          gridIndex: 4
+        }
       ],
       yAxis: [
         {
@@ -352,18 +391,46 @@ class BreathWave extends Component {
           },
           gridIndex: 3
         },
+        {
+          name: t('Sleep Body Movement Ratio'),
+          nameLocation: 'center',
+          nameGap: '50',
+          type: 'value',
+          // nameRotate: '0.1',
+          min: 0,
+          max: 60,
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: '#efefef',
+              type: 'solid'
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#aaa'
+            }
+          },
+          gridIndex: 4
+        }
       ],
       grid: [{
         top: '12%',
-        bottom: '72%'
+        bottom: '76%'
       }, {
-        top: '32%',
-        bottom: '52%'
+        top: '28%',
+        bottom: '60%'
       }, {
-        top: '52%',
-        bottom: '32%'
+        top: '44%',
+        bottom: '44%'
       }, {
-        top: '72%',
+        top: '60%',
+        bottom: '28%'
+      }, {
+        top: '76%',
         bottom: '12%'
       }],
       dataZoom: [
@@ -372,14 +439,14 @@ class BreathWave extends Component {
           type: 'slider',
           start: 10,
           end: 11,
-          xAxisIndex: [0, 1, 2, 3]
+          xAxisIndex: [0, 1, 2, 3, 4]
         },
         {
           show: true,
           type: 'inside',
           start: 10,
           end: 11,
-          xAxisIndex: [0, 1, 2, 3]
+          xAxisIndex: [0, 1, 2, 3, 4]
         },
       ],
       series: [
@@ -456,6 +523,20 @@ class BreathWave extends Component {
           data: newPrArr,
           xAxisIndex: 3,
           yAxisIndex: 3
+        },
+        {
+          name: t('Body Movement'),
+          type: 'bar',
+          barWidth: 1,
+          itemStyle: {
+            normal: {
+              color: '#ff4e50',
+              // width: 1
+            }
+          },
+          data: bodyMoveTimeChartData,
+          xAxisIndex: 4,
+          yAxisIndex: 4
         }
       ]
     };
@@ -501,6 +582,8 @@ const mapStateToProps = state => (
     spoArr: state.report.alreadyDecodedData.Spo2Arr,
     prArr: state.report.alreadyDecodedData.prArr,
     waveData: state.report.waveData,
+    bodyMoveListInfo: state.report.data.bodyMoveListInfo,
+    bodyMoveList: state.report.data.bodyMoveList,
   }
 );
 

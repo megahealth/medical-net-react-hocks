@@ -68,6 +68,8 @@ const DefaultState = {
       snoreList: [],
       noiseList: [],
       somniloquyList: [],
+      bodyMoveListInfo: {},
+      bodyMoveList: [],
       startSnoreTime: 0,
       endSnoreDuration: 0,
       waveFileId: '',
