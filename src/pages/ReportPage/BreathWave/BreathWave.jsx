@@ -315,7 +315,7 @@ class BreathWave extends Component {
           },
         },
         {
-          name: t('Sleep Respiratory Event'),
+          name: t('SR Event'),
           nameLocation: 'center',
           nameGap: '50',
           // nameRotate: '90',
@@ -340,7 +340,7 @@ class BreathWave extends Component {
           gridIndex: 1
         },
         {
-          name: t('Blood Oxygen Per'),
+          name: t('Blood Oxygen'),
           nameLocation: 'center',
           nameGap: '50',
           type: 'value',
@@ -366,7 +366,7 @@ class BreathWave extends Component {
           gridIndex: 2
         },
         {
-          name: t('Heart Rate BPM'),
+          name: t('Heart Rate'),
           nameLocation: 'center',
           nameGap: '50',
           type: 'value',
@@ -392,7 +392,7 @@ class BreathWave extends Component {
           gridIndex: 3
         },
         {
-          name: t('Sleep Body Movement Ratio'),
+          name: t('Body Movement'),
           nameLocation: 'center',
           nameGap: '50',
           type: 'value',
