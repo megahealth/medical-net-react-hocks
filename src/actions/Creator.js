@@ -72,8 +72,13 @@ Creator.getAllReportsData = asyncActionFactory(
     if (limit) Reports.limit(limit);
     if (current) Reports.skip(limit * (current - 1));
     if (idBaseOrg) Reports.equalTo('idBaseOrg', idBaseOrg);
+    if (idBaseOrg.id==='5b14eb612f301e0038e08fba') {
+      let idGroup = AV.Object.createWithoutData('Group', '5f605940e86fc14735ac3c5f');
+      Reports.equalTo('idGroup', idGroup);
+    }
     Reports.descending('createdAt');
-    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'patientInfo', 'extraCheckTimeMinute']);
+    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'idPatient', 'patientInfo', 'extraCheckTimeMinute', 'idGroup']);
+    Reports.include('idPatient');
     let total, result;
     try {
       total = await Reports.count();
@@ -84,11 +89,13 @@ Creator.getAllReportsData = asyncActionFactory(
     try {
       result = await Reports.find();
       const arr = result.map((item, index) => {
+        let arrname = item.get('patientInfo') ? item.get('patientInfo')[0] : '';
+        let idname = item.get('idPatient') && item.get('idPatient').get('name') || '--';
         return {
           'id': item.id,
           'key': index,
           'index': index + 1,
-          'name': item.get('patientInfo') ? item.get('patientInfo')[0] : '--',
+          'name': arrname || idname,
           'date': moment(item.createdAt).format('YYYY-MM-DD'),
           'AHI': item.get('AHI').toFixed(1),
           'time': `${(item.get('extraCheckTimeMinute') / 60).toFixed(1)}h`,

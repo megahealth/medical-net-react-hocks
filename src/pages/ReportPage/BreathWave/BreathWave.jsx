@@ -130,7 +130,8 @@ class BreathWave extends Component {
     const option = {
       animation: false,
       legend: {
-        data: [t('Breath Wave'), t('Sleep Respiratory Event'), t('Blood Oxygen'), t('Heart Rate'), t('Body Movement')],
+        // data: [t('Breath Wave'), t('Sleep Respiratory Event'), t('Blood Oxygen'), t('Heart Rate'), t('Body Movement')],
+        data: [t('Breath Wave'), t('Blood Oxygen'), t('Heart Rate'), t('Body Movement')],
         top: 20
       },
       tooltip: {
@@ -180,6 +181,34 @@ class BreathWave extends Component {
             }
           },
         },
+        // {
+        //   type: 'time',
+        //   show: false,
+        //   splitNumber: 12,
+        //   min: sleepStageStart,
+        //   max: sleepStageEnd,
+        //   axisTick: {
+        //     show: false,
+        //   },
+        //   axisLine: {
+        //     lineStyle: {
+        //       color: '#aaa'
+        //     }
+        //   },
+        //   axisLabel: {
+        //     showMinLabel: true,
+        //     showMaxLabel: true,
+        //     formatter: (value, index) => moment(value).format('HH:mm')
+        //   },
+        //   splitLine: {
+        //     show: true,
+        //     lineStyle: {
+        //       color: '#efefef',
+        //       type: 'solid'
+        //     }
+        //   },
+        //   gridIndex: 1
+        // },
         {
           type: 'time',
           show: false,
@@ -187,7 +216,7 @@ class BreathWave extends Component {
           min: sleepStageStart,
           max: sleepStageEnd,
           axisTick: {
-            show: false,
+            show: true,
           },
           axisLine: {
             lineStyle: {
@@ -225,10 +254,10 @@ class BreathWave extends Component {
           axisLabel: {
             showMinLabel: true,
             showMaxLabel: true,
-            formatter: (value, index) => moment(value).format('HH:mm')
+            formatter: (value, index) => moment(value).format('HH:mm:ss')
           },
           splitLine: {
-            show: true,
+            show: false,
             lineStyle: {
               color: '#efefef',
               type: 'solid'
@@ -242,33 +271,6 @@ class BreathWave extends Component {
           min: sleepStageStart,
           max: sleepStageEnd,
           axisTick: {
-            show: true,
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#aaa'
-            }
-          },
-          axisLabel: {
-            showMinLabel: true,
-            showMaxLabel: true,
-            formatter: (value, index) => moment(value).format('HH:mm:ss')
-          },
-          splitLine: {
-            show: false,
-            lineStyle: {
-              color: '#efefef',
-              type: 'solid'
-            }
-          },
-          gridIndex: 3
-        },
-        {
-          type: 'time',
-          splitNumber: 12,
-          min: sleepStageStart,
-          max: sleepStageEnd,
-          axisTick: {
             show: false,
           },
           axisLine: {
@@ -288,7 +290,7 @@ class BreathWave extends Component {
               type: 'solid'
             }
           },
-          gridIndex: 4
+          gridIndex: 3
         }
       ],
       yAxis: [
@@ -314,31 +316,31 @@ class BreathWave extends Component {
             }
           },
         },
-        {
-          name: t('SR Event'),
-          nameLocation: 'center',
-          nameGap: '50',
-          // nameRotate: '90',
-          type: 'value',
-          min: 0,
-          max: 100,
-          splitLine: {
-            show: true,
-            lineStyle: {
-              color: '#efefef',
-              type: 'solid'
-            }
-          },
-          axisTick: {
-            show: false,
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#aaa'
-            }
-          },
-          gridIndex: 1
-        },
+        // {
+        //   name: t('SR Event'),
+        //   nameLocation: 'center',
+        //   nameGap: '50',
+        //   // nameRotate: '90',
+        //   type: 'value',
+        //   min: 0,
+        //   max: 100,
+        //   splitLine: {
+        //     show: true,
+        //     lineStyle: {
+        //       color: '#efefef',
+        //       type: 'solid'
+        //     }
+        //   },
+        //   axisTick: {
+        //     show: false,
+        //   },
+        //   axisLine: {
+        //     lineStyle: {
+        //       color: '#aaa'
+        //     }
+        //   },
+        //   gridIndex: 1
+        // },
         {
           name: t('Blood Oxygen'),
           nameLocation: 'center',
@@ -363,7 +365,7 @@ class BreathWave extends Component {
               type: 'solid'
             }
           },
-          gridIndex: 2
+          gridIndex: 1
         },
         {
           name: t('Heart Rate'),
@@ -389,7 +391,7 @@ class BreathWave extends Component {
               type: 'solid'
             }
           },
-          gridIndex: 3
+          gridIndex: 2
         },
         {
           name: t('Body Movement'),
@@ -414,39 +416,54 @@ class BreathWave extends Component {
               color: '#aaa'
             }
           },
-          gridIndex: 4
+          gridIndex: 3
         }
       ],
+      // grid: [{
+      //   top: '12%',
+      //   bottom: '76%'
+      // }, {
+      //   top: '28%',
+      //   bottom: '60%'
+      // }, {
+      //   top: '44%',
+      //   bottom: '44%'
+      // }, {
+      //   top: '60%',
+      //   bottom: '28%'
+      // }, {
+      //   top: '76%',
+      //   bottom: '12%'
+      // }],
       grid: [{
-        top: '12%',
-        bottom: '76%'
-      }, {
-        top: '28%',
-        bottom: '60%'
-      }, {
-        top: '44%',
-        bottom: '44%'
-      }, {
-        top: '60%',
-        bottom: '28%'
-      }, {
-        top: '76%',
-        bottom: '12%'
-      }],
+          top: '12%',
+          bottom: '74%'
+        }, {
+          top: '32%',
+          bottom: '54%'
+        }, {
+          top: '54%',
+          bottom: '32%'
+        }, {
+          top: '74%',
+          bottom: '12%'
+        }],
       dataZoom: [
         {
           show: true,
           type: 'slider',
           start: 10,
           end: 11,
-          xAxisIndex: [0, 1, 2, 3, 4]
+          // xAxisIndex: [0, 1, 2, 3, 4]
+          xAxisIndex: [0, 1, 2, 3]
         },
         {
           show: true,
           type: 'inside',
           start: 10,
           end: 11,
-          xAxisIndex: [0, 1, 2, 3, 4]
+          // xAxisIndex: [0, 1, 2, 3, 4]
+          xAxisIndex: [0, 1, 2, 3]
         },
       ],
       series: [
@@ -458,11 +475,9 @@ class BreathWave extends Component {
           lineStyle: {
             width: 1
           },
-          // barWidth: 1,
           itemStyle: {
             normal: {
               color: '#7367F0',
-              // width: 1
             }
           },
           data: waveChartData,
@@ -470,25 +485,23 @@ class BreathWave extends Component {
             data: areas
           }
         },
-        {
-          name: t('Sleep Respiratory Event'),
-          type: 'bar',
-          barWidth: 1,
-          itemStyle: {
-            normal: {
-              color: '#FA742B',
-              // width: 1
-            }
-          },
-          data: breathEventChartData,
-          xAxisIndex: 1,
-          yAxisIndex: 1
-        },
+        // {
+        //   name: t('Sleep Respiratory Event'),
+        //   type: 'bar',
+        //   barWidth: 1,
+        //   itemStyle: {
+        //     normal: {
+        //       color: '#FA742B',
+        //       // width: 1
+        //     }
+        //   },
+        //   data: breathEventChartData,
+        //   xAxisIndex: 1,
+        //   yAxisIndex: 1
+        // },
         {
           type: 'line',
           name: t('Blood Oxygen'),
-          // smooth: true,
-          // sampling: 'average',
           showSymbol: false,
           hoverAnimation: false,
           lineStyle: {
@@ -497,18 +510,15 @@ class BreathWave extends Component {
           itemStyle: {
             normal: {
               color: '#ff4e50',
-              // width: 1
             }
           },
           data: newSpoArr,
-          xAxisIndex: 2,
-          yAxisIndex: 2
+          xAxisIndex: 1,
+          yAxisIndex: 1
         },
         {
           type: 'line',
           name: t('Heart Rate'),
-          // smooth: true,
-          // sampling: 'average',
           showSymbol: false,
           hoverAnimation: false,
           lineStyle: {
@@ -517,12 +527,11 @@ class BreathWave extends Component {
           itemStyle: {
             normal: {
               color: '#28C76F',
-              // width: 1
             }
           },
           data: newPrArr,
-          xAxisIndex: 3,
-          yAxisIndex: 3
+          xAxisIndex: 2,
+          yAxisIndex: 2
         },
         {
           name: t('Body Movement'),
@@ -531,12 +540,11 @@ class BreathWave extends Component {
           itemStyle: {
             normal: {
               color: '#ff4e50',
-              // width: 1
             }
           },
           data: bodyMoveTimeChartData,
-          xAxisIndex: 4,
-          yAxisIndex: 4
+          xAxisIndex: 3,
+          yAxisIndex: 3
         }
       ]
     };
