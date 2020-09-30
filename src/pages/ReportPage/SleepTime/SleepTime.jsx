@@ -66,8 +66,8 @@ class SleepTime extends Component {
   }
 
   render() {
-    const { t } = this.props;
-
+    const { t, sleepData } = this.props;
+    console.log(sleepData);
     return (
       <div className="block">
         <Title level={2}>{t('Sleep Time Statistics')}</Title>
@@ -76,23 +76,28 @@ class SleepTime extends Component {
         </div>
         <div className="table-data">
           <span>
-            <span>{ this.getSleepTime().sleepStageStart }</span>
+            <span>{ sleepData.secStart || '--' }</span>
+            {/* <span>{ this.getSleepTime().sleepStageStart }</span> */}
             <span>{t('Recording Start Time')}</span>
           </span>
           <span>
-            <span>{ this.getSleepTime().sleepStageEnd }</span>
+          <span>{ sleepData.secEnd  || '--' }</span>
+            {/* <span>{ this.getSleepTime().sleepStageEnd }</span> */}
             <span>{t('Recording End Time')}</span>
           </span>
           <span>
-            <span>{ this.getSleepTime().totalRecordTime }</span>
+          <span>{ sleepData.totalRecord  || '--' }</span>
+            {/* <span>{ this.getSleepTime().totalRecordTime }</span> */}
             <span>{t('Total Tecord Duration')}</span>
           </span>
           <span>
-            <span>{ this.getSleepTime().totalSleepTime }</span>
+          <span>{ sleepData.totalRecordTime  || '--' }</span>
+            {/* <span>{ this.getSleepTime().totalSleepTime }</span> */}
             <span>{t('Total Sleep Duration')}</span>
           </span>
           <span>
-            <span>{ this.getSleepTime().sleepPercent }</span>
+          <span>{ sleepData.sleepEfficiency  || '--' }</span>
+            {/* <span>{ this.getSleepTime().sleepPercent }</span> */}
             <span>{t('Sleep Efficiency')}(%)</span>
           </span>
         </div>
@@ -102,20 +107,20 @@ class SleepTime extends Component {
 }
 
 SleepTime.propTypes = {
-  startSleepTime: PropTypes.number.isRequired,
-  startStatusTimeMinute: PropTypes.number.isRequired,
-  endStatusTimeMinute: PropTypes.number.isRequired,
-  extraCheckTimeMinute: PropTypes.number.isRequired,
-  sleepData: PropTypes.array.isRequired,
+  // startSleepTime: PropTypes.number.isRequired,
+  // startStatusTimeMinute: PropTypes.number.isRequired,
+  // endStatusTimeMinute: PropTypes.number.isRequired,
+  // extraCheckTimeMinute: PropTypes.number.isRequired,
+  sleepData: PropTypes.object,
 };
 
 const mapStateToProps = state => (
   {
-    startSleepTime: state.report.data.startSleepTime,
-    startStatusTimeMinute: state.report.data.startStatusTimeMinute,
-    endStatusTimeMinute: state.report.data.endStatusTimeMinute,
-    extraCheckTimeMinute: state.report.data.extraCheckTimeMinute,
-    sleepData: state.report.data.sleepData,
+    // startSleepTime: state.report.data.startSleepTime,
+    // startStatusTimeMinute: state.report.data.startStatusTimeMinute,
+    // endStatusTimeMinute: state.report.data.endStatusTimeMinute,
+    // extraCheckTimeMinute: state.report.data.extraCheckTimeMinute,
+    sleepData: state.report.adviceData,
   }
 );
 

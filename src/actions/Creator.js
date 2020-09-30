@@ -90,7 +90,7 @@ Creator.getAllReportsData = asyncActionFactory(
       result = await Reports.find();
       const arr = result.map((item, index) => {
         let arrname = item.get('patientInfo') ? item.get('patientInfo')[0] : '';
-        let idname = item.get('idPatient') && item.get('idPatient').get('name') || '--';
+        let idname = item.get('idPatient') && (item.get('idPatient').get('name') || '--');
         return {
           'id': item.id,
           'key': index,
@@ -171,8 +171,11 @@ Creator.getReportData = asyncActionFactory(
     dispatch(getting());
 
     const Reports = new AV.Query('Reports');
+    Reports.include('idPatient')
+    Reports.include('customInfo')
+    Reports.include('editedData')
     const result = await Reports.get(id)
-
+    console.log(result);
     let data = result.attributes;
     const { ringData, tempSleepId, idRingReportFile } = data;
     const fileid = idRingReportFile && idRingReportFile.id;
@@ -193,11 +196,173 @@ Creator.getReportData = asyncActionFactory(
     }
     const waveData = waveRes && waveRes.data;
     decodeRingData(id, ringData, tempSleepId, fileid).then((alreadyDecodedData) => {
-      dispatch(success({ data, alreadyDecodedData, waveData }));
+      console.log(alreadyDecodedData);
+     
+      const adviceData =  DataToEditData(data, alreadyDecodedData)
+      dispatch(success({ data, alreadyDecodedData, waveData, adviceData }));
     }, (err) => {
       dispatch(fail({ errorcode: err }));
     });
   }
 );
+
+// 编辑状态
+Creator.changeEditStatus = () => ({
+  type: TYPES.CHANGE_EDITE_STATUS,
+});
+
+// 提交输入框的值
+Creator.handleInputChange = (data) => ({
+  type: TYPES.HANDLE_INPUT_CHANGE,
+  data
+});
+
+// 取消修改
+Creator.cancelUpdate = () => ({
+  type: TYPES.CANCEL_UPDATE,
+})
+
+// 保存修改
+Creator.saveUpdate = asyncActionFactory(
+  ['SAVE_UPDATE', 'SAVE_UPDATE_SUCCESS', 'SAVE_UPDATE_FAILED'],
+  (getting, success, fail, data, id) => async (dispatch) => {
+    dispatch(getting())
+    const { name, age, gender, height, weight } = data;
+
+    const editData = {
+      name, age, gender, height, weight
+    }
+
+    console.log(editData);
+    const report = AV.Object.createWithoutData('Reports', id);
+    report.set('customInfo', editData);
+    try {
+      await report.save();
+      dispatch(success())
+      dispatch(Creator.changeEditStatus())
+    } catch (error) {
+      console.log(error);
+      dispatch(fail())
+    }
+
+
+  }
+)
+
+// 处理报告数据成养老版editData格式
+function DataToEditData(data, alreadyDecodedData) {
+  var obj = {}
+  if (data.editedData) {
+    const sleepTimeObj = getSleepTime(data)
+    obj = data.editedData
+    if(!obj.totalRecord){
+      obj.totalRecord = sleepTimeObj.totalRecord
+    }
+  } else {
+    if(alreadyDecodedData){
+      obj = {
+        ahi: data.AHI.toFixed(1),
+        ahiAdvice: null,
+  
+        secStart: null,
+        fallAsleep: null,
+        secEnd: null,
+        getUp: null,
+        sleepEfficiency: null,
+        totalRecordTime: null,
+  
+        average: alreadyDecodedData.BEMeanlen,
+        max: alreadyDecodedData.BEMaxlen,
+        maxDuration: moment(alreadyDecodedData.BEMaxlentime).format('HH:mm'),
+        totalBreathNum: alreadyDecodedData.BECnt,
+        totalDuration: alreadyDecodedData.BETotalTime,
+        validInTotal: alreadyDecodedData.BETotalrate,
+        eventCnt: alreadyDecodedData.BEOHCnt,
+        mixBreathNum: alreadyDecodedData.BECCnt,
+        centralBreathNum: alreadyDecodedData.BEMCnt,
+  
+        prAvg: alreadyDecodedData.prAvg,
+        prMax: alreadyDecodedData.prMax,
+        prMin: alreadyDecodedData.prMin,
+  
+        spo2Avg: alreadyDecodedData.Spo2Avg,
+        spo2Min: alreadyDecodedData.Spo2Min,
+        diffThdLge3Cnts: alreadyDecodedData.diffThdLge3Cnts,
+        diffThdLge3Pr: alreadyDecodedData.diffThdLge3Pr,
+  
+        spo2Less80Time: alreadyDecodedData.spo2Less80Time,
+        spo2Less80TimePercent: alreadyDecodedData.spo2Less80TimePercent,
+        spo2Less85Time: alreadyDecodedData.spo2Less85Time,
+        spo2Less85TimePercent: alreadyDecodedData.spo2Less85TimePercent,
+        spo2Less90Time: alreadyDecodedData.spo2Less90Time,
+        spo2Less90TimePercent: alreadyDecodedData.spo2Less90TimePercent,
+        spo2Less95Time: alreadyDecodedData.spo2Less95Time,
+        spo2Less95TimePercent: alreadyDecodedData.spo2Less95TimePercent,
+      }
+    }
+    const sleepTimeObj = getSleepTime(data)
+    obj = { ...obj, ...sleepTimeObj }
+  }
+
+  return obj
+}
+
+function getSleepPercent(data) {
+  const { sleepData } = data;
+  let wakeTime = 0;
+  let remSleep = 0;
+  let lightSleep = 0;
+  let deepSleep = 0;
+  let all = 0;
+  if(sleepData.length!=0){
+    for (let i = 0, j = sleepData.length; i < j; i++) {
+      all++;
+      switch (sleepData[i]) {
+        case 0:
+          wakeTime++;
+          break;
+        case 2:
+          remSleep++;
+          break;
+        case 3:
+          lightSleep++;
+          break;
+        case 4:
+          deepSleep++;
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  
+
+  const wakeTimePer = parseFloat((wakeTime * 100 / all).toFixed(1))?parseFloat((wakeTime * 100 / all).toFixed(1)):100;
+  const totalSleepMilliseconds = moment.duration((lightSleep + remSleep + deepSleep) * 60 * 1000);
+
+  return {
+    totalSleepTime: `${totalSleepMilliseconds.hours()} 时 ${totalSleepMilliseconds.minutes()} 分`,
+    sleepPercent: 100 - wakeTimePer,
+  };
+}
+
+function getSleepTime(data) {
+  const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute, extraCheckTimeMinute } = data;
+  const start = startSleepTime;
+  const sleepStageStart = start + (startStatusTimeMinute === -1 ? 0 : startStatusTimeMinute) * 60 * 1000;
+  const sleepStageEnd = start + (endStatusTimeMinute === -1 ? 0 : endStatusTimeMinute) * 60 * 1000;
+  const end = start + (extraCheckTimeMinute === -1 ? 0 : extraCheckTimeMinute) * 60 * 1000;
+  const totalMilliseconds = moment.duration(sleepStageEnd - sleepStageStart);
+
+  return {
+    fallAsleep: moment(start).format('HH:mm'),
+    getUp: moment(end).format('HH:mm'),
+    secStart: moment(sleepStageStart).format('HH:mm'),
+    secEnd: moment(sleepStageEnd).format('HH:mm'),
+    totalRecord: `${totalMilliseconds.hours()}时${totalMilliseconds.minutes()}分`,
+    totalRecordTime: getSleepPercent(data).totalSleepTime,
+    sleepEfficiency: getSleepPercent(data).sleepPercent,
+  };
+}
 
 export default Creator;
