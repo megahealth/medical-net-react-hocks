@@ -212,9 +212,9 @@ Creator.changeEditStatus = () => ({
 });
 
 // 提交输入框的值
-Creator.handleInputChange = (data) => ({
+Creator.handleInputChange = (adviceData,edition) => ({
   type: TYPES.HANDLE_INPUT_CHANGE,
-  data
+  data: {adviceData,edition}
 });
 
 // 取消修改
@@ -227,15 +227,25 @@ Creator.saveUpdate = asyncActionFactory(
   ['SAVE_UPDATE', 'SAVE_UPDATE_SUCCESS', 'SAVE_UPDATE_FAILED'],
   (getting, success, fail, data, id) => async (dispatch) => {
     dispatch(getting())
-    const { name, age, gender, height, weight } = data;
-
-    const editData = {
-      name, age, gender, height, weight
-    }
-
-    console.log(editData);
+    console.log(data);
+    const { adviceData, editData } = data
+    
+    
     const report = AV.Object.createWithoutData('Reports', id);
-    report.set('customInfo', editData);
+    if(editData){
+      const { name, age, gender, height, weight } = editData;
+      const userInfo = {
+        name, age, gender, height, weight
+      }
+      console.log(userInfo);
+      report.set('customInfo', userInfo);
+      report.set('hasEdited', true);
+    }
+    if(adviceData){
+      console.log(adviceData);
+      report.set('editedData', adviceData);
+      report.set('hasEdited', true);
+    }
     try {
       await report.save();
       dispatch(success())
@@ -341,7 +351,7 @@ function getSleepPercent(data) {
   const totalSleepMilliseconds = moment.duration((lightSleep + remSleep + deepSleep) * 60 * 1000);
 
   return {
-    totalSleepTime: `${totalSleepMilliseconds.hours()} 时 ${totalSleepMilliseconds.minutes()} 分`,
+    totalSleepTime: `${totalSleepMilliseconds.hours()}H${totalSleepMilliseconds.minutes()}m`,
     sleepPercent: 100 - wakeTimePer,
   };
 }
@@ -359,7 +369,7 @@ function getSleepTime(data) {
     getUp: moment(end).format('HH:mm'),
     secStart: moment(sleepStageStart).format('HH:mm'),
     secEnd: moment(sleepStageEnd).format('HH:mm'),
-    totalRecord: `${totalMilliseconds.hours()}时${totalMilliseconds.minutes()}分`,
+    totalRecord: `${totalMilliseconds.hours()}H${totalMilliseconds.minutes()}m`,
     totalRecordTime: getSleepPercent(data).totalSleepTime,
     sleepEfficiency: getSleepPercent(data).sleepPercent,
   };

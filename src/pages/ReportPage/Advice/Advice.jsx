@@ -17,11 +17,11 @@ class Advice extends Component {
   handleChange = (e) => {
     var data = {};
     const { handleInputChange } = this.props
-   
+    // console.log(e.target.value);
       data = {
         [e.target.name]: e.target.value
     }
-    console.log(data);
+    // console.log(data)
     handleInputChange(data)
   }
 
@@ -34,7 +34,7 @@ class Advice extends Component {
           <span></span>
         </div>
         <div className="advice">
-          <TextArea rows={10} name="ahiAdvice" value={ adviceData.ahiAdvice } />
+          <TextArea rows={10} name="ahiAdvice" value={ adviceData.ahiAdvice } onChange={ this.handleChange } />
         </div>
       </div>
     );
@@ -63,7 +63,7 @@ const mapStateToProps = state => (
 const mapDispatchToProps = dispatch => (
   {
     handleInputChange(data){
-      dispatch(Creator.handleInputChange(data))
+      dispatch(Creator.handleInputChange(data,{}))
     }
   }
 );

@@ -77,7 +77,7 @@ const report = (state = DefaultState.report, action) => {
         data: action.payload.data,
         alreadyDecodedData: action.payload.alreadyDecodedData ? action.payload.alreadyDecodedData : state.alreadyDecodedData,
         waveData: action.payload.waveData,
-        edition: action.payload.data.customInfo || action.payload.data.idPatient?action.payload.data.idPatient.attributes:{},
+        edition: action.payload.data.customInfo || ( action.payload.data.idPatient?action.payload.data.idPatient.attributes:{} ),
         adviceData: action.payload.adviceData || {},
       };
     case TYPES.GET_REPORT_DATA_FAILED:
@@ -95,7 +95,8 @@ const report = (state = DefaultState.report, action) => {
       let data = action.data;
       return {
         ...state,
-        edition: { ...state.edition, ...data }
+        edition: data.edition?{ ...state.edition, ...data.edition }:{ ...state.edition },
+        adviceData: data.adviceData?{ ...state.adviceData, ...data.adviceData }:{ ...state.adviceData }
       };
     case TYPES.CANCEL_UPDATE:
       return {

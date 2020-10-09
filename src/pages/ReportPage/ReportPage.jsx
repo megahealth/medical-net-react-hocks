@@ -56,13 +56,15 @@ class ReportPage extends Component {
   saveUserEdit = () => {
     const { saveUpdate, report } = this.props;
     const { edition } = report;
-    saveUpdate(edition, this.id)
+    saveUpdate({adviceData:{},edition}, this.id)
 
     // console.log('wwwwwwwwwww',edition,this.id);
   }
 
   saveAdviceEdit = () => {
-    console.log(123);
+    const { saveUpdate, report } = this.props;
+    const { adviceData } = report;
+    saveUpdate({adviceData, edition:{}}, this.id)
   }
 
   render() {
@@ -80,7 +82,12 @@ class ReportPage extends Component {
                 shape="round"
                 icon={<LeftOutlined />}
                 size={size}
-                onClick={() => this.props.history.goBack()}
+                onClick={
+                  () => { 
+                    this.props.history.goBack(); 
+                    if(isEditting){this.exitEdit()}
+                  }
+                }
               >
                 {t('Back')}
               </Button>
@@ -146,7 +153,8 @@ ReportPage.propTypes = {
     error: PropTypes.bool,
     isEditting: PropTypes.bool,
     data: PropTypes.object,
-    edition: PropTypes.object
+    edition: PropTypes.object,
+    adviceData: PropTypes.object,
   }).isRequired,
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,

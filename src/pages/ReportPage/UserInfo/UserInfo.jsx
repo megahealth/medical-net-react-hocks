@@ -9,10 +9,23 @@ import Creator from '../../../actions/Creator';
 const { Title } = Typography;
 const { Option } = Select;
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
+var male, female, selectedGender
 
 class UserInfo extends Component {
-  componentDidMount() {
 
+  componentDidMount() {}
+
+  setGender = ()=>{
+    const { edition } = this.props
+    if(localStorage.getItem('language') === "en"){
+      male = 'M';
+      female = 'F';
+      selectedGender = edition.gender?((edition.gender === "男" || edition.gender === "M")?"M":"F"):"--";
+    }else{
+      male = '男';
+      female = '女';
+      selectedGender = edition.gender?((edition.gender === "男" || edition.gender === "M")?"男":"女"):"--";
+    }
   }
 
   getBMI() {
@@ -40,6 +53,8 @@ class UserInfo extends Component {
     handleInputChange(data)
   }
   render() {
+    this.setGender()
+    console.log(selectedGender);
     const { t, isEditting, edition } = this.props;
     return (
       <div className="block">
@@ -59,11 +74,11 @@ class UserInfo extends Component {
             <span>
               {/* {edition.gender === "M" ? "男" : "女" || '--'} */}
               {isEditting ? <div>
-                <Select name="gender" showArrow={false} value={edition.gender === "M" ? "男" : "女" || '--'} style={{ width: 130 }} onChange={this.handleChange}>
-                  <Option value="男">男</Option>
-                  <Option value="女">女</Option>
+                <Select name="gender" showArrow={false} value={selectedGender} onChange={this.handleChange}>
+                <Option value={ male }>{ male }</Option>
+                <Option value={ female }>{ female }</Option>
                 </Select>
-              </div> : (edition.gender === "M" ? "男" : (edition.gender === "F" ? "女" : edition.gender) || '--')}
+              </div> : (selectedGender)}
             </span>
             <span>{t('User Gender')}</span>
           </span>
@@ -124,7 +139,7 @@ const mapStateToProps = state => (
 const mapDispatchToProps = dispatch => (
   {
     handleInputChange(data){
-      dispatch(Creator.handleInputChange(data))
+      dispatch(Creator.handleInputChange({},data))
     }
   }
 );

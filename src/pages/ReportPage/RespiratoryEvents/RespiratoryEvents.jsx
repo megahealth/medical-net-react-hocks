@@ -25,7 +25,7 @@ class RespiratoryEvents extends Component {
       t2: 0,
       t3: 0
     };
-    if (breathList.length !== 0) {
+    if (breathList.length != 0) {
       for (let i = 0; i < breathList.length; i++) {
         const thisValue = breathList[i][1];
         if (max < thisValue) {
