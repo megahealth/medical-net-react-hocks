@@ -90,7 +90,7 @@ class BreathWave extends Component {
     let breathEventChartData = [];
     let areas = [];
 
-    const data = breathList && breathEvent;
+    const data = (breathList && breathEvent) || [];
 
     for (let i = 0; i < data.length; i++) {
       const breathEventTime = new Date(data[i][0] * 1000);
@@ -591,7 +591,7 @@ const mapStateToProps = state => (
     prArr: state.report.alreadyDecodedData.prArr,
     waveData: state.report.waveData,
     bodyMoveListInfo: state.report.data.bodyMoveListInfo,
-    bodyMoveList: state.report.data.bodyMoveList,
+    bodyMoveList: state.report.data.bodyMoveList?state.report.data.bodyMoveList:[],
   }
 );
 

@@ -77,7 +77,7 @@ const report = (state = DefaultState.report, action) => {
         data: action.payload.data,
         alreadyDecodedData: action.payload.alreadyDecodedData ? action.payload.alreadyDecodedData : state.alreadyDecodedData,
         waveData: action.payload.waveData,
-        edition: action.payload.data.customInfo || ( action.payload.data.idPatient?action.payload.data.idPatient.attributes:{} ),
+        edition: action.payload.data.customInfo || ( action.payload.data.idPatient?action.payload.data.idPatient.attributes:action.payload.data.patientInfo ),
         adviceData: action.payload.adviceData || {},
       };
     case TYPES.GET_REPORT_DATA_FAILED:

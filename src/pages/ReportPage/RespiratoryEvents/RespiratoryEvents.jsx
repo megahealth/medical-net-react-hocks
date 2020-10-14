@@ -70,7 +70,7 @@ class RespiratoryEvents extends Component {
     const { BECCnt, BECnt, BEMCnt, BEMaxlen, BEMaxlentime, BEMeanlen, BEOHCnt, BETotalTime, BETotalrate, SPOVER, t } = this.props;
     const events = {};
     if (SPOVER === 'NONE') {
-      console.log(this.countRespiratoryEvents());
+      // console.log(this.countRespiratoryEvents());
       events.BEMeanlen = this.countRespiratoryEvents().BEMeanlen;
       events.BEMaxlen = this.countRespiratoryEvents().BEMaxlen;
       events.BEMaxlentime = this.countRespiratoryEvents().BEMaxlentime;

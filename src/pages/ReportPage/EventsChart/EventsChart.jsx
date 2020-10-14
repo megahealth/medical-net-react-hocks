@@ -20,7 +20,7 @@ class EventsChart extends Component {
     const sleepStageEnd = startSleepTime + endStatusTimeMinute * 60 * 1000;
 
     const breathEventChartData = [];
-    const data = breathList && breathEvent;
+    const data = (breathList && breathEvent) || [];
     for (let i = 0; i < data.length; i++) {
       const breathEventTime = new Date(data[i][0] * 1000);
       const breathEventData = data[i][1];

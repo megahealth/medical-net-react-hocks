@@ -54,7 +54,6 @@ class UserInfo extends Component {
   }
   render() {
     this.setGender()
-    console.log(selectedGender);
     const { t, isEditting, edition } = this.props;
     return (
       <div className="block">
@@ -99,7 +98,7 @@ class UserInfo extends Component {
               {/* {edition.height + 'cm' || '--'} */}
               {isEditting ? <div>
                   <Input name="height" style={{ width: 130 }} value={(edition.height)} onChange={this.handleChange} />
-                </div> : (edition.height + 'cm' || '--')}
+                </div> : (edition.height ? (edition.height + 'cm') : '--')}
             </span>
             <span>{t('User Height')}</span>
           </span>
@@ -108,7 +107,7 @@ class UserInfo extends Component {
               {/* {edition.weight + 'Kg' || '--'} */}
               {isEditting ? <div>
                   <Input name="weight" style={{ width: 130 }} value={edition.weight} onChange={this.handleChange} />
-                </div> : (edition.weight + 'Kg' || '--')}
+                </div> : (edition.weight ? (edition.weight + 'Kg') : '--')}
             </span>
             <span>{t('User Weight')}</span>
           </span>

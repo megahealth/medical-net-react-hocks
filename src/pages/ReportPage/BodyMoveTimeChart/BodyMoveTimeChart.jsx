@@ -22,7 +22,7 @@ class BodyMoveTimeChart extends Component {
     const interval = bodyMoveListInfo && bodyMoveListInfo.interval;
 
     const bodyMoveTimeChartData = [];
-    const data = bodyMoveList;
+    const data = bodyMoveList?bodyMoveList:[];
     for (let i = 0; i < data.length; i++) {
       const bodyMoveTimeTime = new Date(start + i * interval * 1000);
       const bodyMoveTimeData = data[i][0];
