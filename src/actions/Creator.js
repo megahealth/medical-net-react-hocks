@@ -72,6 +72,7 @@ Creator.getAllReportsData = asyncActionFactory(
     if (limit) Reports.limit(limit);
     if (current) Reports.skip(limit * (current - 1));
     if (idBaseOrg) Reports.equalTo('idBaseOrg', idBaseOrg);
+    if (idBaseOrg.id === '5b14eb612f301e0038e08fba') {
       let idGroup = AV.Object.createWithoutData('Group', '5f605940e86fc14735ac3c5f');
       Reports.equalTo('idGroup', idGroup);
     }
