@@ -56,6 +56,8 @@ class ReportPage extends Component {
   saveUserEdit = () => {
     const { saveUpdate, report } = this.props;
     const { edition } = report;
+    console.log(report.edition);
+    console.log({adviceData:{},edition}, this.id);
     saveUpdate({adviceData:{},edition}, this.id)
 
     // console.log('wwwwwwwwwww',edition,this.id);
@@ -102,7 +104,7 @@ class ReportPage extends Component {
                   </div>
                   :
                   <div className="hide-print option-btns">
-                    <Button shape="round" icon={<SaveOutlined />} size={size} onClick={ this.saveAdviceEdit }> {t('Save')} </Button>
+                    {/* <Button shape="round" icon={<SaveOutlined />} size={size} onClick={ this.saveAdviceEdit }> {t('Save')} </Button> */}
                     <Button shape="round" icon={<PrinterOutlined />} size={size}> {t('Print')} </Button>
                     <Button shape="round" icon={<EditOutlined />} size={size} onClick={changeEditStatus} > {t('Edit')} </Button>
                   </div>

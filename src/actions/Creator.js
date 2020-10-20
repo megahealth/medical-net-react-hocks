@@ -236,12 +236,12 @@ Creator.saveUpdate = asyncActionFactory(
   (getting, success, fail, data, id) => async (dispatch) => {
     dispatch(getting())
     // console.log(data);
-    const { adviceData, editData } = data
+    const { adviceData, edition } = data
 
 
     const report = AV.Object.createWithoutData('Reports', id);
-    if (editData) {
-      const { name, age, gender, height, weight } = editData;
+    if (edition) {
+      const { name, age, gender, height, weight } = edition;
       const userInfo = {
         name, age, gender, height, weight
       }

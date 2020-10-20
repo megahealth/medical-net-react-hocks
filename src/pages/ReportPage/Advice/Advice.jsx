@@ -9,10 +9,13 @@ import './Advice.scss';
 
 const { Title } = Typography;
 const { TextArea } = Input;
-
+var str;
 class Advice extends Component {
-  componentDidMount() {
-
+  componentWillMount() {
+    str = '';
+    const { adviceData } = this.props;
+    str += this.getSleepAdvice(adviceData);
+    str += this.getAhiAdvice()
   }
   handleChange = (e) => {
     var data = {};
@@ -27,16 +30,18 @@ class Advice extends Component {
 
   getAhiGrade = (ahi) => {
     var ahiGrade;
-    if (ahi == -1) {
-      ahiGrade = 0;
-    } else if (ahi < 5) {
-      ahiGrade = 1;
-    } else if (ahi >= 5 && ahi < 15) {
-      ahiGrade = 2;
-    } else if (ahi >= 15 && ahi < 30) {
-      ahiGrade = 3;
-    } else {
-      ahiGrade = 4;
+    if(ahi){
+      if (ahi == -1) {
+        ahiGrade = 0;
+      } else if (ahi < 5) {
+        ahiGrade = 1;
+      } else if (ahi >= 5 && ahi < 15) {
+        ahiGrade = 2;
+      } else if (ahi >= 15 && ahi < 30) {
+        ahiGrade = 3;
+      } else {
+        ahiGrade = 4;
+      }
     }
     return ahiGrade;
   }
@@ -79,12 +84,14 @@ class Advice extends Component {
         '3.排除上呼吸道病变后，转睡眠呼吸专科就诊，经压力滴定测试后，无论是否手术均建议夜间无创正压通气治疗；'+'\n'+
         '4.饮食宜清淡，戒烟、戒酒；适当运动，增强体质，控制BMI（身体质量指数）在18.5-24；使用右侧卧位睡姿入眠；慎用或停用镇静、安眠药物；'+'\n'+
         '5.最好连续的睡眠监测，治疗3-6月后进行门诊复诊；';
+      default:
+        return ''
     }
   }
   getSleepAdvice = (adviceData) => {
     var ahiGrade = this.getAhiGrade(adviceData.ahi);
     var spoGrade = this.getSpoGrade(adviceData.spo2Min);
-    var spo = `夜间平均血氧饱和度为${adviceData.spo2Avg}%，最低血氧饱和度为${adviceData.spo2Min}%`;
+    var spo = `夜间平均血氧饱和度为${adviceData.spo2Avg||'--'}%，最低血氧饱和度为${adviceData.spo2Min||'--'}%`;
     var breathe = '';
     switch (ahiGrade) {
       case 1:
@@ -116,21 +123,18 @@ class Advice extends Component {
     }
     const sleepAdvice = 
     `睡眠分期分析：
-    您的总睡眠时间为${adviceData.totalRecordTime}，睡眠效率(TST/TIB)为${adviceData.sleepEfficiency}%，其中深睡期占比${adviceData.deepSleepPercent}%，浅睡期占比${adviceData.lightSleepPercent}%，快速眼动期占比${adviceData.remSleepPercent}%。`
+    您的总睡眠时间为${adviceData.totalRecordTime||'--'}，睡眠效率(TST/TIB)为${adviceData.sleepEfficiency||'--'}%，其中深睡期占比${adviceData.deepSleepPercent||'--'}%，浅睡期占比${adviceData.lightSleepPercent||'--'}%，快速眼动期占比${adviceData.remSleepPercent||'--'}%。`
     +'\n'+
     `睡眠呼吸综述:
-    您的AHI指数为${adviceData.ahi}，${ breathe },${ spo }`
-    +'\n'
+    您的AHI指数为${adviceData.ahi||'--'}，${ breathe?breathe+',':'' }${ spo }`
+    +'\n'+
+    '建议：'+'\n'
     ;
     return sleepAdvice;
   }
 
   render() {
     const { t, adviceData } = this.props;
-    var str = "";
-    str += this.getSleepAdvice(adviceData);
-    str += adviceData.ahiAdvice?adviceData.ahiAdvice:this.getAhiAdvice()
-
     return (
       <div className="block">
         <Title level={2}>{t('Sleep Evaluation Recommendations')}</Title>
@@ -138,7 +142,7 @@ class Advice extends Component {
           <span></span>
         </div>
         <div className="advice">
-          <TextArea rows={10} name="ahiAdvice" value={str} onChange={ this.handleChange } />
+          <TextArea rows={10} name="ahiAdvice" value={adviceData.ahiAdvice?adviceData.ahiAdvice:str} onChange={ this.handleChange } />
         </div>
       </div>
     );

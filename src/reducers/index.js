@@ -101,7 +101,7 @@ const report = (state = DefaultState.report, action) => {
     case TYPES.CANCEL_UPDATE:
       return {
         ...state,
-        edition: state.data.idPatient.attributes
+        edition: state.data.idPatient?state.data.idPatient.attributes:state.data.patientInfo
       }
     default:
       return state;
