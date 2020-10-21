@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { Skeleton, Button } from 'antd';
 import {
   LeftOutlined,
-  // EditOutlined,
-  // PrinterOutlined,
-  // SaveOutlined
+  EditOutlined,
+  PrinterOutlined,
+  SaveOutlined,
+  CloseSquareOutlined
 } from '@ant-design/icons';
 import { withTranslation } from 'react-i18next';
 import './ReportPage.scss';
@@ -46,8 +47,32 @@ class ReportPage extends Component {
     getReportData(this.id);
   }
 
+  exitEdit = () => {
+    const { cancelUpdate, changeEditStatus } = this.props
+    cancelUpdate()
+    changeEditStatus()
+  }
+
+  saveUserEdit = () => {
+    const { saveUpdate, report } = this.props;
+    const { edition } = report;
+    console.log(report.edition);
+    console.log({adviceData:{},edition}, this.id);
+    saveUpdate({adviceData:{},edition}, this.id)
+
+    // console.log('wwwwwwwwwww',edition,this.id);
+  }
+
+  saveAdviceEdit = () => {
+    const { saveUpdate, report } = this.props;
+    const { adviceData } = report;
+    saveUpdate({adviceData, edition:{}}, this.id)
+  }
+
   render() {
-    const { report, t } = this.props;
+    const { report, t, changeEditStatus } = this.props;
+    const { isEditting } = report
+
     const { size } = this.state;
 
     return (
@@ -59,16 +84,35 @@ class ReportPage extends Component {
                 shape="round"
                 icon={<LeftOutlined />}
                 size={size}
-                onClick={() => this.props.history.goBack()}
+                onClick={
+                  () => { 
+                    this.props.history.goBack(); 
+                    if(isEditting){this.exitEdit()}
+                  }
+                }
               >
-                {t('Back')} 
+                {t('Back')}
               </Button>
             </div>
-            {/* <div className="right">
-              <Button shape="round" icon={<EditOutlined />} size={size}> {t('Edit')} </Button>
+            <div className="right">
+              {
+                isEditting
+                  ?
+                  <div className="hide-print option-btns">
+                    <Button shape="round" icon={<SaveOutlined />} size={size} onClick={ this.saveUserEdit }> {t('Save')} </Button>
+                    <Button shape="round" icon={<CloseSquareOutlined />} size={size}  onClick={this.exitEdit} > {t('Exit')} </Button>
+                  </div>
+                  :
+                  <div className="hide-print option-btns">
+                    {/* <Button shape="round" icon={<SaveOutlined />} size={size} onClick={ this.saveAdviceEdit }> {t('Save')} </Button> */}
+                    <Button shape="round" icon={<PrinterOutlined />} size={size}> {t('Print')} </Button>
+                    <Button shape="round" icon={<EditOutlined />} size={size} onClick={changeEditStatus} > {t('Edit')} </Button>
+                  </div>
+              }
+              {/* <Button shape="round" icon={<EditOutlined />} size={size} onClick={changeEditStatus} > {t('Edit')} </Button>
               <Button shape="round" icon={<SaveOutlined />} size={size}> {t('Save')} </Button>
-              <Button shape="round" icon={<PrinterOutlined />} size={size}> {t('Print')} </Button>
-            </div> */}
+              <Button shape="round" icon={<PrinterOutlined />} size={size}> {t('Print')} </Button> */}
+            </div>
           </div>
           <Skeleton paragraph={{ rows: 15 }} loading={report.loading}>
             <div className="print-page">
@@ -109,11 +153,17 @@ ReportPage.propTypes = {
   report: PropTypes.shape({
     loading: PropTypes.bool,
     error: PropTypes.bool,
-    data: PropTypes.object
+    isEditting: PropTypes.bool,
+    data: PropTypes.object,
+    edition: PropTypes.object,
+    adviceData: PropTypes.object,
   }).isRequired,
   match: PropTypes.object.isRequired,
-  getReportData: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  saveUpdate: PropTypes.func.isRequired,
+  cancelUpdate: PropTypes.func.isRequired,
+  getReportData: PropTypes.func.isRequired,
+  changeEditStatus: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
@@ -126,6 +176,15 @@ const mapDispatchToProps = dispatch => ({
   getReportData(id) {
     dispatch(Creator.getReportData(id));
   },
+  changeEditStatus() {
+    dispatch(Creator.changeEditStatus());
+  },
+  cancelUpdate() {
+    dispatch(Creator.cancelUpdate())
+  },
+  saveUpdate(data,id) {
+    dispatch(Creator.saveUpdate(data,id))
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(ReportPage));

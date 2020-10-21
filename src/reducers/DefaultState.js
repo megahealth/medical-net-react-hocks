@@ -125,7 +125,13 @@ const DefaultState = {
       spo2Less95TimePercent: 0,
       timeStart: 0,
     },
-    waveData: {}
+    waveData: {},
+
+    
+    isEditting: false,
+    edition: {},
+    adviceData: {},
+
   }
 };
 

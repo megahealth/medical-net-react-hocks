@@ -75,8 +75,10 @@ const report = (state = DefaultState.report, action) => {
         ...state,
         loading: false,
         data: action.payload.data,
-        alreadyDecodedData: action.payload.alreadyDecodedData,
-        waveData: action.payload.waveData
+        alreadyDecodedData: action.payload.alreadyDecodedData ? action.payload.alreadyDecodedData : state.alreadyDecodedData,
+        waveData: action.payload.waveData,
+        edition: action.payload.data.customInfo || ( action.payload.data.idPatient?action.payload.data.idPatient.attributes:action.payload.data.patientInfo ),
+        adviceData: action.payload.adviceData || {},
       };
     case TYPES.GET_REPORT_DATA_FAILED:
       return {
@@ -84,6 +86,23 @@ const report = (state = DefaultState.report, action) => {
         loading: false,
         error: true
       };
+    case TYPES.CHANGE_EDITE_STATUS:
+      return {
+        ...state,
+        isEditting: !state.isEditting
+      }
+    case TYPES.HANDLE_INPUT_CHANGE:
+      let data = action.data;
+      return {
+        ...state,
+        edition: data.edition?{ ...state.edition, ...data.edition }:{ ...state.edition },
+        adviceData: data.adviceData?{ ...state.adviceData, ...data.adviceData }:{ ...state.adviceData }
+      };
+    case TYPES.CANCEL_UPDATE:
+      return {
+        ...state,
+        edition: state.data.idPatient?state.data.idPatient.attributes:state.data.patientInfo
+      }
     default:
       return state;
   }

@@ -37,10 +37,10 @@ class SleepStage extends Component {
       }
     }
 
-    const remSleepPer = parseFloat((remSleep * 100 / all).toFixed(1));
-    const lightSleepPer = parseFloat((lightSleep * 100 / all).toFixed(1));
-    const deepSleepPer = parseFloat((deepSleep * 100 / all).toFixed(1));
-    const wakeTimePer = parseFloat((wakeTime * 100 / all).toFixed(1));
+    const remSleepPer = parseFloat((remSleep * 100 / all).toFixed(1)) || '--';
+    const lightSleepPer = parseFloat((lightSleep * 100 / all).toFixed(1)) || '--';
+    const deepSleepPer = parseFloat((deepSleep * 100 / all).toFixed(1)) || '--';
+    const wakeTimePer = parseFloat((wakeTime * 100 / all).toFixed(1)) || '--';
 
     return {
       wakeTime,

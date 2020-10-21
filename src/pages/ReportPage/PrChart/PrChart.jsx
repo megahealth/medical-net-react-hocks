@@ -18,7 +18,7 @@ class PrChart extends Component {
     } = this.props;
     const len = prArr.length;
 
-    if (len > 0) {
+    if (len >= 0) {
       const sleepStageStart = startSleepTime + startStatusTimeMinute * 60 * 1000;
       const sleepStageEnd = startSleepTime + endStatusTimeMinute * 60 * 1000;
       const realStart = 1000 * spoStart;

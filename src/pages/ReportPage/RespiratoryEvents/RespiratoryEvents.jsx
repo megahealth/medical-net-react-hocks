@@ -12,7 +12,7 @@ const { Title } = Typography;
 class RespiratoryEvents extends Component {
 
   countRespiratoryEvents() {
-    const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute, breathList } = this.props;
+    const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute, breathList, BEMeanlen, BETotalrate } = this.props;
     const sleepStageStart = startSleepTime + (startStatusTimeMinute === -1 ? 0 : startStatusTimeMinute) * 60 * 1000;
     const hasBreathType = breathList.length > 0 && breathList[0].length > 4;
     let max = 0;
@@ -25,7 +25,7 @@ class RespiratoryEvents extends Component {
       t2: 0,
       t3: 0
     };
-    if (breathList.length !== 0) {
+    if (breathList.length != 0) {
       for (let i = 0; i < breathList.length; i++) {
         const thisValue = breathList[i][1];
         if (max < thisValue) {
@@ -53,9 +53,8 @@ class RespiratoryEvents extends Component {
         }
       }
     }
-
     return {
-      BEMeanlen: parseInt((total / breathList.length).toFixed(0), 10),
+      BEMeanlen: breathList.length!=0?parseInt((total / breathList.length).toFixed(0), 10):BEMeanlen,
       BEMaxlen: max,
       BEMaxlentime: sleepStageStart + maxDuration * 1000,
       BEOHCnt: breathTypeEnt.t2 + breathTypeEnt.t3,
@@ -63,7 +62,7 @@ class RespiratoryEvents extends Component {
       BEMCnt: breathTypeEnt.t0,
       BECnt: breathList.length,
       BETotalTime: parseInt((total / 60).toFixed(0), 10),
-      BETotalrate: parseFloat((total / 60 / (endStatusTimeMinute - startStatusTimeMinute) * 100).toFixed(1), 10),
+      BETotalrate: total!=0?parseFloat((total / 60 / (endStatusTimeMinute - startStatusTimeMinute) * 100).toFixed(1), 10):BETotalrate,
     };
   }
 
@@ -71,7 +70,7 @@ class RespiratoryEvents extends Component {
     const { BECCnt, BECnt, BEMCnt, BEMaxlen, BEMaxlentime, BEMeanlen, BEOHCnt, BETotalTime, BETotalrate, SPOVER, t } = this.props;
     const events = {};
     if (SPOVER === 'NONE') {
-      console.log(this.countRespiratoryEvents());
+      // console.log(this.countRespiratoryEvents());
       events.BEMeanlen = this.countRespiratoryEvents().BEMeanlen;
       events.BEMaxlen = this.countRespiratoryEvents().BEMaxlen;
       events.BEMaxlentime = this.countRespiratoryEvents().BEMaxlentime;

@@ -89,7 +89,9 @@ const resources = {
       "Breath Wave Trend": "Breath Wave Trend",
       "Chart Ratio": "Ratio",
       "Sleep Body Movement Ratio": "Sleep Body Movement Ratio",
-      "Body Movement": "Body Movement"
+      "Body Movement": "Body Movement",
+      "Exit": "Exit"
+
     }
   },
   'zh-CN': {
@@ -178,7 +180,8 @@ const resources = {
       "Breath Wave Trend": "呼吸波趋势图",
       "Chart Ratio": "占比",
       "Sleep Body Movement Ratio": "睡眠体动时长",
-      "Body Movement": "体动"
+      "Body Movement": "体动",
+      "Exit": "取消"
     }
   }
 };
@@ -188,7 +191,7 @@ i18n
   .init({
     resources,
     // lng: navigator.language,
-    lng: 'en',
+    lng: localStorage.getItem('language')?localStorage.getItem('language'):'en',
 
     keySeparator: false, // we do not use keys in form messages.welcome
 

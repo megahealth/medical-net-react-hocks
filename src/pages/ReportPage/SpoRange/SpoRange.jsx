@@ -22,7 +22,6 @@ class SpoRange extends Component {
       spo2Less80Time,
       t
     } = this.props;
-
     return (
       <div className="block">
         <Title level={2}>{t('SpO2')}</Title>

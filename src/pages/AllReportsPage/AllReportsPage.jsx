@@ -10,8 +10,8 @@ import { Translation } from 'react-i18next';
 import Creator from '../../actions/Creator';
 import Header from '../../components/Header/Header';
 // import TransComponent from './TransComponent'
-// import Sidebar from '../../components/Sidebar/Sidebar';
-// import SidebarTabs from '../../common/SidebarTabs';
+import Sidebar from '../../components/Sidebar/Sidebar';
+import SidebarTabs from '../../common/SidebarTabs';
 import './AllReportsPage.scss';
 
 const columns = [
@@ -67,7 +67,7 @@ class AllReportsPage extends Component {
       <div className="container">
         <Header />
         <div className="content">
-          {/* <Sidebar tabs={SidebarTabs} /> */}
+          <Sidebar tabs={SidebarTabs} />
           {
             allReports.loading
             ? <div className="content-loading"><Skeleton /></div>
