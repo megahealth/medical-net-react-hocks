@@ -14,7 +14,7 @@ import 'antd/dist/antd.css';
 import 'antd-mobile/dist/antd-mobile.css';
 
 import LoginPage from './pages/LoginPage/LoginPage';
-import AllReportsPage from './pages/AllReportsPage/AllReportsPage';
+import ReportListPage from './pages/ReportListPage/ReportListPage';
 import ValidReportsPage from './pages/ValidReportsPage/ValidReportsPage';
 import DevicePage from './pages/DevicePage/DevicePage';
 import DeviceDetailPage from './pages/DeviceDetailPage/DeviceDetailPage';
@@ -30,7 +30,7 @@ const App = () => (
   <div className="app-container">
     <Switch>
       <Route path="/" exact component={LoginPage}></Route>
-      <Route path="/allreports" exact component={AllReportsPage}></Route>
+      <Route path="/allreports" exact component={ReportListPage}></Route>
       <Route path="/validreports" exact component={ValidReportsPage}></Route>
       <Route path="/device" exact component={DevicePage}></Route>
       <Route path="/devicedetail" exact component={DeviceDetailPage}></Route>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Skeleton, Button } from 'antd';
+import { Spin, Button } from 'antd';
 import {
   LeftOutlined,
   // EditOutlined,
@@ -70,7 +70,7 @@ class ReportPage extends Component {
               <Button shape="round" icon={<PrinterOutlined />} size={size}> {t('Print')} </Button>
             </div> */}
           </div>
-          <Skeleton paragraph={{ rows: 15 }} loading={report.loading}>
+          <Spin spinning={report.loading} size="large" tip="数据处理中...">
             <div className="print-page">
               <ReportHeader></ReportHeader>
               <UserInfo></UserInfo>
@@ -98,7 +98,7 @@ class ReportPage extends Component {
             <div className="print-page">
               <BreathWave></BreathWave>
             </div>
-          </Skeleton>
+          </Spin>
         </div>
       </div>
     );

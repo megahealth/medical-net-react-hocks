@@ -12,7 +12,7 @@ import Header from '../../components/Header/Header';
 // import TransComponent from './TransComponent'
 // import Sidebar from '../../components/Sidebar/Sidebar';
 // import SidebarTabs from '../../common/SidebarTabs';
-import './AllReportsPage.scss';
+import './ReportListPage.scss';
 
 const columns = [
   {
@@ -50,7 +50,7 @@ const columns = [
   }
 ];
 
-class AllReportsPage extends Component {
+class ReportListPage extends Component {
   componentDidMount() {
     const { allReports, getAllReportsData } = this.props;
     getAllReportsData(10, 1, allReports.filter);
@@ -68,30 +68,28 @@ class AllReportsPage extends Component {
         <Header />
         <div className="content">
           {/* <Sidebar tabs={SidebarTabs} /> */}
-          {
-            allReports.loading
-            ? <div className="content-loading"><Skeleton /></div>
-            : <div className="content-r">
-              <div className="content-r-c">
-                <Table
-                  onRow={item => {
-                    return { onClick: this.toReport.bind(this, item.id) };
-                  }}
-                  columns={columns}
-                  dataSource={allReports.reportsData}
-                  pagination={allReports.pagination}
-                  onChange={res => getAllReportsData(10, res.current, allReports.filter)}
-                ></Table>
-              </div>
+          <div className="content-r">
+            <div className="content-r-c">
+              <Table
+                onRow={item => {
+                  return { onClick: this.toReport.bind(this, item.id) };
+                }}
+                columns={columns}
+                dataSource={allReports.reportsData}
+                pagination={allReports.pagination}
+                loading={allReports.loading}
+                onChange={res => getAllReportsData(10, res.current, allReports.filter)}
+              ></Table>
             </div>
-          }
+          </div>
+          
         </div>
       </div>
     );
   }
 }
 
-AllReportsPage.propTypes = {
+ReportListPage.propTypes = {
   allReports: PropTypes.shape({
     loading: PropTypes.bool,
     error: PropTypes.bool,
@@ -114,4 +112,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AllReportsPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ReportListPage);

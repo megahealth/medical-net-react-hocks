@@ -137,7 +137,7 @@ function decodeRingData(id, ringData, tempSleepId, fileid) {
   return new Promise((resolve, reject) => {
     let data = {};
     if(tempSleepId && fileid) {
-      const ringDataUrl = 'https://webapi.megahealth.cn/webApi/ringData?fileId=' + fileid + '&tempSleepId=' + tempSleepId;
+      const ringDataUrl = 'https://raw.megahealth.cn/webApi/ringData?fileId=' + fileid + '&tempSleepId=' + tempSleepId;
       axios.get(ringDataUrl).then(res => {
         if(res.data.code===1){
           resolve(res.data.data)
