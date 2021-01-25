@@ -19,6 +19,7 @@ import ValidReportsPage from './pages/ValidReportsPage/ValidReportsPage';
 import DevicePage from './pages/DevicePage/DevicePage';
 import DeviceDetailPage from './pages/DeviceDetailPage/DeviceDetailPage';
 import ReportPage from './pages/ReportPage/ReportPage';
+import MyApp from './app'
 
 AV.applicationId = undefined;
 AV.init({
@@ -30,10 +31,11 @@ const App = () => (
   <div className="app-container">
     <Switch>
       <Route path="/" exact component={LoginPage}></Route>
-      <Route path="/allreports" exact component={AllReportsPage}></Route>
+      <Route path='/app' component={MyApp}></Route>
+      {/* <Route path="/allreports" exact component={AllReportsPage}></Route> */}
       <Route path="/validreports" exact component={ValidReportsPage}></Route>
       <Route path="/device" exact component={DevicePage}></Route>
-      <Route path="/devicedetail" exact component={DeviceDetailPage}></Route>
+      {/* <Route path="/devicedetail/:id" exact component={DeviceDetailPage}></Route> */}
       <Route path="/report/:id" exact component={ReportPage}></Route>
     </Switch>
   </div>

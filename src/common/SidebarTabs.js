@@ -5,9 +5,10 @@ import DEVICE_DETAIL from '../assets/device-detail.png';
 
 const SidebarTabs = [
   {
-    path: '/allreports',
+    path: '/app/allreports',
     icon: ALL_REPORTS,
-    name: '报告列表'
+    name: '报告列表',
+    role:[5,6]
   },
   // {
   //   path: '/validreports',
@@ -15,14 +16,16 @@ const SidebarTabs = [
   //   name: '有效报告'
   // },
   {
-    path: '/device',
+    path: '/app/device',
     icon: DEVICE,
-    name: '设备状态'
+    name: '设备状态',
+    role:[5]
   },
   {
-    path: '/devicedetail',
+    path: '/app/devicedetail',
     icon: DEVICE_DETAIL,
-    name: '设备管理'
+    name: '设备管理',
+    role:[6]
   }
 ];
 

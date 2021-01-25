@@ -55,7 +55,7 @@ class LoginPage extends Component {
 
     AV.User.logIn(username, password).then(user => {
       const history = createHashHistory();
-      history.push('/allreports');
+      history.push('/app');
     }, err => {
       // 登录失败（可能是密码错误）
       let errMsg = t('Login failed');
