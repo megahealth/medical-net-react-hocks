@@ -24,6 +24,21 @@ const DefaultState = {
       endDate: null
     }
   },
+  allDevice:{
+    loading:true,
+    error:false,
+    deviceList:[],
+    pagination:{
+      current:1,
+      pageSize:10,
+      total:0,
+    }
+  },
+  deviceDetail:{
+    deviceId:'',
+    device:{},
+    ringArr:[],
+  },
   report: {
     loading: true,
     error: false,

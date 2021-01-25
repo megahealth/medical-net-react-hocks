@@ -27,3 +27,11 @@ export const SAVE_UPDATE_FAILED = '保存修改报告失败';
 export const CHANGE_EDITE_STATUS = '改变编辑状态';
 export const HANDLE_INPUT_CHANGE = '改变Input的值';
 export const CANCEL_UPDATE = '取消编辑';
+
+export const GET_ALL_DEVICE_DATA = '获取全部设备';
+export const GET_ALL_DEVICE_DATA_SUCCESS = '获取全部设备成功';
+export const GET_ALL_DEVICE_DATA_FAILED = '获取全部设备失败';
+
+export const GET_DEVICE_DETAIL_DATA = '获取设备详情';
+export const GET_DEVICE_DETAIL_SUCCESS = '获取设备详情成功';
+export const GET_DEVICE_DETAIL_FAILED = '获取设备详情失败';

@@ -274,6 +274,119 @@ Creator.saveUpdate = asyncActionFactory(
   }
 )
 
+// 获取设备列表
+Creator.getAllDevice = asyncActionFactory(
+  ['GET_ALL_DEVICE_DATA', 'GET_ALL_DEVICE_DATA_SUCCESS', 'GET_ALL_DEVICE_DATA_FAILED'],
+  (getting, success, fail, pagination) => async (dispatch) => {
+    dispatch(getting());
+    const { pageSize, current } = pagination;
+    const user = AV.User.current();
+    const roleType = user.attributes.roleType;
+    var DeviceQuery = new AV.Query('Device');
+    DeviceQuery.select(["active", "belongTo", "boundDevices", "deviceSN", "idBaseOrg", "idBoundDevice", "idDevice", "idPatient", "isAutoUpdateRing", "isAutoUpdate", "ledOnTime", "localIP", "modeType", "monitorStatus", "order", "period", "rawDataUpload", "reportTitle", "ringRealtime", "ringStatus", "romVersion", "sleepStatus", "status", "versionNO", "workStatus", "wifiName"]);
+    DeviceQuery.include("idPatient", "idBoundDevice", "idBaseOrg");
+    var innerQuery1 = new AV.Query("BaseOrganizations");
+    if (roleType == 5) {
+      let count,deviceLists,deviceList;
+      innerQuery1.equalTo("type", 'ZGSMZX');
+      innerQuery1.limit(1000);
+      DeviceQuery.matchesQuery('idBaseOrg', innerQuery1);
+      try {
+        count = await DeviceQuery.count();
+        pagination.total = count
+      } catch (error) {
+        dispatch(fail({ errorcode: error }));
+      }
+      
+      DeviceQuery.addDescending('createdAt');
+      DeviceQuery.limit(pageSize);
+      DeviceQuery.skip((current-1) * 10);
+      try {
+        deviceLists = await DeviceQuery.find();
+      } catch (error) {
+        dispatch(fail({ errorcode: error }));
+      }
+      deviceList = []
+      try {
+        deviceLists.forEach(item=>{
+          const device = item.attributes;
+          deviceList.push({
+            key:item.id,
+            idBaseOrg:device.idBaseOrg.id,
+            deviceSN:device.deviceSN,
+            versionNO:device.versionNO,
+            status:device.status,
+            period:device.period,
+          })
+        })
+      } catch (error) {
+        dispatch(fail({ errorcode: error }));
+      }
+      
+      try {
+        const devices = await handleUser(deviceList);
+        dispatch(success({ pagination:pagination, deviceList:devices }));
+      } catch (error) {
+        dispatch(fail({ errorcode: error }));
+      }
+      
+    }
+})
+
+// 获取设备详情
+
+Creator.getDeviceDetail = asyncActionFactory(
+  ['GET_DEVICE_DETAIL_DATA','GET_DEVICE_DETAIL_SUCCESS','GET_DEVICE_DETAIL_FAILED'],
+  (getting,success,fail,id) => async (dispatch) => {
+    dispatch(getting())
+    let count, ringArr;
+    const user = AV.User.current();
+    let res = []
+    const roleType = user.attributes.roleType
+    let { idBaseOrg } = user.attributes;
+    const queryDevice = new AV.Query('Device');
+    queryDevice.include('idPatient')
+    queryDevice.select(['deviceSN','period','modeType','versionNO','workStatus','monitorStatus','wifiName','idPatient','ledOnTime']);
+    if(roleType == 5){
+      try {
+        res = await queryDevice.get(id);
+      } catch (error) {
+        dispatch(fail({ errorcode: error }));
+      }
+    }else if(roleType == 6){
+      queryDevice.equalTo('idBaseOrg',idBaseOrg);
+      try {
+        res = await queryDevice.find()
+      } catch (error) {
+        dispatch(fail({ errorcode: error }));
+      }
+    }
+    const device = res[0] ? res[0].attributes : res.attributes;
+    const deviceId = res[0] ? res[0].id : res.id;
+    if(device){
+      // 查询报告数量
+      const queryReportsCount = new AV.Query('Reports');
+      const idDevice = new AV.Object.createWithoutData('Device',deviceId);
+      queryReportsCount.equalTo('idDevice',idDevice);
+      // 查询戒指列表
+      const queryRing = new AV.Query('BoundDevice');
+      queryRing.equalTo('mPlusSn',device.deviceSN);
+      try {
+        count = await queryReportsCount.count();
+        device.count = count;
+        ringArr = await queryRing.find();
+      } catch (error) {
+        dispatch(fail({ errorcode: error }));
+      }
+      dispatch(success({
+        deviceId:deviceId,
+        device:device,
+        ringArr:_parseRingInfo(ringArr)
+      }))
+    }
+  }
+)
+
 // 处理报告数据成养老版editData格式
 function DataToEditData(data, alreadyDecodedData) {
   var obj = {}
@@ -398,4 +511,77 @@ function getSleepTime(data) {
   };
 }
 
+// 设备列表需要所属账号
+async function handleUser (datas){
+  // 设备归属账号\根据idBaseOrg查询User表中username
+  var _UserQuery1 = new AV.Query('_User');
+  var orgPointer1 = AV.Object.createWithoutData('BaseOrganizations', (datas[0] && datas[0].idBaseOrg) || '1');
+  _UserQuery1.equalTo('idBaseOrg', orgPointer1);
+
+  var _UserQuery2 = new AV.Query('_User');
+  var orgPointer2 = AV.Object.createWithoutData('BaseOrganizations', (datas[1] && datas[1].idBaseOrg) || '1');
+  _UserQuery2.equalTo('idBaseOrg', orgPointer2);
+
+  var _UserQuery3 = new AV.Query('_User');
+  var orgPointer3 = AV.Object.createWithoutData('BaseOrganizations', (datas[2] && datas[2].idBaseOrg) || '1');
+  _UserQuery3.equalTo('idBaseOrg', orgPointer3);
+
+  var _UserQuery4 = new AV.Query('_User');
+  var orgPointer4 = AV.Object.createWithoutData('BaseOrganizations', (datas[3] && datas[3].idBaseOrg) || '1');
+  _UserQuery4.equalTo('idBaseOrg', orgPointer4);
+
+  var _UserQuery5 = new AV.Query('_User');
+  var orgPointer5 = AV.Object.createWithoutData('BaseOrganizations', (datas[4] && datas[4].idBaseOrg) || '1');
+  _UserQuery5.equalTo('idBaseOrg', orgPointer5);
+
+  var _UserQuery6 = new AV.Query('_User');
+  var orgPointer6 = AV.Object.createWithoutData('BaseOrganizations', datas[5] && datas[5].idBaseOrg || '1');
+  _UserQuery6.equalTo('idBaseOrg', orgPointer6);
+
+  var _UserQuery7 = new AV.Query('_User');
+  var orgPointer7 = AV.Object.createWithoutData('BaseOrganizations', datas[6] && datas[6].idBaseOrg || '1');
+  _UserQuery7.equalTo('idBaseOrg', orgPointer7);
+
+  var _UserQuery8 = new AV.Query('_User');
+  var orgPointer8 = AV.Object.createWithoutData('BaseOrganizations', datas[7] && datas[7].idBaseOrg || '1');
+  _UserQuery8.equalTo('idBaseOrg', orgPointer8);
+
+  var _UserQuery9 = new AV.Query('_User');
+  var orgPointer9 = AV.Object.createWithoutData('BaseOrganizations', datas[8] && datas[8].idBaseOrg || '1');
+  _UserQuery9.equalTo('idBaseOrg', orgPointer9);
+
+  var _UserQuery10 = new AV.Query('_User');
+  var orgPointer10 = AV.Object.createWithoutData('BaseOrganizations', datas[9] && datas[9].idBaseOrg || '1');
+  _UserQuery10.equalTo('idBaseOrg', orgPointer10);
+
+  var _UserQueryAll = AV.Query.or(_UserQuery1, _UserQuery2, _UserQuery3, _UserQuery4, _UserQuery5, _UserQuery6, _UserQuery7, _UserQuery8, _UserQuery9, _UserQuery10);
+  _UserQueryAll.include("idBaseOrg");
+  let userRes =  await _UserQueryAll.find();
+  for (var i = 0; i < userRes.length; i++) {
+    for(var j = 0; j < datas.length; j++){
+      if(userRes[i].get('idBaseOrg').id==datas[j].idBaseOrg){
+        let userId = userRes[i].id;
+        let hotelId = userRes[i].get('idBaseOrg').get('idOrganization');
+        let userName = userRes[i].get('username');
+        let nickName = userRes[i].get('name');
+        datas[j].userId = userId;
+        datas[j].hotelId = hotelId;
+        datas[j].userName = userName;
+        datas[j].nickName = nickName;
+      }
+    }
+  }
+  return datas;
+} 
+
+// 设备型号
+function _parseRingInfo(ringArr){
+  return ringArr.map(item=>{
+    const ringInfo = item.attributes;
+    var typeOfSN = ringInfo.sn.slice(0, 4);
+    var newTypeOfRing = typeOfSN == 'P11B' ? '陶瓷' : '金属';
+    item.attributes.typeOfSN = newTypeOfRing
+    return item
+  })
+}
 export default Creator;
