@@ -90,8 +90,39 @@ const resources = {
       "Chart Ratio": "Ratio",
       "Sleep Body Movement Ratio": "Sleep Body Movement Ratio",
       "Body Movement": "Body Movement",
-      "Exit": "Exit"
-
+      "Exit": "Exit",
+      "Report list": "Report list",
+      "Device list": "Device list",
+      "Device management": "Device management",
+      "SN": "SN",
+      "Device version": "Version",
+      "Device status": "Status",
+      "Monitor period": "Period",
+      "Account name": "Account",
+      "User nickname": "Nickname",
+      "Online": "Online",
+      "Monitoring": "Monitoring",
+      "Not online": "Not online",
+      "Mode": "Mode",
+      "Firmware version": "Version",
+      "Number of reports": "Reports",
+      "Device information": "Device information",
+      "Ring information": "Ring information",
+      "Ring SN": "Ring SN",
+      "Model": "Model",
+      "Battery": "Battery",
+      "Data status": "Data status",
+      "Breathing light switch": "Breathing light switch",
+      "Monitoring switch": "Monitoring switch",
+      "Change Password": "Change Password",
+      "Log out": "Log out",
+      "Adult":"Adult",
+      "Children":"Children",
+      "Not connected":"Not connected",
+      "Connected":"Connected",
+      "Add ring":"Add ring",
+      "Metal":"Metal",
+      "Ceramics":"Ceramics",
     }
   },
   'zh-CN': {
@@ -181,7 +212,39 @@ const resources = {
       "Chart Ratio": "占比",
       "Sleep Body Movement Ratio": "睡眠体动时长",
       "Body Movement": "体动",
-      "Exit": "取消"
+      "Exit": "取消",
+      "Report list": "报告列表",
+      "Device list": "设备列表",
+      "Device management": "设备管理",
+      "SN": "设备编号",
+      "Device version": "设备版本",
+      "Device status": "设备状态",
+      "Monitor period": "监测时段",
+      "Account name": "归属账号",
+      "User nickname": "用户昵称",
+      "Online": "上线",
+      "Monitoring": "检测中",
+      "Not online": "未上线",
+      "Mode": "模式",
+      "Firmware version": "固件版本",
+      "Number of reports": "总报告数",
+      "Device information": "初筛仪信息",
+      "Ring information": "戒指信息",
+      "Ring SN": "戒指SN",
+      "Model": "型号",
+      "Battery": "电量",
+      "Data status": "血氧数据",
+      "Breathing light switch": "呼吸灯开关",
+      "Monitoring switch": "定时监测",
+      "Change Password": "修改账号密码",
+      "Log out": "退出登录",
+      "Adult":"成人",
+      "Children":"儿童",
+      "Not connected":"未连接",
+      "Connected":"已连接",
+      "Add ring":"添加戒指",
+      "Metal":"金属",
+      "Ceramics":"陶瓷",
     }
   }
 };
@@ -191,7 +254,7 @@ i18n
   .init({
     resources,
     // lng: navigator.language,
-    lng: localStorage.getItem('language')?localStorage.getItem('language'):'en',
+    lng: localStorage.getItem('language') ? localStorage.getItem('language') : 'en',
 
     keySeparator: false, // we do not use keys in form messages.welcome
 
@@ -200,4 +263,4 @@ i18n
     }
   });
 
-  export default i18n;
+export default i18n;

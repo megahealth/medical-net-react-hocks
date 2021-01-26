@@ -6,35 +6,51 @@ import { createHashHistory } from 'history';
 import AV from 'leancloud-storage';
 import { Table, Skeleton } from 'antd';
 import Creator from '../../actions/Creator';
+import { Translation } from 'react-i18next';
 
 const columns = [
   {
-    title: '设备编号',
+    title: <Translation>
+      {t => <span>{t('SN')}</span>}
+    </Translation>,
     dataIndex: 'deviceSN',
     align: 'center'
   },
   {
-    title: '设备版本',
+    title: <Translation>
+      {t => <span>{t('Device version')}</span>}
+    </Translation>,
     dataIndex: 'versionNO',
     align: 'center'
   },
   {
-    title: '设备状态',
+    title: <Translation>
+      {t => <span>{t('Device status')}</span>}
+    </Translation>,
     dataIndex: 'status',
-    align: 'center'
+    align: 'center',
+    render: status => <Translation>
+      {t => <span style={{color:status.color}}>{t(status.str)}</span>}
+    </Translation>,
   },
   {
-    title: '监测时段',
+    title: <Translation>
+      {t => <span>{t('Monitor period')}</span>}
+    </Translation>,
     dataIndex: 'period',
     align: 'center'
   },
   {
-    title: '归属账号',
+    title: <Translation>
+      {t => <span>{t('Account name')}</span>}
+    </Translation>,
     dataIndex: 'userName',
     align: 'center'
   },
   {
-    title: '用户昵称',
+    title: <Translation>
+      {t => <span>{t('User nickname')}</span>}
+    </Translation>,
     dataIndex: 'nickName',
     align: 'center'
   }
@@ -42,42 +58,42 @@ const columns = [
 
 class DevicePage extends Component {
   state = {
-    loading:true,
-    allDevice:[],
-    pagination:{
-      current:0,
-      pageSize:10,
-      total:0,
+    loading: true,
+    allDevice: [],
+    pagination: {
+      current: 0,
+      pageSize: 10,
+      total: 0,
     }
   }
   componentDidMount() {
-    let {allDevice, getAllDevice} = this.props;
+    let { allDevice, getAllDevice } = this.props;
     getAllDevice(allDevice.pagination);
   }
-  toDeviceDetail = (id)=>{
+  toDeviceDetail = (id) => {
     const history = createHashHistory();
     history.push(`/app/device/${id}`);
   }
   render() {
     const { loading, pagination, deviceList } = this.props.allDevice
     return (
-      <React.Fragment>   
+      <React.Fragment>
         {
           loading
-          ? <div className="content-loading"><Skeleton /></div>
-          : <div className="content-r">
-            <div className="content-r-c">
-              <Table
-                onRow={item => {
-                  return { onClick: ()=>this.toDeviceDetail(item.key) };
-                }}
-                columns={columns}
-                dataSource={deviceList}
-                pagination={pagination}
-                onChange={res => this.props.getAllDevice({...pagination,current:res.current})}
-              ></Table>
+            ? <div className="content-loading"><Skeleton /></div>
+            : <div className="content-r">
+              <div className="content-r-c">
+                <Table
+                  onRow={item => {
+                    return { onClick: () => this.toDeviceDetail(item.key) };
+                  }}
+                  columns={columns}
+                  dataSource={deviceList}
+                  pagination={pagination}
+                  onChange={res => this.props.getAllDevice({ ...pagination, current: res.current })}
+                ></Table>
+              </div>
             </div>
-          </div>
         }
       </React.Fragment>
     );
@@ -102,7 +118,7 @@ const mapStateToProps = state => (
 
 const mapDispatchToProps = dispatch => (
   {
-    getAllDevice(pagination){ 
+    getAllDevice(pagination) {
       dispatch(Creator.getAllDevice(pagination))
     },
   }

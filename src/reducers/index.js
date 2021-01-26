@@ -143,14 +143,30 @@ const deviceDetail = (state = DefaultState.deviceDetail, action) => {
         ...state
       })
     case TYPES.GET_DEVICE_DETAIL_SUCCESS:
-      console.log(action);
       return ({
         ...state,
+        roleType: action.payload.roleType,
         deviceId: action.payload.deviceId,
         device: action.payload.device,
         ringArr: action.payload.ringArr
       })
     case TYPES.GET_DEVICE_DETAIL_FAILED:
+      return ({
+        ...state
+      })
+    case TYPES.CHANGE_DEVICE_LED:
+      return ({
+        ...state
+      })
+    case TYPES.CHANGE_DEVICE_LED_SUCCESS:
+      return ({
+        ...state,
+        device:{
+          ...state.device,
+          ledOnTime:action.payload.ledOnTime,
+        }
+      })
+    case TYPES.CHANGE_DEVICE_LED_FAILED:
       return ({
         ...state
       })

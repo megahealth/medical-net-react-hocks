@@ -7,7 +7,7 @@ const SidebarTabs = [
   {
     path: '/app/allreports',
     icon: ALL_REPORTS,
-    name: '报告列表',
+    name: 'Report list',
     role:[5,6]
   },
   // {
@@ -18,13 +18,13 @@ const SidebarTabs = [
   {
     path: '/app/device',
     icon: DEVICE,
-    name: '设备状态',
+    name: 'Device list',
     role:[5]
   },
   {
     path: '/app/devicedetail',
     icon: DEVICE_DETAIL,
-    name: '设备管理',
+    name: 'Device management',
     role:[6]
   }
 ];

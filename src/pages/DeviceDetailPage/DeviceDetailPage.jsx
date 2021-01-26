@@ -7,17 +7,14 @@ import styleColor from '../../common/styleColor'
 import AV from 'leancloud-storage';
 import Creator from '../../actions/Creator';
 import { Button, Switch } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { Modal } from 'antd-mobile';
+import { Translation } from 'react-i18next';
 
 class DeviceDetailPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      deviceId: '',
-      device: {},
-      ringArr: [],
-      roleType: null
-    }
+    this.state = {}
     this.id = props.match.params.id;
   }
   async componentDidMount() {
@@ -42,15 +39,8 @@ class DeviceDetailPage extends Component {
     ]);
   }
   changeLed = (checked) => {
-    const led = checked ? -1 : 0
-    const device = AV.Object.createWithoutData('Device', this.props.deviceDetail.deviceId)
-    device.set('ledOnTime', led)
-    device.save().then(res => {
-      this.props.getDeviceDetail(this.id);
-    }).catch(error => {
-      console.log(error);
-    })
-
+    const led = checked ? -1 : 0;
+    this.props.changeLED(led, this.props.deviceDetail.deviceId)
   }
   changeMonitor = (checked) => {
     console.log(`changeMonitor ${checked}`)
@@ -60,7 +50,7 @@ class DeviceDetailPage extends Component {
       const ringInfo = item.attributes;
       return (<tr key={item.id} style={ringInfo.active ? styleColor.background_blue : styleColor.background_gry}>
         <td>{ringInfo.sn}</td>
-        <td>{ringInfo.typeOfSN}</td>
+        <Translation>{ t => <td>{t(ringInfo.typeOfSN)}</td> }</Translation>
         <td>{ringInfo.mac}</td>
         <td>
           <span style={ringInfo.battery > 50 ? styleColor.background_greed : (ringInfo.battery >= 25 ? styleColor.background_red : styleColor.background_gry_600)}></span>
@@ -75,32 +65,34 @@ class DeviceDetailPage extends Component {
   }
 
   render() {
-    const { device, ringArr } = this.props.deviceDetail;
+    const { device, ringArr, roleType } = this.props.deviceDetail;
     return (
       <div className="content-r">
         <div className="device-detail">
           <div className="simple-card" style={{ padding: '20px 10px' }}>
-            <div className="card-title">初筛仪信息</div>
+            <div className="card-title">
+              <Translation>{ t => <span>{t('Device information')}</span> }</Translation>
+            </div>
             <table>
               <thead>
                 <tr>
-                  <th>设备编号</th>
-                  <th>监测时间段</th>
-                  <th>模式</th>
-                  <th>固件版本</th>
+                  <th><Translation>{ t => <span>{t('SN')}</span> }</Translation></th>
+                  <th><Translation>{ t => <span>{t('Monitor period')}</span> }</Translation></th>
+                  <th><Translation>{ t => <span>{t('Mode')}</span> }</Translation></th>
+                  <th><Translation>{ t => <span>{t('Firmware version')}</span> }</Translation></th>
                   <th>wifi</th>
-                  <th>状态</th>
-                  <th>总报告数</th>
+                  <th><Translation>{ t => <span>{t('Device status')}</span> }</Translation></th>
+                  <th><Translation>{ t => <span>{t('Number of reports')}</span> }</Translation></th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>{device.deviceSN}</td>
                   <td>{device.period}</td>
-                  <td>{device.modeType == 1 ? '儿童模式' : '成人模式'}</td>
+                  <td><Translation>{ t => <span>{device.modeType == 1 ? t('Children') : t('Adult')}</span> }</Translation></td>
                   <td>{device.versionNO}</td>
-                  <td>{device.workStatus == '1' ? device.wifiName : '未连接'}</td>
-                  <td>{device.workStatus == '1' ? (device.monitorStatus == 0 ? '在线' : '监测中') : '未上线'}</td>
+                  <td><Translation>{ t => <span>{device.workStatus == '1' ? t(device.wifiName) : t('Not connected')}</span> }</Translation></td>
+                  <td><Translation>{ t => <span>{device.workStatus == '1' ? (device.monitorStatus == 0 ? t('Online') : t('Monitoring')) : t('Not online')}</span> }</Translation></td>
                   <td>{device.count}</td>
                 </tr>
               </tbody>
@@ -109,22 +101,24 @@ class DeviceDetailPage extends Component {
         </div>
         <div className="device-page">
           <div className="simple-card">
-            <div className="card-title">戒指信息</div>
+            <div className="card-title">
+              <Translation>{ t => <span>{t('Ring information')}</span> }</Translation>
+            </div>
             <table>
               <thead>
                 <tr>
-                  <th style={{ width: '22%' }}>戒指SN</th>
-                  <th style={{ width: '15%' }}>型号</th>
+                  <th style={{ width: '22%' }}><Translation>{ t => <span>{t('Ring SN')}</span> }</Translation></th>
+                  <th style={{ width: '15%' }}><Translation>{ t => <span>{t('Model')}</span> }</Translation></th>
                   <th style={{ width: '22%' }}>MAC</th>
-                  <th style={{ width: '12%' }}>电量</th>
-                  <th style={{ width: '12%' }}>血氧数据</th>
-                  <th style={{ width: '17%' }}>固件版本</th>
+                  <th style={{ width: '12%' }}><Translation>{ t => <span>{t('Battery')}</span> }</Translation></th>
+                  <th style={{ width: '12%' }}><Translation>{ t => <span>{t('Data status')}</span> }</Translation></th>
+                  <th style={{ width: '17%' }}><Translation>{ t => <span>{t('Firmware version')}</span> }</Translation></th>
                 </tr>
               </thead>
               <tbody>{this.ringList(ringArr)}</tbody>
             </table>
             <div className="add-ring">
-              <Button icon="plus" size="large">添加戒指</Button>
+              <Button icon={<PlusOutlined />} size="large"><Translation>{ t => <span>{t('Add ring')}</span> }</Translation></Button>
             </div>
           </div>
         </div>
@@ -165,20 +159,24 @@ class DeviceDetailPage extends Component {
              */}
         <div className="simple-card">
           <div className="breath-light">
-            <span>呼吸灯开关</span>
+            <Translation>{ t => <span>{t('Breathing light switch')}</span> }</Translation>
             <Switch size='default' checked={device.ledOnTime == 0 ? false : true} onChange={this.changeLed} style={{ float: 'right' }} />
           </div>
         </div>
         <div className="simple-card">
           <div className="breath-light">
-            <span>定时监测</span>
+            <Translation>{ t => <span>{t('Monitoring switch')}</span> }</Translation>
             <Switch size='default' onChange={this.changeMonitor} style={{ float: 'right' }} />
           </div>
         </div>
-        {this.state.roleType == 5 ?
-          <div className="simple-card card-item">{'修改账号密码'}</div> : null
+        {roleType == 5 ?
+          <div className="simple-card card-item">
+            <Translation>{ t => <span>{t('Change Password')}</span> }</Translation>
+          </div> : null
         }
-        <div className="simple-card card-item log-out" onClick={this.logOut.bind(this)}>退出登录</div>
+        <div className="simple-card card-item log-out" onClick={this.logOut.bind(this)}>
+          <Translation>{ t => <span>{t('Log out')}</span> }</Translation>
+        </div>
       </div>
 
     );
@@ -192,6 +190,7 @@ DeviceDetailPage.propTypes = {
     ringArr: PropTypes.array
   }).isRequired,
   getDeviceDetail: PropTypes.func.isRequired,
+  changeLED: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
@@ -202,9 +201,11 @@ const mapStateToProps = state => (
 
 const mapDispatchToProps = dispatch => (
   {
-    startAnimation: () => dispatch(Creator.startAnimation()),
     getDeviceDetail(id) {
       dispatch(Creator.getDeviceDetail(id))
+    },
+    changeLED(led,id){
+      dispatch(Creator.changeLED(led,id))
     }
   }
 );

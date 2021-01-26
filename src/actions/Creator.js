@@ -71,12 +71,12 @@ Creator.getAllReportsData = asyncActionFactory(
     const roleType = user.attributes.roleType;
     if (limit) Reports.limit(limit);
     if (current) Reports.skip(limit * (current - 1));
-    if(roleType == 5) {
+    if (roleType == 5) {
       const queryRoleType = new AV.Query('BaseOrganizations');
-      queryRoleType.equalTo('type','ZGSMZX');
+      queryRoleType.equalTo('type', 'ZGSMZX');
       queryRoleType.limit(1000);
-      Reports.matchesQuery('idBaseOrg',queryRoleType)
-    }else{
+      Reports.matchesQuery('idBaseOrg', queryRoleType)
+    } else {
       if (idBaseOrg) Reports.equalTo('idBaseOrg', idBaseOrg);
     }
     if (idBaseOrg.id === '5b14eb612f301e0038e08fba') {
@@ -287,7 +287,7 @@ Creator.getAllDevice = asyncActionFactory(
     DeviceQuery.include("idPatient", "idBoundDevice", "idBaseOrg");
     var innerQuery1 = new AV.Query("BaseOrganizations");
     if (roleType == 5) {
-      let count,deviceLists,deviceList;
+      let count, deviceLists, deviceList;
       innerQuery1.equalTo("type", 'ZGSMZX');
       innerQuery1.limit(1000);
       DeviceQuery.matchesQuery('idBaseOrg', innerQuery1);
@@ -297,47 +297,47 @@ Creator.getAllDevice = asyncActionFactory(
       } catch (error) {
         dispatch(fail({ errorcode: error }));
       }
-      
+
       DeviceQuery.addDescending('createdAt');
       DeviceQuery.limit(pageSize);
-      DeviceQuery.skip((current-1) * 10);
+      DeviceQuery.skip((current - 1) * 10);
       try {
         deviceLists = await DeviceQuery.find();
       } catch (error) {
         dispatch(fail({ errorcode: error }));
       }
+      console.log(deviceLists);
       deviceList = []
       try {
-        deviceLists.forEach(item=>{
+        deviceLists.forEach(item => {
           const device = item.attributes;
           deviceList.push({
-            key:item.id,
-            idBaseOrg:device.idBaseOrg.id,
-            deviceSN:device.deviceSN,
-            versionNO:device.versionNO,
-            status:device.status,
-            period:device.period,
+            key: item.id,
+            idBaseOrg: device.idBaseOrg.id,
+            deviceSN: device.deviceSN,
+            versionNO: device.versionNO,
+            status: deviceStatus(device.workStatus,device.monitorStatus),
+            period: device.period,
           })
         })
       } catch (error) {
         dispatch(fail({ errorcode: error }));
       }
-      
+
       try {
         const devices = await handleUser(deviceList);
-        dispatch(success({ pagination:pagination, deviceList:devices }));
+        dispatch(success({ pagination: pagination, deviceList: devices }));
       } catch (error) {
         dispatch(fail({ errorcode: error }));
       }
-      
+
     }
-})
+  })
 
 // 获取设备详情
-
 Creator.getDeviceDetail = asyncActionFactory(
-  ['GET_DEVICE_DETAIL_DATA','GET_DEVICE_DETAIL_SUCCESS','GET_DEVICE_DETAIL_FAILED'],
-  (getting,success,fail,id) => async (dispatch) => {
+  ['GET_DEVICE_DETAIL_DATA', 'GET_DEVICE_DETAIL_SUCCESS', 'GET_DEVICE_DETAIL_FAILED'],
+  (getting, success, fail, id) => async (dispatch) => {
     dispatch(getting())
     let count, ringArr;
     const user = AV.User.current();
@@ -346,15 +346,15 @@ Creator.getDeviceDetail = asyncActionFactory(
     let { idBaseOrg } = user.attributes;
     const queryDevice = new AV.Query('Device');
     queryDevice.include('idPatient')
-    queryDevice.select(['deviceSN','period','modeType','versionNO','workStatus','monitorStatus','wifiName','idPatient','ledOnTime']);
-    if(roleType == 5){
+    queryDevice.select(['deviceSN', 'period', 'modeType', 'versionNO', 'workStatus', 'monitorStatus', 'wifiName', 'idPatient', 'ledOnTime']);
+    if (roleType == 5) {
       try {
         res = await queryDevice.get(id);
       } catch (error) {
         dispatch(fail({ errorcode: error }));
       }
-    }else if(roleType == 6){
-      queryDevice.equalTo('idBaseOrg',idBaseOrg);
+    } else if (roleType == 6) {
+      queryDevice.equalTo('idBaseOrg', idBaseOrg);
       try {
         res = await queryDevice.find()
       } catch (error) {
@@ -363,14 +363,14 @@ Creator.getDeviceDetail = asyncActionFactory(
     }
     const device = res[0] ? res[0].attributes : res.attributes;
     const deviceId = res[0] ? res[0].id : res.id;
-    if(device){
+    if (device) {
       // 查询报告数量
       const queryReportsCount = new AV.Query('Reports');
-      const idDevice = new AV.Object.createWithoutData('Device',deviceId);
-      queryReportsCount.equalTo('idDevice',idDevice);
+      const idDevice = new AV.Object.createWithoutData('Device', deviceId);
+      queryReportsCount.equalTo('idDevice', idDevice);
       // 查询戒指列表
       const queryRing = new AV.Query('BoundDevice');
-      queryRing.equalTo('mPlusSn',device.deviceSN);
+      queryRing.equalTo('mPlusSn', device.deviceSN);
       try {
         count = await queryReportsCount.count();
         device.count = count;
@@ -379,13 +379,56 @@ Creator.getDeviceDetail = asyncActionFactory(
         dispatch(fail({ errorcode: error }));
       }
       dispatch(success({
-        deviceId:deviceId,
-        device:device,
-        ringArr:_parseRingInfo(ringArr)
+        deviceId: deviceId,
+        roleType: roleType,
+        device: device,
+        ringArr: _parseRingInfo(ringArr)
       }))
     }
   }
 )
+
+// 设备详情页呼吸灯开关
+Creator.changeLED = asyncActionFactory(
+  ['CHANGE_DEVICE_LED', 'CHANGE_DEVICE_LED_SUCCESS', 'CHANGE_DEVICE_LED_FAILED'],
+  (getting, success, fail, led, id) => async (dispatch) => {
+    dispatch(getting());
+    const device = AV.Object.createWithoutData('Device', id)
+    device.set('ledOnTime', led)
+    device.save().then(res => {
+      dispatch(success({ ledOnTime: led }))
+    }).catch(error => {
+      dispatch(fail({ errorcode: error }));
+    })
+  }
+)
+
+//设备 
+function deviceStatus(workStatus, monitorStatus) {
+  switch (workStatus) {
+    case "1":
+      switch (monitorStatus) {
+        case "0":
+          return {
+            str: "Online",
+            color: "rgb(227,207,87)",
+            wifiConect: true
+          };
+        case "1":
+          return {
+            str: "Monitoring",
+            color: "green",
+            wifiConect: true
+          };
+      }
+    default:
+      return {
+          str: "Not online",
+          color: "black",
+          wifiConect: false
+      };
+  }
+}
 
 // 处理报告数据成养老版editData格式
 function DataToEditData(data, alreadyDecodedData) {
@@ -512,7 +555,7 @@ function getSleepTime(data) {
 }
 
 // 设备列表需要所属账号
-async function handleUser (datas){
+async function handleUser(datas) {
   // 设备归属账号\根据idBaseOrg查询User表中username
   var _UserQuery1 = new AV.Query('_User');
   var orgPointer1 = AV.Object.createWithoutData('BaseOrganizations', (datas[0] && datas[0].idBaseOrg) || '1');
@@ -556,10 +599,10 @@ async function handleUser (datas){
 
   var _UserQueryAll = AV.Query.or(_UserQuery1, _UserQuery2, _UserQuery3, _UserQuery4, _UserQuery5, _UserQuery6, _UserQuery7, _UserQuery8, _UserQuery9, _UserQuery10);
   _UserQueryAll.include("idBaseOrg");
-  let userRes =  await _UserQueryAll.find();
+  let userRes = await _UserQueryAll.find();
   for (var i = 0; i < userRes.length; i++) {
-    for(var j = 0; j < datas.length; j++){
-      if(userRes[i].get('idBaseOrg').id==datas[j].idBaseOrg){
+    for (var j = 0; j < datas.length; j++) {
+      if (userRes[i].get('idBaseOrg').id == datas[j].idBaseOrg) {
         let userId = userRes[i].id;
         let hotelId = userRes[i].get('idBaseOrg').get('idOrganization');
         let userName = userRes[i].get('username');
@@ -572,14 +615,14 @@ async function handleUser (datas){
     }
   }
   return datas;
-} 
+}
 
 // 设备型号
-function _parseRingInfo(ringArr){
-  return ringArr.map(item=>{
+function _parseRingInfo(ringArr) {
+  return ringArr.map(item => {
     const ringInfo = item.attributes;
     var typeOfSN = ringInfo.sn.slice(0, 4);
-    var newTypeOfRing = typeOfSN == 'P11B' ? '陶瓷' : '金属';
+    var newTypeOfRing = typeOfSN == 'P11B' ? 'Ceramics' : 'Metal';
     item.attributes.typeOfSN = newTypeOfRing
     return item
   })

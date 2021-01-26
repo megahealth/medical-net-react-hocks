@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Sidebar.scss';
 import { NavLink } from 'react-router-dom';
+import { Translation } from 'react-i18next';
 import AV from 'leancloud-storage';
 var roleType = null
 class Sidebar extends Component {
@@ -21,7 +22,11 @@ class Sidebar extends Component {
               <NavLink to={item.path} activeClassName="active" key={item.path}>
                 <li>
                   <img src={item.icon} alt="" />
-                  <span>{item.name}</span>
+                  <Translation>
+                  {
+                    t => <span>{t(item.name)}</span>
+                  }
+                </Translation>    
                 </li>
               </NavLink>
               :null

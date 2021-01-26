@@ -36,6 +36,7 @@ const DefaultState = {
   },
   deviceDetail:{
     deviceId:'',
+    roleType:null,
     device:{},
     ringArr:[],
   },

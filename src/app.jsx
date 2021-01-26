@@ -16,20 +16,20 @@ class MyApp extends Component {
   }
   render() { 
     return (   
-    <div className="container">
-      <Header />
-      <div className="content">
-        <Sidebar tabs={SidebarTabs} />
-        <Switch>
-          <Route path="/app/allreports" exact component={AllReportsPage}></Route>
-          <Route path="/app/devicedetail" exact component={DeviceDetailPage}></Route>
-          <Route path="/app/device/:id" exact component={DeviceDetailPage}></Route>
-          <Route path="/app/device" exact component={Device}></Route>
-          <Redirect to="/app/allreports"/>
-        </Switch>
+      <div className="container">
+        <Header />
+        <div className="content">
+          <Sidebar tabs={SidebarTabs} />
+          <Switch>
+            <Route path="/app/allreports" exact component={AllReportsPage}></Route>
+            <Route path="/app/devicedetail" exact component={DeviceDetailPage}></Route>
+            <Route path="/app/device/:id" exact component={DeviceDetailPage}></Route>
+            <Route path="/app/device" exact component={Device}></Route>
+            <Redirect to="/app/allreports"/>
+          </Switch>
+        </div>
       </div>
-    </div>
-  );
+    );
   }
 }
 

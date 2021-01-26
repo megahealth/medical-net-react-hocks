@@ -32,10 +32,8 @@ const App = () => (
     <Switch>
       <Route path="/" exact component={LoginPage}></Route>
       <Route path='/app' component={MyApp}></Route>
-      {/* <Route path="/allreports" exact component={AllReportsPage}></Route> */}
       <Route path="/validreports" exact component={ValidReportsPage}></Route>
-      <Route path="/device" exact component={DevicePage}></Route>
-      {/* <Route path="/devicedetail/:id" exact component={DeviceDetailPage}></Route> */}
+      {/* <Route path="/device" exact component={DevicePage}></Route> */}
       <Route path="/report/:id" exact component={ReportPage}></Route>
     </Switch>
   </div>

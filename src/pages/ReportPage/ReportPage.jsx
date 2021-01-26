@@ -60,7 +60,6 @@ class ReportPage extends Component {
     console.log({adviceData:{},edition}, this.id);
     saveUpdate({adviceData:{},edition}, this.id)
 
-    // console.log('wwwwwwwwwww',edition,this.id);
   }
 
   saveAdviceEdit = () => {
@@ -104,14 +103,10 @@ class ReportPage extends Component {
                   </div>
                   :
                   <div className="hide-print option-btns">
-                    {/* <Button shape="round" icon={<SaveOutlined />} size={size} onClick={ this.saveAdviceEdit }> {t('Save')} </Button> */}
                     <Button shape="round" icon={<PrinterOutlined />} size={size}> {t('Print')} </Button>
                     <Button shape="round" icon={<EditOutlined />} size={size} onClick={changeEditStatus} > {t('Edit')} </Button>
                   </div>
               }
-              {/* <Button shape="round" icon={<EditOutlined />} size={size} onClick={changeEditStatus} > {t('Edit')} </Button>
-              <Button shape="round" icon={<SaveOutlined />} size={size}> {t('Save')} </Button>
-              <Button shape="round" icon={<PrinterOutlined />} size={size}> {t('Print')} </Button> */}
             </div>
           </div>
           <Skeleton paragraph={{ rows: 15 }} loading={report.loading}>
