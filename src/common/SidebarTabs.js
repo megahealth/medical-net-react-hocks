@@ -19,13 +19,13 @@ const SidebarTabs = [
     path: '/app/device',
     icon: DEVICE,
     name: 'Device list',
-    role:[5]
+    role:[5,6]
   },
   {
     path: '/app/devicedetail',
     icon: DEVICE_DETAIL,
     name: 'Device management',
-    role:[6]
+    role:[]
   }
 ];
 

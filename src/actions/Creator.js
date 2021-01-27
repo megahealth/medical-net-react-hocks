@@ -50,7 +50,6 @@ Creator.getAllReportsData = asyncActionFactory(
     dispatch(getting());
 
     const Reports = new AV.Query('Reports');
-    console.log(filter)
     // 筛选条件
     if (filter && filter.reportType) {
       if (filter.reportType.indexOf('valid') > -1) {
@@ -84,8 +83,8 @@ Creator.getAllReportsData = asyncActionFactory(
       Reports.equalTo('idGroup', idGroup);
     }
     Reports.descending('createdAt');
-    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'idPatient', 'patientInfo', 'extraCheckTimeMinute', 'idGroup']);
-    Reports.include('idPatient');
+    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'idPatient','idReport' ,'idDevice', 'patientInfo', 'extraCheckTimeMinute', 'idGroup']);
+    Reports.include(['idPatient','idDevice']);
     let total, result;
     try {
       total = await Reports.count();
@@ -98,14 +97,19 @@ Creator.getAllReportsData = asyncActionFactory(
       const arr = result.map((item, index) => {
         let arrname = item.get('patientInfo') ? item.get('patientInfo')[0] : '';
         let idname = item.get('idPatient') && (item.get('idPatient').get('name') || '--');
+        let sn = item.get('idDevice') && (item.get('idDevice').get('deviceSN') || '--');
+        let idDevice = item.get('idDevice') && (item.get('idDevice').id || '--');
+        let idReport = item.get('idReport') || '';
         return {
           'id': item.id,
           'key': index,
-          'index': index + 1,
-          'name': arrname || idname,
+          'index': idReport,
+          'sn':sn,
+          'idDevice':idDevice,
+          'name': (arrname || idname) || '未登记',
           'date': moment(item.createdAt).format('YYYY-MM-DD'),
-          'AHI': item.get('AHI').toFixed(1),
-          'time': `${(item.get('extraCheckTimeMinute') / 60).toFixed(1)}h`,
+          'AHI': ahiDegree(item.get('AHI').toFixed(1)),
+          'time': `${(item.get('extraCheckTimeMinute') / 60).toFixed(1)}小时`,
         }
       });
       dispatch(success({ reports: arr, total, current }));
@@ -181,9 +185,11 @@ Creator.getReportData = asyncActionFactory(
     Reports.include('idPatient')
     Reports.include('customInfo')
     Reports.include('editedData')
+    Reports.include('idModifiedReport')
     const result = await Reports.get(id)
     // console.log(result);
     let data = result.attributes;
+    const reportNum = data.idModifiedReport?data.idModifiedReport.get('reportNumber'):'';
     const { ringData, tempSleepId, idRingReportFile } = data;
     const fileid = idRingReportFile && idRingReportFile.id;
 
@@ -214,7 +220,7 @@ Creator.getReportData = asyncActionFactory(
       // console.log(alreadyDecodedData);
 
       const adviceData = DataToEditData(data, alreadyDecodedData)
-      dispatch(success({ data, alreadyDecodedData, waveData, adviceData }));
+      dispatch(success({ data, alreadyDecodedData, waveData, adviceData, reportNum }));
     }, (err) => {
       dispatch(fail({ errorcode: err }));
     });
@@ -285,52 +291,57 @@ Creator.getAllDevice = asyncActionFactory(
     var DeviceQuery = new AV.Query('Device');
     DeviceQuery.select(["active", "belongTo", "boundDevices", "deviceSN", "idBaseOrg", "idBoundDevice", "idDevice", "idPatient", "isAutoUpdateRing", "isAutoUpdate", "ledOnTime", "localIP", "modeType", "monitorStatus", "order", "period", "rawDataUpload", "reportTitle", "ringRealtime", "ringStatus", "romVersion", "sleepStatus", "status", "versionNO", "workStatus", "wifiName"]);
     DeviceQuery.include("idPatient", "idBoundDevice", "idBaseOrg");
-    var innerQuery1 = new AV.Query("BaseOrganizations");
+    
+    let count, deviceLists, deviceList;
     if (roleType == 5) {
-      let count, deviceLists, deviceList;
+      var innerQuery1 = new AV.Query("BaseOrganizations");
       innerQuery1.equalTo("type", 'ZGSMZX');
       innerQuery1.limit(1000);
       DeviceQuery.matchesQuery('idBaseOrg', innerQuery1);
-      try {
-        count = await DeviceQuery.count();
-        pagination.total = count
-      } catch (error) {
-        dispatch(fail({ errorcode: error }));
-      }
+    }else if(roleType == 6){
+      let { idBaseOrg } = user.attributes;
+      DeviceQuery.equalTo('idBaseOrg', idBaseOrg);
+    }
+    else{
+      dispatch(fail({ errorcode: '登录信息错误！' }));
+    }
+    try {
+      count = await DeviceQuery.count();
+      pagination.total = count
+    } catch (error) {
+      dispatch(fail({ errorcode: error }));
+    }
 
-      DeviceQuery.addDescending('createdAt');
-      DeviceQuery.limit(pageSize);
-      DeviceQuery.skip((current - 1) * 10);
-      try {
-        deviceLists = await DeviceQuery.find();
-      } catch (error) {
-        dispatch(fail({ errorcode: error }));
-      }
-      console.log(deviceLists);
-      deviceList = []
-      try {
-        deviceLists.forEach(item => {
-          const device = item.attributes;
-          deviceList.push({
-            key: item.id,
-            idBaseOrg: device.idBaseOrg.id,
-            deviceSN: device.deviceSN,
-            versionNO: device.versionNO,
-            status: deviceStatus(device.workStatus,device.monitorStatus),
-            period: device.period,
-          })
+    DeviceQuery.addDescending('createdAt');
+    DeviceQuery.limit(pageSize);
+    DeviceQuery.skip((current - 1) * 10);
+    try {
+      deviceLists = await DeviceQuery.find();
+    } catch (error) {
+      dispatch(fail({ errorcode: error }));
+    }
+    deviceList = []
+    try {
+      deviceLists.forEach(item => {
+        const device = item.attributes;
+        deviceList.push({
+          key: item.id,
+          idBaseOrg: device.idBaseOrg.id,
+          deviceSN: device.deviceSN,
+          versionNO: device.versionNO,
+          status: deviceStatus(device.workStatus,device.monitorStatus),
+          period: device.period,
         })
-      } catch (error) {
-        dispatch(fail({ errorcode: error }));
-      }
+      })
+    } catch (error) {
+      dispatch(fail({ errorcode: error }));
+    }
 
-      try {
-        const devices = await handleUser(deviceList);
-        dispatch(success({ pagination: pagination, deviceList: devices }));
-      } catch (error) {
-        dispatch(fail({ errorcode: error }));
-      }
-
+    try {
+      const devices = await handleUser(deviceList);
+      dispatch(success({ pagination: pagination, deviceList: devices }));
+    } catch (error) {
+      dispatch(fail({ errorcode: error }));
     }
   })
 
@@ -347,19 +358,14 @@ Creator.getDeviceDetail = asyncActionFactory(
     const queryDevice = new AV.Query('Device');
     queryDevice.include('idPatient')
     queryDevice.select(['deviceSN', 'period', 'modeType', 'versionNO', 'workStatus', 'monitorStatus', 'wifiName', 'idPatient', 'ledOnTime']);
-    if (roleType == 5) {
+    if (roleType == 5 || roleType == 6) {
       try {
         res = await queryDevice.get(id);
       } catch (error) {
         dispatch(fail({ errorcode: error }));
       }
-    } else if (roleType == 6) {
-      queryDevice.equalTo('idBaseOrg', idBaseOrg);
-      try {
-        res = await queryDevice.find()
-      } catch (error) {
-        dispatch(fail({ errorcode: error }));
-      }
+    } else{
+      dispatch(fail({ errorcode: '登录信息错误！' }));
     }
     const device = res[0] ? res[0].attributes : res.attributes;
     const deviceId = res[0] ? res[0].id : res.id;
@@ -402,6 +408,16 @@ Creator.changeLED = asyncActionFactory(
     })
   }
 )
+
+// 设备详情页监控时段和模式的修改
+Creator.changeMonitorAndMode = (params) => {
+  const { modeType, timeEnd, timeStart } = params;
+  const period = timeStart + '-' + timeEnd;
+  return ({
+    type: TYPES.CHANGE_DEVICE_PERIOD_AND_MODE,
+    payload: {modeType, period}
+  })
+}
 
 //设备 
 function deviceStatus(workStatus, monitorStatus) {
@@ -523,7 +539,7 @@ function getSleepPercent(data) {
   const totalSleepMilliseconds = moment.duration((lightSleep + remSleep + deepSleep) * 60 * 1000);
 
   return {
-    totalSleepTime: `${totalSleepMilliseconds.hours()}H${totalSleepMilliseconds.minutes()}m`,
+    totalSleepTime: `${totalSleepMilliseconds.hours()}时${totalSleepMilliseconds.minutes()}分`,
     sleepPercent: 100 - wakeTimePer,
     deepSleepPercent: (parseFloat((deepSleep * 100 / all).toFixed(1)) ? parseFloat((deepSleep * 100 / all).toFixed(1)) : 100),
     lightSleepPercent: (parseFloat((lightSleep * 100 / all).toFixed(1)) ? parseFloat((lightSleep * 100 / all).toFixed(1)) : 100),
@@ -545,7 +561,7 @@ function getSleepTime(data) {
     getUp: moment(end).format('HH:mm'),
     secStart: moment(sleepStageStart).format('HH:mm'),
     secEnd: moment(sleepStageEnd).format('HH:mm'),
-    totalRecord: `${totalMilliseconds.hours()}H${totalMilliseconds.minutes()}m`,
+    totalRecord: `${totalMilliseconds.hours()}时${totalMilliseconds.minutes()}分`,
     totalRecordTime: getSleepPercent(data).totalSleepTime,
     sleepEfficiency: getSleepPercent(data).sleepPercent,
     deepSleepPercent: getSleepPercent(data).deepSleepPercent,
@@ -627,4 +643,46 @@ function _parseRingInfo(ringArr) {
     return item
   })
 }
+
+// AHI程度
+
+function ahiDegree(ahi){
+  if(ahi == -1){
+    return {
+      ahi:ahi,
+      color:'#ccc',
+      degree:'无效',
+    }
+  }
+  if(ahi<5&&ahi>=0) {
+    return {
+      ahi:ahi,
+      color:'#20deff',
+      degree:'正常',
+    }
+  }
+  if(ahi>=5&&ahi<15) {
+    return {
+      ahi:ahi,
+      color:'#95ff8e',
+      degree:'轻度',
+    }
+  }
+  if(ahi>=15&&ahi<30) {
+    return {
+      ahi:ahi,
+      color:'#feba3b',
+      degree:'中度',
+    }
+  }
+  if(ahi>=30) {
+    return {
+      ahi:ahi,
+      color:'#fd4f51',
+      degree:'重度',
+    }
+  }
+  return {};
+}
+
 export default Creator;

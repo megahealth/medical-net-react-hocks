@@ -142,8 +142,7 @@ const DefaultState = {
       timeStart: 0,
     },
     waveData: {},
-
-    
+    reportNum:'',
     isEditting: false,
     edition: {},
     adviceData: {},

@@ -130,7 +130,7 @@ const resources = {
       "Welcome to React": "欢迎使用 React",
       "App Title": "兆观呼吸睡眠初筛管理工作站",
       "Log Out": "登出",
-      "Column Head Index": "序号",
+      "Column Head Index": "报告编号",
       "Column Head Name": "姓名",
       "Column Head Date": "日期",
       "Column Head Time": "总记录时间",

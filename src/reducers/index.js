@@ -79,6 +79,7 @@ const report = (state = DefaultState.report, action) => {
         waveData: action.payload.waveData,
         edition: action.payload.data.customInfo || (action.payload.data.idPatient ? action.payload.data.idPatient.attributes : action.payload.data.patientInfo),
         adviceData: action.payload.adviceData || {},
+        reportNum: action.payload.reportNum,
       };
     case TYPES.GET_REPORT_DATA_FAILED:
       return {
@@ -169,6 +170,15 @@ const deviceDetail = (state = DefaultState.deviceDetail, action) => {
     case TYPES.CHANGE_DEVICE_LED_FAILED:
       return ({
         ...state
+      })
+    case TYPES.CHANGE_DEVICE_PERIOD_AND_MODE:
+      return ({
+        ...state,
+        device:{
+          ...state.device,
+          modeType: action.payload.modeType,
+          period: action.payload.period
+        }
       })
     default:
       return state;

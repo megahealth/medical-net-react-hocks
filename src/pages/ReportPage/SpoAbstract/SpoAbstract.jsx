@@ -13,7 +13,6 @@ class SpoAbstract extends Component {
 
   render() {
     const { Spo2Avg, Spo2Min, diffThdLge3Cnts, diffThdLge3Pr, t } = this.props;
-
     return (
       <div className="block">
         <Title level={2}>{t('Blood oxygen statistics')}</Title>
@@ -22,11 +21,11 @@ class SpoAbstract extends Component {
         </div>
         <div className="table-data">
           <span>
-            <span>{ Spo2Avg }</span>
+            <span>{ Spo2Avg&&Spo2Avg.toFixed(1) }</span>
             <span>{t('Average SpO2')}</span>
           </span>
           <span>
-            <span>{ Spo2Min }</span>
+            <span>{ Spo2Min&&Spo2Min.toFixed(1) }</span>
             <span>{t('Lowest SpO2')}</span>
           </span>
           <span>
@@ -34,7 +33,7 @@ class SpoAbstract extends Component {
             <span>{t('Num of Desat')}</span>
           </span>
           <span>
-            <span>{ diffThdLge3Pr }</span>
+            <span>{ diffThdLge3Pr&&diffThdLge3Pr.toFixed(1) }</span>
             <span>{t('ODI')}</span>
           </span>
         </div>

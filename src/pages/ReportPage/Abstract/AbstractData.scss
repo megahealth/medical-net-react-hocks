@@ -1,0 +1,35 @@
+.ahi{
+  width: 500px;
+  margin-bottom: 0;
+}
+.ahi li{
+  width: 100px;
+  list-style-type:none;
+  text-align: center;
+  font-size:16px;
+  width: 23%;
+  height: 2px;
+  float: left;
+  margin-right: 2px;
+  position: relative;
+  top: 14px;
+} 
+.ahi li img{
+  border: none;
+  left: 40%;
+  position: absolute;
+  top: -14px;
+  width: 20px;
+}
+.ahi .first{
+  background-color: #20deff !important;
+}
+.ahi .second{
+  background-color: #95ff8e !important;
+}
+.ahi .third{
+  background-color: #feba3b !important;
+}
+.ahi .forth{
+  background-color: #fd4f51 !important;
+}
