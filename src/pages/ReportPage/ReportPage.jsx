@@ -68,16 +68,19 @@ class ReportPage extends Component {
     saveUpdate({adviceData, edition:{}}, this.id)
   }
 
+  print = () => {
+    window.print()
+  }
+
   render() {
     const { report, t, changeEditStatus } = this.props;
     const { isEditting } = report
-
     const { size } = this.state;
 
     return (
       <div className="container">
         <div className="wrapper">
-          <div className="option">
+          <div className="option print-hide">
             <div className="left">
               <Button
                 shape="round"
@@ -103,7 +106,7 @@ class ReportPage extends Component {
                   </div>
                   :
                   <div className="hide-print option-btns">
-                    <Button shape="round" icon={<PrinterOutlined />} size={size}> {t('Print')} </Button>
+                    <Button shape="round" icon={<PrinterOutlined />} size={size} onClick={this.print}> {t('Print')} </Button>
                     <Button shape="round" icon={<EditOutlined />} size={size} onClick={changeEditStatus} > {t('Edit')} </Button>
                   </div>
               }
@@ -132,7 +135,7 @@ class ReportPage extends Component {
               <PrChart></PrChart>
               <EventsChart></EventsChart>
               <StageChart></StageChart>
-              <BodyMoveTimeChart></BodyMoveTimeChart>
+              {/* <BodyMoveTimeChart></BodyMoveTimeChart> */}
             </div>
             <div className="print-page">
               <BreathWave></BreathWave>

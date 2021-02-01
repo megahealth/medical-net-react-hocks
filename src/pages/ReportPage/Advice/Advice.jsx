@@ -65,6 +65,10 @@ class Advice extends Component {
   getAhiAdvice = () => {
     const grade = this.getAhiGrade(this.props.adviceData.ahi)
     switch (grade) {
+      case 0:
+        return  '   1,当晚设备所在房间内无人睡眠。'+'\n'+
+              '   2,由于修改睡眠时间，造成睡眠监测提前结束。'+'\n'+
+              '   3,您的设备摆放位置不准确，需要调整。具体请参照使用说明。';
       case 1:
         return  '1.保持良好的生活习惯；'+'\n'+
         '2.适当运动，增强体质；'+'\n'+
@@ -79,7 +83,7 @@ class Advice extends Component {
         '3.排除上呼吸道病变后，转睡眠呼吸专科就诊，经压力滴定测试后，无论是否手术均建议夜间无创正压通气治疗；'+'\n'+
         '4.最好连续的睡眠监测，治疗3-6月后进行门诊复诊；';
       case 4:
-        return '1.结合临床完善相关检查'+'\n'+
+        return '1.结合临床完善相关检查；'+'\n'+
         '2.耳鼻喉科就诊，了解有无口部咽喉部位解剖学异常，必要时进行鼻咽部CT/MRI了解有无手术指症状；'+'\n'+
         '3.排除上呼吸道病变后，转睡眠呼吸专科就诊，经压力滴定测试后，无论是否手术均建议夜间无创正压通气治疗；'+'\n'+
         '4.饮食宜清淡，戒烟、戒酒；适当运动，增强体质，控制BMI（身体质量指数）在18.5-24；使用右侧卧位睡姿入眠；慎用或停用镇静、安眠药物；'+'\n'+
@@ -127,14 +131,14 @@ class Advice extends Component {
     +'\n'+
     `睡眠呼吸综述:
     您的AHI指数为${adviceData.ahi||'--'}，${ breathe?breathe+',':'' }${ spo }`
-    +'\n'+
-    '建议：'+'\n'
+    +'\n'+(ahiGrade == 0?'经检测,您当前的您当前这份报告被判定为无效报告。出现此现象的原因可能是：':'建议：')+'\n'
     ;
     return sleepAdvice;
   }
 
   render() {
-    const { t, adviceData } = this.props;
+    const { t, adviceData, edition } = this.props;
+    console.log('hhhh',adviceData, edition)
     return (
       <div className="block">
         <Title level={2}>{t('Sleep Evaluation Recommendations')}</Title>
@@ -142,7 +146,22 @@ class Advice extends Component {
           <span></span>
         </div>
         <div className="advice">
-          <TextArea rows={10} name="ahiAdvice" value={adviceData.ahiAdvice?adviceData.ahiAdvice:str} onChange={ this.handleChange } />
+          <TextArea 
+            autoSize={{ minRows: 5, maxRows: 20 }} 
+            bordered = {false}
+            name="ahiAdvice" 
+            // value={adviceData.ahiAdvice?adviceData.ahiAdvice:str} 
+            value={str} 
+            onChange={ this.handleChange } 
+          />
+          <div className='signature'>
+            <div>
+              <span>签名日期：</span>
+            </div>
+            <div>
+              <span>医师签名：</span>
+            </div>
+          </div>
         </div>
       </div>
     );

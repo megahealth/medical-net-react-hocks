@@ -1,3 +1,23 @@
 .advice {
   margin-top: 20px;
 }
+
+.signature{
+  width: 100%;
+  height: 0.4rem;
+  padding-top: 0.2rem;
+}
+
+.signature div {
+  float: right;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  height: 0.4rem;
+}
+.signature div:nth-child(2){
+  width: 1.5rem;
+}
+.signature div:nth-child(1){
+  width: 2rem;
+}

@@ -40,10 +40,10 @@ class StageChart extends Component {
     const option = {
       animation: false,
       grid: {
-        left: '-2%',
+        left: '-1%',
         right: '3%',
         bottom: '8%',
-        top: '10%',
+        top: '20%',
         containLabel: true,
       },
       // dataZoom: [{
@@ -129,6 +129,7 @@ class StageChart extends Component {
         },
       },
       yAxis: {
+        name: t('睡眠分期'),
         type: 'value',
         min: 0,
         max: 4,
@@ -228,7 +229,7 @@ class StageChart extends Component {
   render() {
     return (
       <div className="block">
-        <ReactEcharts option={this.getOption()} style={{ height: '300px' }} />
+        <ReactEcharts option={this.getOption()}  style={{ height:'2.4rem' }} />
       </div>
     );
   }

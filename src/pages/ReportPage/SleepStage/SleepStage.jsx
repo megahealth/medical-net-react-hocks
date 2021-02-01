@@ -10,52 +10,52 @@ const { Title } = Typography;
 
 class SleepStage extends Component {
 
-  getSleepPercent() {
-    const { sleepData } = this.props;
-    let wakeTime = 0;
-    let remSleep = 0;
-    let lightSleep = 0;
-    let deepSleep = 0;
-    let all = 0;
-    for (let i = 0, j = sleepData.length; i < j; i++) {
-      all++;
-      switch (sleepData[i]) {
-        case 0:
-          wakeTime++;
-          break;
-        case 2:
-          remSleep++;
-          break;
-        case 3:
-          lightSleep++;
-          break;
-        case 4:
-          deepSleep++;
-          break;
-        default:
-          break;
-      }
-    }
+  // getSleepPercent() {
+  //   const { sleepData } = this.props;
+  //   let wakeTime = 0;
+  //   let remSleep = 0;
+  //   let lightSleep = 0;
+  //   let deepSleep = 0;
+  //   let all = 0;
+  //   for (let i = 0, j = sleepData.length; i < j; i++) {
+  //     all++;
+  //     switch (sleepData[i]) {
+  //       case 0:
+  //         wakeTime++;
+  //         break;
+  //       case 2:
+  //         remSleep++;
+  //         break;
+  //       case 3:
+  //         lightSleep++;
+  //         break;
+  //       case 4:
+  //         deepSleep++;
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   }
+  //   console.log(wakeTime,remSleep,lightSleep,deepSleep)
+  //   const remSleepPer = parseFloat((remSleep * 100 / all).toFixed(1)) || '--';
+  //   const lightSleepPer = parseFloat((lightSleep * 100 / all).toFixed(1)) || '--';
+  //   const deepSleepPer = parseFloat((deepSleep * 100 / all).toFixed(1)) || '--';
+  //   const wakeTimePer = parseFloat((wakeTime * 100 / all).toFixed(1)) || '--';
 
-    const remSleepPer = parseFloat((remSleep * 100 / all).toFixed(1)) || '--';
-    const lightSleepPer = parseFloat((lightSleep * 100 / all).toFixed(1)) || '--';
-    const deepSleepPer = parseFloat((deepSleep * 100 / all).toFixed(1)) || '--';
-    const wakeTimePer = parseFloat((wakeTime * 100 / all).toFixed(1)) || '--';
-
-    return {
-      wakeTime,
-      wakeTimePer,
-      remSleep,
-      remSleepPer,
-      lightSleep,
-      lightSleepPer,
-      deepSleep,
-      deepSleepPer
-    };
-  }
+  //   return {
+  //     wakeTime,
+  //     wakeTimePer,
+  //     remSleep,
+  //     remSleepPer,
+  //     lightSleep,
+  //     lightSleepPer,
+  //     deepSleep,
+  //     deepSleepPer
+  //   };
+  // }
 
   render() {
-    const { t } = this.props;
+    const { t,adviceData } = this.props;
 
     return (
       <div className="block">
@@ -71,23 +71,23 @@ class SleepStage extends Component {
           </span>
           <span>
             <span>{t('Awake')}</span>
-            <span className="table-value">{ this.getSleepPercent().wakeTime }</span>
-            <span className="table-value">{ this.getSleepPercent().wakeTimePer }</span>
+            <span className="table-value">{ adviceData.wakeTime }</span>
+            <span className="table-value">{ adviceData.wakeTimePer }</span>
           </span>
           <span>
             <span>{t('REM')}</span>
-            <span className="table-value">{ this.getSleepPercent().remSleep }</span>
-            <span className="table-value">{ this.getSleepPercent().remSleepPer }</span>
+            <span className="table-value">{ adviceData.remSleep }</span>
+            <span className="table-value">{ adviceData.remSleepPercent }</span>
           </span>
           <span>
             <span>{t('Light')}</span>
-            <span className="table-value">{ this.getSleepPercent().lightSleep }</span>
-            <span className="table-value">{ this.getSleepPercent().lightSleepPer }</span>
+            <span className="table-value">{ adviceData.lightSleep }</span>
+            <span className="table-value">{ adviceData.lightSleepPercent }</span>
           </span>
           <span>
             <span>{t('Deep')}</span>
-            <span className="table-value">{ this.getSleepPercent().deepSleep }</span>
-            <span className="table-value">{ this.getSleepPercent().deepSleepPer }</span>
+            <span className="table-value">{ adviceData.deepSleep }</span>
+            <span className="table-value">{ adviceData.deepSleepPercent }</span>
           </span>
         </div>
       </div>
@@ -97,11 +97,13 @@ class SleepStage extends Component {
 
 SleepStage.propTypes = {
   sleepData: PropTypes.array.isRequired,
+  adviceData: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => (
   {
     sleepData: state.report.data.sleepData,
+    adviceData: state.report.adviceData,
   }
 );
 

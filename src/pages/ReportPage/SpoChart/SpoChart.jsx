@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Typography } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { withTranslation } from 'react-i18next';
-
 const { Title } = Typography;
 
 class SpoChart extends Component {
@@ -99,7 +98,7 @@ class SpoChart extends Component {
           },
         },
         yAxis: {
-          name: t('Blood Oxygen BPM'),
+          name: t('血氧饱和度(%)'),
           type: 'value',
           nameRotate: '0.1',
           min: 70,
@@ -154,7 +153,7 @@ class SpoChart extends Component {
         <div className="short-line center">
           <span></span>
         </div>
-        <ReactEcharts option={this.getOption()} style={{ height: '300px' }} />
+        <ReactEcharts option={this.getOption()} style={{ height:'2.4rem' }} />
       </div>
     );
   }

@@ -175,7 +175,7 @@ class StagePieChart extends Component {
   render() {
     return (
       <div className="block">
-        <ReactEcharts option={this.getOption()} style={{ height: '200px' }} />
+        <ReactEcharts option={this.getOption()} style={{ height: '1.6rem' }} />
       </div>
     );
   }

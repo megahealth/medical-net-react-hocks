@@ -80,6 +80,7 @@ const report = (state = DefaultState.report, action) => {
         edition: action.payload.data.customInfo || (action.payload.data.idPatient ? action.payload.data.idPatient.attributes : action.payload.data.patientInfo),
         adviceData: action.payload.adviceData || {},
         reportNum: action.payload.reportNum,
+        id:action.payload.id,
       };
     case TYPES.GET_REPORT_DATA_FAILED:
       return {
@@ -104,6 +105,15 @@ const report = (state = DefaultState.report, action) => {
         ...state,
         edition: state.data.idPatient ? state.data.idPatient.attributes : state.data.patientInfo
       }
+    case TYPES.CHANGE_REPORT_NUM:
+      return ({
+        ...state,
+        data:{
+          ...state.data,
+          idModifiedReport: action.payload.idModifiedReport,
+        },
+        reportNum: action.payload.reportNum,
+      })
     default:
       return state;
   }
@@ -136,7 +146,7 @@ const allDevice = (state = DefaultState.allDevice, action) => {
   }
 }
 
-// 报告详情数据
+// 设备详情数据
 const deviceDetail = (state = DefaultState.deviceDetail, action) => {
   switch (action.type) {
     case TYPES.GET_DEVICE_DETAIL_DATA:

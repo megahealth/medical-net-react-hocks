@@ -2,27 +2,29 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Typography,Input } from 'antd';
+import { Typography, Input } from 'antd';
 import { withTranslation } from 'react-i18next';
 import AV from 'leancloud-storage';
+import Creator from '../../../actions/Creator';
+import { Toast } from 'antd-mobile';
 
 const { Title } = Typography;
 
 class ReportHeader extends Component {
   state = {
-    reportNum:null,
-    status:false,
+    reportNum: null,
+    status: false,
   }
   getReportDate() {
     const { startSleepTime, endStatusTimeMinute, t } = this.props;
     const time = startSleepTime + endStatusTimeMinute * 60 * 1000;
-    return moment(time).format( t('YYYY-MM-DD') );
+    return moment(time).format(t('YYYY-MM-DD'));
   }
   changeInputValue = (e) => {
     console.log(e.target.value);
     this.setState({
-      reportNum:e.target.value,
-      status:true
+      reportNum: e.target.value,
+      status: true
     })
   }
   inputFocus = () => {
@@ -30,13 +32,41 @@ class ReportHeader extends Component {
     this.state.status = true;
   }
   inputBlur = () => {
-    if(this.state.status){
-      console.log('aaa',this.state.reportNum);
-      this.state.status = false;
+    if (this.state.status) {
+      if (this.props.reportNum != this.state.reportNum) {
+        this.saveChange()
+      }
     }
   }
-  saveChange = () => {
-    
+  saveChange = async () => {
+    const { idModifiedReport, changeReportNum, id } = this.props;
+    const reportNum = this.state.reportNum;
+    var res = null;
+    if (idModifiedReport) {
+      const updateReportNum = AV.Object.createWithoutData('ModifiedReport', idModifiedReport.id);
+      updateReportNum.set('reportNumber', reportNum);
+      try {
+        res = await updateReportNum.save();
+      } catch (error) {
+        console.log(error);
+        Toast.fail('修改失败！', 1)
+      }
+    } else {
+      const modifiedReport = new AV.Object('ModifiedReport');
+      const updateReport = AV.Object.createWithoutData('Reports',id)
+      modifiedReport.set('reportNumber', reportNum);
+      res = await modifiedReport.save();
+      updateReport.set('idModifiedReport',res)
+      await updateReport.save()
+    }
+    changeReportNum({
+      idModifiedReport: res,
+      reportNum: reportNum,
+    })
+    this.state = {
+      reportNum: null,
+      status: false
+    }
   }
   render() {
     const { deviceSN, t, reportNum, showInput } = this.props;
@@ -45,20 +75,20 @@ class ReportHeader extends Component {
         <div className="header-info">
           {
             showInput
-            ?<div style={{ display:'flex',justifyContent:'start',alignItems:'center',width:'150px' }}>
-              <span style={{ display:'block',width:'70px' }}>病历号：</span>
-              <div style={{ borderBottom:'1px solid black' }}>
-                <Input 
-                  bordered={false} 
-                  value={this.state.reportNum==null ? reportNum : this.state.reportNum}
-                  onFocus={this.inputFocus}
-                  onBlur = { this.inputBlur }
-                  onPressEnter = { this.inputBlur }
-                  onChange = {this.changeInputValue}
-                />
+              ? <div style={{ display: 'flex', justifyContent:'space-evenly', alignItems: 'center', width: '1.75rem' }}>
+                <span style={{ display: 'block', width: '0.65rem' }}>病例号：</span>
+                <div style={{ borderBottom: '1px solid black', width:'1rem' }}>
+                  <Input
+                    bordered={false}
+                    value={this.state.reportNum == null ? reportNum : this.state.reportNum}
+                    onFocus={this.inputFocus}
+                    onBlur={this.inputBlur}
+                    onPressEnter={this.inputBlur}
+                    onChange={this.changeInputValue}
+                  />
+                </div>
               </div>
-            </div>
-            :<span>病历号：{reportNum}</span>
+              : <span>病例号：{reportNum}</span>
           }
           <span>
             {t('Device SN')}：
@@ -82,7 +112,10 @@ ReportHeader.propTypes = {
   deviceSN: PropTypes.string.isRequired,
   startSleepTime: PropTypes.number.isRequired,
   endStatusTimeMinute: PropTypes.number.isRequired,
-  reportNum:PropTypes.string
+  reportNum: PropTypes.string,
+  idModifiedReport: PropTypes.object,
+  id: PropTypes.string.isRequired,
+  changeReportNum: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
@@ -90,13 +123,17 @@ const mapStateToProps = state => (
     deviceSN: state.report.data.remoteDevice.deviceSN,
     startSleepTime: state.report.data.startSleepTime,
     endStatusTimeMinute: state.report.data.endStatusTimeMinute,
-    reportNum:state.report.reportNum
+    reportNum: state.report.reportNum,
+    idModifiedReport: state.report.data.idModifiedReport,
+    id: state.report.id
   }
 );
 
 const mapDispatchToProps = dispatch => (
   {
-
+    changeReportNum(params) {
+      dispatch(Creator.changeReportNum(params))
+    }
   }
 );
 

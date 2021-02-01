@@ -4,74 +4,102 @@ import { createHashHistory } from 'history';
 import { connect } from 'react-redux';
 import { Table, Skeleton, Space } from 'antd';
 import { Translation } from 'react-i18next';
-
+import { Modal, Toast } from 'antd-mobile'
 import Creator from '../../actions/Creator';
+import AV from 'leancloud-storage';
 import './AllReportsPage.scss';
-
-const columns = [
-  {
-    title: <Translation>
-      {t => <span>{t('Column Head Index')}</span>}
-    </Translation>,
-    dataIndex: 'index',
-    align: 'center'
-  },
-  {
-    title: <Translation>
-      {t => <span>{t('Column Head Name')}</span>}
-    </Translation>,
-    dataIndex: 'name',
-    align: 'center'
-  },
-  {
-    title: <Translation>
-      {t => <span>{t('SN')}</span>}
-    </Translation>,
-    dataIndex: 'sn',
-    align: 'center',
-    render: (text, record) => (
-      <Space size="middle">
-        <a onClick={(e) => toDeviceDetail(e, record)}>{text}</a>
-      </Space>
-    )
-  },
-  {
-    title: <Translation>
-      {t => <span>{t('Column Head Date')}</span>}
-    </Translation>,
-    dataIndex: 'date',
-    align: 'center'
-  },
-  {
-    title: 'AHI',
-    dataIndex: 'AHI',
-    align: 'center',
-    render: ahi => <Translation>
-      {t => <span style={{ color: ahi.color }}>{ahi.ahi+` (${t(ahi.degree)})`}</span>}
-    </Translation>
-  },
-  {
-    title: <Translation>
-      {t => <span>{t('Column Head Time')}</span>}
-    </Translation>,
-    dataIndex: 'time',
-    align: 'center'
-  }
-];
-function toDeviceDetail(e, id) {
-  e.stopPropagation();
-  const history = createHashHistory();
-  history.push(`/app/device/${id.idDevice}`);
-}
+const alert = Modal.alert;
 class AllReportsPage extends Component {
+  columns = [
+    {
+      title: <Translation>
+        {t => <span>{t('Column Head Index')}</span>}
+      </Translation>,
+      dataIndex: 'index',
+      align: 'center'
+    },
+    {
+      title: <Translation>
+        {t => <span>{t('Column Head Name')}</span>}
+      </Translation>,
+      dataIndex: 'name',
+      align: 'center'
+    },
+    {
+      title: <Translation>
+        {t => <span>{t('SN')}</span>}
+      </Translation>,
+      dataIndex: 'sn',
+      align: 'center',
+      render: (text, record) => (
+        <Space size="middle">
+          <a onClick={(e) => this.getSameSnReport(e, record)}>{text}</a>
+        </Space>
+      )
+    },
+    {
+      title: <Translation>
+        {t => <span>{t('Column Head Date')}</span>}
+      </Translation>,
+      dataIndex: 'date',
+      align: 'center'
+    },
+    {
+      title: 'AHI',
+      dataIndex: 'AHI',
+      align: 'center',
+      render: ahi => <Translation>
+        {t => <span style={{ color: ahi.color }}>{ahi.ahi+` (${t(ahi.degree)})`}</span>}
+      </Translation>
+    },
+    {
+      title: <Translation>
+        {t => <span>{t('Column Head Time')}</span>}
+      </Translation>,
+      dataIndex: 'time',
+      align: 'center'
+    }
+  ];
   componentDidMount() {
     const { allReports, getAllReportsData } = this.props;
     getAllReportsData(10, 1, allReports.filter);
   }
-
-  toReport = (id) => {
-    const history = createHashHistory();
-    history.push(`/report/${id}`);
+  getSameSnReport = (e, id) => {
+    const { setFilter,allReports, getAllReportsData } = this.props;
+    e.stopPropagation();
+    setFilter({...allReports.filter,deviceId:id.idDevice});
+    getAllReportsData(10, 1, {...allReports.filter,deviceId:id.idDevice});
+  }
+  toReport = (report) => {
+    const { allReports, getAllReportsData } = this.props;
+    const pagination = allReports.pagination;
+    if(report.AHI.degree == '无效'){
+      return (
+        alert('删除无效报告','该报告为无效报告，需要删除吗?', [
+          { text: '取消'},
+          {
+            text: '删除',
+            onPress: () =>
+              new Promise((resolve) => {
+                const deleteReport = AV.Object.createWithoutData('Reports', report.id);
+                deleteReport.destroy().then(res => {
+                  Toast.success('删除成功！', 1);
+                  getAllReportsData(pagination.pageSize,pagination.current,allReports.filter)
+                  resolve();
+                }).catch(error => {
+                  console.log(error);
+                  Toast.success('删除失败！', 1);
+                  resolve();
+                })
+              }),
+          },
+        ])
+      )
+    }else{
+      const history = createHashHistory();
+      history.push(`/report/${report.id}`);
+    }
+    
   }
 
   render() {
@@ -85,9 +113,9 @@ class AllReportsPage extends Component {
               <div className="content-r-c">
                 <Table
                   onRow={item => {
-                    return { onClick: () => this.toReport(item.id) };
+                    return { onClick: () => this.toReport(item) };
                   }}
-                  columns={columns}
+                  columns={this.columns}
                   dataSource={allReports.reportsData}
                   pagination={allReports.pagination}
                   onChange={res => getAllReportsData(10, res.current, allReports.filter)}
@@ -109,6 +137,7 @@ AllReportsPage.propTypes = {
     filter: PropTypes.object
   }).isRequired,
   getAllReportsData: PropTypes.func.isRequired,
+  setFilter: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
@@ -121,6 +150,9 @@ const mapDispatchToProps = dispatch => ({
   getAllReportsData(limit, current, filter) {
     dispatch(Creator.getAllReportsData(limit, current, filter));
   },
+  setFilter(filter) {
+    dispatch(Creator.setFilter(filter));
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AllReportsPage);

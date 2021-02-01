@@ -3,6 +3,7 @@ import pako from 'pako';
 import axios from 'axios';
 import * as TYPES from './Types';
 import moment from 'moment';
+import { Toast } from 'antd-mobile';
 
 const Creator = {};
 /*
@@ -64,8 +65,12 @@ Creator.getAllReportsData = asyncActionFactory(
     if (filter && filter.endDate) {
       Reports.lessThan('createdAt', filter.endDate);
     }
+    if (filter && filter.deviceId){
+      const device = AV.Object.createWithoutData('Device',filter.deviceId);
+      Reports.equalTo('idDevice',device)
+    }
 
-    const user = AV.User.current();
+      const user = AV.User.current();
     const idBaseOrg = user.attributes.idBaseOrg;
     const roleType = user.attributes.roleType;
     if (limit) Reports.limit(limit);
@@ -83,8 +88,8 @@ Creator.getAllReportsData = asyncActionFactory(
       Reports.equalTo('idGroup', idGroup);
     }
     Reports.descending('createdAt');
-    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'idPatient','idReport' ,'idDevice', 'patientInfo', 'extraCheckTimeMinute', 'idGroup']);
-    Reports.include(['idPatient','idDevice']);
+    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'idPatient', 'idReport', 'idDevice', 'patientInfo', 'extraCheckTimeMinute', 'idGroup','startSleepTime', 'startStatusTimeMinute', 'endStatusTimeMinute']);
+    Reports.include(['idPatient', 'idDevice']);
     let total, result;
     try {
       total = await Reports.count();
@@ -100,16 +105,22 @@ Creator.getAllReportsData = asyncActionFactory(
         let sn = item.get('idDevice') && (item.get('idDevice').get('deviceSN') || '--');
         let idDevice = item.get('idDevice') && (item.get('idDevice').id || '--');
         let idReport = item.get('idReport') || '';
+        const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute,  } = item.attributes;
+        const start = startSleepTime;
+        const sleepStageStart = start + (startStatusTimeMinute === -1 ? 0 : startStatusTimeMinute) * 60 * 1000;
+        const sleepStageEnd = start + (endStatusTimeMinute === -1 ? 0 : endStatusTimeMinute) * 60 * 1000;
+        console.log('ffff',sleepStageEnd - sleepStageStart)
+        const totalMilliseconds = moment.duration(sleepStageEnd - sleepStageStart);
         return {
           'id': item.id,
           'key': index,
           'index': idReport,
-          'sn':sn,
-          'idDevice':idDevice,
+          'sn': sn,
+          'idDevice': idDevice,
           'name': (arrname || idname) || '未登记',
           'date': moment(item.createdAt).format('YYYY-MM-DD'),
           'AHI': ahiDegree(item.get('AHI').toFixed(1)),
-          'time': `${(item.get('extraCheckTimeMinute') / 60).toFixed(1)}小时`,
+          'time': `${totalMilliseconds.hours()}时${totalMilliseconds.minutes()}分`,
         }
       });
       dispatch(success({ reports: arr, total, current }));
@@ -189,7 +200,7 @@ Creator.getReportData = asyncActionFactory(
     const result = await Reports.get(id)
     // console.log(result);
     let data = result.attributes;
-    const reportNum = data.idModifiedReport?data.idModifiedReport.get('reportNumber'):'';
+    const reportNum = data.idModifiedReport ? data.idModifiedReport.get('reportNumber') : '';
     const { ringData, tempSleepId, idRingReportFile } = data;
     const fileid = idRingReportFile && idRingReportFile.id;
 
@@ -217,10 +228,8 @@ Creator.getReportData = asyncActionFactory(
     }
     const waveData = waveRes && waveRes.data;
     decodeRingData(id, ringData, tempSleepId, fileid).then((alreadyDecodedData) => {
-      // console.log(alreadyDecodedData);
-
       const adviceData = DataToEditData(data, alreadyDecodedData)
-      dispatch(success({ data, alreadyDecodedData, waveData, adviceData, reportNum }));
+      dispatch(success({ data, alreadyDecodedData, waveData, adviceData, reportNum, id }));
     }, (err) => {
       dispatch(fail({ errorcode: err }));
     });
@@ -291,18 +300,18 @@ Creator.getAllDevice = asyncActionFactory(
     var DeviceQuery = new AV.Query('Device');
     DeviceQuery.select(["active", "belongTo", "boundDevices", "deviceSN", "idBaseOrg", "idBoundDevice", "idDevice", "idPatient", "isAutoUpdateRing", "isAutoUpdate", "ledOnTime", "localIP", "modeType", "monitorStatus", "order", "period", "rawDataUpload", "reportTitle", "ringRealtime", "ringStatus", "romVersion", "sleepStatus", "status", "versionNO", "workStatus", "wifiName"]);
     DeviceQuery.include("idPatient", "idBoundDevice", "idBaseOrg");
-    
+
     let count, deviceLists, deviceList;
     if (roleType == 5) {
       var innerQuery1 = new AV.Query("BaseOrganizations");
       innerQuery1.equalTo("type", 'ZGSMZX');
       innerQuery1.limit(1000);
       DeviceQuery.matchesQuery('idBaseOrg', innerQuery1);
-    }else if(roleType == 6){
+    } else if (roleType == 6) {
       let { idBaseOrg } = user.attributes;
       DeviceQuery.equalTo('idBaseOrg', idBaseOrg);
     }
-    else{
+    else {
       dispatch(fail({ errorcode: '登录信息错误！' }));
     }
     try {
@@ -329,7 +338,7 @@ Creator.getAllDevice = asyncActionFactory(
           idBaseOrg: device.idBaseOrg.id,
           deviceSN: device.deviceSN,
           versionNO: device.versionNO,
-          status: deviceStatus(device.workStatus,device.monitorStatus),
+          status: deviceStatus(device.workStatus, device.monitorStatus),
           period: device.period,
         })
       })
@@ -364,7 +373,7 @@ Creator.getDeviceDetail = asyncActionFactory(
       } catch (error) {
         dispatch(fail({ errorcode: error }));
       }
-    } else{
+    } else {
       dispatch(fail({ errorcode: '登录信息错误！' }));
     }
     const device = res[0] ? res[0].attributes : res.attributes;
@@ -415,10 +424,18 @@ Creator.changeMonitorAndMode = (params) => {
   const period = timeStart + '-' + timeEnd;
   return ({
     type: TYPES.CHANGE_DEVICE_PERIOD_AND_MODE,
-    payload: {modeType, period}
+    payload: { modeType, period }
   })
 }
 
+// 病例号修改
+Creator.changeReportNum = (params) => {
+  const { idModifiedReport, reportNum } = params;
+  return ({
+    type: TYPES.CHANGE_REPORT_NUM,
+    payload: { idModifiedReport, reportNum }
+  })
+}
 //设备 
 function deviceStatus(workStatus, monitorStatus) {
   switch (workStatus) {
@@ -439,26 +456,30 @@ function deviceStatus(workStatus, monitorStatus) {
       }
     default:
       return {
-          str: "Not online",
-          color: "black",
-          wifiConect: false
+        str: "Not online",
+        color: "black",
+        wifiConect: false
       };
   }
 }
 
 // 处理报告数据成养老版editData格式
 function DataToEditData(data, alreadyDecodedData) {
+  console.log('uuuuuuuuuu',data, alreadyDecodedData)
   var obj = {}
   if (data.editedData) {
+    // 暂不使用编辑数据替代原有数据
+  // if (false) {
     const sleepTimeObj = getSleepTime(data)
-    obj = data.editedData
+    obj = {
+      ...data.editedData
+    }
     if (!obj.totalRecord) {
       obj.totalRecord = sleepTimeObj.totalRecord
     }
   } else {
     if (alreadyDecodedData) {
       obj = {
-        ahi: data.AHI.toFixed(1),
         ahiAdvice: null,
 
         secStart: null,
@@ -500,73 +521,102 @@ function DataToEditData(data, alreadyDecodedData) {
         spo2Less95TimePercent: alreadyDecodedData.spo2Less95TimePercent,
       }
     }
-    const sleepTimeObj = getSleepTime(data)
-    obj = { ...obj, ...sleepTimeObj }
   }
-
+  const sleepTimeObj = getSleepTime(data, alreadyDecodedData)
+  obj = { ...obj, ...sleepTimeObj }
   return obj
 }
 
-function getSleepPercent(data) {
+function getSleepPercent(data, alreadyDecodedData) {
   const { sleepData } = data;
   let wakeTime = 0;
   let remSleep = 0;
   let lightSleep = 0;
   let deepSleep = 0;
   let all = 0;
-  if (sleepData.length != 0) {
-    for (let i = 0, j = sleepData.length; i < j; i++) {
-      all++;
-      switch (sleepData[i]) {
-        case 0:
-          wakeTime++;
-          break;
-        case 2:
-          remSleep++;
-          break;
-        case 3:
-          lightSleep++;
-          break;
-        case 4:
-          deepSleep++;
-          break;
-        default:
-          break;
+  let wakeTimePer = 0;
+  let remSleepPercent = 0;
+  let lightSleepPercent = 0;
+  let deepSleepPercent = 0;
+  if(alreadyDecodedData){
+    const {Waketime,Wakerate,REMtime,REMrate,LightSleeptime,LightSleeprate,DeepSleeptime,DeepSleeprate} = alreadyDecodedData
+    wakeTime = Waketime;
+    remSleep = REMtime;
+    lightSleep = LightSleeptime;
+    deepSleep = DeepSleeptime;
+    wakeTimePer = Wakerate ? parseFloat(Wakerate).toFixed(1) : 0;
+    remSleepPercent = REMrate ? parseFloat(REMrate).toFixed(1) : 0;
+    lightSleepPercent = LightSleeprate ? parseFloat(LightSleeprate).toFixed(1) : 0;
+    deepSleepPercent = DeepSleeprate ? parseFloat(DeepSleeprate).toFixed(1) : 0;
+  }else{
+    if (sleepData.length != 0) {
+      for (let i = 0, j = sleepData.length; i < j; i++) {
+        all++;
+        switch (sleepData[i]) {
+          case 0:
+            wakeTime++;
+            break;
+          case 2:
+            remSleep++;
+            break;
+          case 3:
+            lightSleep++;
+            break;
+          case 4:
+            deepSleep++;
+            break;
+          default:
+            break;
+        }
       }
     }
+    wakeTimePer = parseFloat((wakeTime * 100 / all).toFixed(1)) ? parseFloat((wakeTime * 100 / all).toFixed(1)) : 0;
+    deepSleepPercent = (parseFloat((deepSleep * 100 / all).toFixed(1)) ? parseFloat((deepSleep * 100 / all).toFixed(1)) : 0);
+    lightSleepPercent = (parseFloat((lightSleep * 100 / all).toFixed(1)) ? parseFloat((lightSleep * 100 / all).toFixed(1)) : 0);
+    remSleepPercent = (parseFloat((remSleep * 100 / all).toFixed(1)) ? parseFloat((remSleep * 100 / all).toFixed(1)) : 0);
   }
-  const wakeTimePer = parseFloat((wakeTime * 100 / all).toFixed(1)) ? parseFloat((wakeTime * 100 / all).toFixed(1)) : 100;
+
   const totalSleepMilliseconds = moment.duration((lightSleep + remSleep + deepSleep) * 60 * 1000);
-
   return {
+    wakeTime,
+    remSleep,
+    lightSleep,
+    deepSleep,
+    wakeTimePer,
+    deepSleepPercent,
+    lightSleepPercent,
+    remSleepPercent,
     totalSleepTime: `${totalSleepMilliseconds.hours()}时${totalSleepMilliseconds.minutes()}分`,
-    sleepPercent: 100 - wakeTimePer,
-    deepSleepPercent: (parseFloat((deepSleep * 100 / all).toFixed(1)) ? parseFloat((deepSleep * 100 / all).toFixed(1)) : 100),
-    lightSleepPercent: (parseFloat((lightSleep * 100 / all).toFixed(1)) ? parseFloat((lightSleep * 100 / all).toFixed(1)) : 100),
-    remSleepPercent: (parseFloat((remSleep * 100 / all).toFixed(1)) ? parseFloat((remSleep * 100 / all).toFixed(1)) : 100),
-
+    totalSleepMilliseconds : (lightSleep + remSleep + deepSleep) * 60 * 1000
   };
 }
 
-function getSleepTime(data) {
-  const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute, extraCheckTimeMinute } = data;
+function getSleepTime(data, alreadyDecodedData) {
+  const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute, extraCheckTimeMinute, AHI } = data;
   const start = startSleepTime;
-  const sleepStageStart = start + (startStatusTimeMinute === -1 ? 0 : startStatusTimeMinute) * 60 * 1000;
+  const sleepStageStart = start;
+  // const sleepStageStart = start + (startStatusTimeMinute === -1 ? 0 : startStatusTimeMinute) * 60 * 1000;
   const sleepStageEnd = start + (endStatusTimeMinute === -1 ? 0 : endStatusTimeMinute) * 60 * 1000;
   const end = start + (extraCheckTimeMinute === -1 ? 0 : extraCheckTimeMinute) * 60 * 1000;
   const totalMilliseconds = moment.duration(sleepStageEnd - sleepStageStart);
-
+  const sleepEfficiency = (getSleepPercent(data, alreadyDecodedData).totalSleepMilliseconds*100/(sleepStageEnd - sleepStageStart)).toFixed(1);
   return {
+    ahi: data.AHI.toFixed(1),
     fallAsleep: moment(start).format('HH:mm'),
     getUp: moment(end).format('HH:mm'),
     secStart: moment(sleepStageStart).format('HH:mm'),
     secEnd: moment(sleepStageEnd).format('HH:mm'),
     totalRecord: `${totalMilliseconds.hours()}时${totalMilliseconds.minutes()}分`,
-    totalRecordTime: getSleepPercent(data).totalSleepTime,
-    sleepEfficiency: getSleepPercent(data).sleepPercent,
-    deepSleepPercent: getSleepPercent(data).deepSleepPercent,
-    lightSleepPercent: getSleepPercent(data).lightSleepPercent,
-    remSleepPercent: getSleepPercent(data).remSleepPercent,
+    sleepEfficiency: sleepEfficiency,
+    wakeTime:getSleepPercent(data, alreadyDecodedData).wakeTime,
+    remSleep:getSleepPercent(data, alreadyDecodedData).remSleep,
+    lightSleep:getSleepPercent(data, alreadyDecodedData).lightSleep,
+    deepSleep:getSleepPercent(data, alreadyDecodedData).deepSleep,
+    wakeTimePer:getSleepPercent(data, alreadyDecodedData).wakeTimePer,
+    totalRecordTime: getSleepPercent(data, alreadyDecodedData).totalSleepTime,
+    deepSleepPercent: getSleepPercent(data, alreadyDecodedData).deepSleepPercent,
+    lightSleepPercent: getSleepPercent(data, alreadyDecodedData).lightSleepPercent,
+    remSleepPercent: getSleepPercent(data, alreadyDecodedData).remSleepPercent,
   };
 }
 
@@ -645,41 +695,40 @@ function _parseRingInfo(ringArr) {
 }
 
 // AHI程度
-
-function ahiDegree(ahi){
-  if(ahi == -1){
+function ahiDegree(ahi) {
+  if (ahi == -1 || ahi == 0) {
     return {
-      ahi:ahi,
-      color:'#ccc',
-      degree:'无效',
+      ahi: ahi,
+      color: '#ccc',
+      degree: '无效',
     }
   }
-  if(ahi<5&&ahi>=0) {
+  if (ahi < 5 && ahi > 0) {
     return {
-      ahi:ahi,
-      color:'#20deff',
-      degree:'正常',
+      ahi: ahi,
+      color: 'balck',
+      degree: '正常',
     }
   }
-  if(ahi>=5&&ahi<15) {
+  if (ahi >= 5 && ahi < 15) {
     return {
-      ahi:ahi,
-      color:'#95ff8e',
-      degree:'轻度',
+      ahi: ahi,
+      color: 'balck',
+      degree: '轻度',
     }
   }
-  if(ahi>=15&&ahi<30) {
+  if (ahi >= 15 && ahi < 30) {
     return {
-      ahi:ahi,
-      color:'#feba3b',
-      degree:'中度',
+      ahi: ahi,
+      color: 'balck',
+      degree: '中度',
     }
   }
-  if(ahi>=30) {
+  if (ahi >= 30) {
     return {
-      ahi:ahi,
-      color:'#fd4f51',
-      degree:'重度',
+      ahi: ahi,
+      color: 'balck',
+      degree: '重度',
     }
   }
   return {};

@@ -81,11 +81,17 @@ class DevicePage extends Component {
   
   onChangeNicknameBtn = (e,record)=>{
     e.stopPropagation();
-    this.setState({
-      modal:true,
-      oldNickname:record.nickName,
-      record:record
-    })
+    const user = AV.User.current();
+    const roleType = user.attributes.roleType;
+    if(roleType == 5){
+      this.setState({
+        modal:true,
+        oldNickname:record.nickName,
+        record:record
+      })
+    }else{
+      this.toDeviceDetail(record.key);
+    }
   }
   changeNickname = (e)=>{
     this.setState({newNickname:e.target.value})

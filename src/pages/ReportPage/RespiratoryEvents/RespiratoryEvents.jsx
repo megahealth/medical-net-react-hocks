@@ -91,7 +91,7 @@ class RespiratoryEvents extends Component {
       events.BETotalTime = BETotalTime;
       events.BETotalrate = BETotalrate;
     }
-
+    console.log('xff',events)
     return (
       <div className="block">
         <Title level={2}>{t('Sleep Respiratory Event')}</Title>

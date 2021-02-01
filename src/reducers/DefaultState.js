@@ -21,7 +21,8 @@ const DefaultState = {
     filter: {
       reportType: ['all'],
       startDate: null,
-      endDate: null
+      endDate: null,
+      deviceId: null,
     }
   },
   allDevice:{
@@ -146,7 +147,7 @@ const DefaultState = {
     isEditting: false,
     edition: {},
     adviceData: {},
-
+    id:'',
   }
 };
 
