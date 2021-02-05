@@ -109,7 +109,6 @@ Creator.getAllReportsData = asyncActionFactory(
         const start = startSleepTime;
         const sleepStageStart = start + (startStatusTimeMinute === -1 ? 0 : startStatusTimeMinute) * 60 * 1000;
         const sleepStageEnd = start + (endStatusTimeMinute === -1 ? 0 : endStatusTimeMinute) * 60 * 1000;
-        console.log('ffff',sleepStageEnd - sleepStageStart)
         const totalMilliseconds = moment.duration(sleepStageEnd - sleepStageStart);
         return {
           'id': item.id,
@@ -229,6 +228,59 @@ Creator.getReportData = asyncActionFactory(
     const waveData = waveRes && waveRes.data;
     decodeRingData(id, ringData, tempSleepId, fileid).then((alreadyDecodedData) => {
       const adviceData = DataToEditData(data, alreadyDecodedData)
+      if(!alreadyDecodedData){
+        alreadyDecodedData = {
+          AHI: 0,
+          BECCnt: 0,
+          BECnt: 0,
+          BEMCnt: 0,
+          BEMaxlen: 0,
+          BEMaxlentime: 0,
+          BEMeanlen: 0,
+          BEOHCnt: 0,
+          BETotalTime: 0,
+          BETotalrate: 0,
+          BreathEventVect: [],
+          Wakerate: 0,
+          Waketime: 0,
+          DeepSleeprate: 0,
+          DeepSleeptime: 0,
+          LightSleeprate: 0,
+          LightSleeptime: 0,
+          REMrate: 0,
+          REMtime: 0,
+          SAO2EventVect: [],
+          Spo2Arr: [],
+          Spo2Avg: 0,
+          Spo2Min: 0,
+          diffThdLge3Cnts: 0,
+          diffThdLge3Pr: 0,
+          duration: 0,
+          startpos: 0,
+          endpos: 0,
+          handOffArr: 0,
+          handOffArrlen: 0,
+          handonTotalTime: 0,
+          maxSpo2DownTime: 0,
+          prArr: [],
+          prAvg: 0,
+          prMax: 0,
+          prMin: 0,
+          spo2Less60Time: 0,
+          spo2Less60TimePercent: 0,
+          spo2Less70Time: 0,
+          spo2Less70TimePercent: 0,
+          spo2Less80Time: 0,
+          spo2Less80TimePercent: 0,
+          spo2Less85Time: 0,
+          spo2Less85TimePercent: 0,
+          spo2Less90Time: 0,
+          spo2Less90TimePercent: 0,
+          spo2Less95Time: 0,
+          spo2Less95TimePercent: 0,
+          timeStart: 0,
+        }
+      }
       dispatch(success({ data, alreadyDecodedData, waveData, adviceData, reportNum, id }));
     }, (err) => {
       dispatch(fail({ errorcode: err }));
@@ -465,7 +517,6 @@ function deviceStatus(workStatus, monitorStatus) {
 
 // 处理报告数据成养老版editData格式
 function DataToEditData(data, alreadyDecodedData) {
-  console.log('uuuuuuuuuu',data, alreadyDecodedData)
   var obj = {}
   if (data.editedData) {
     // 暂不使用编辑数据替代原有数据

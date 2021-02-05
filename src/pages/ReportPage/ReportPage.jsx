@@ -57,15 +57,15 @@ class ReportPage extends Component {
     const { saveUpdate, report } = this.props;
     const { edition } = report;
     console.log(report.edition);
-    console.log({adviceData:{},edition}, this.id);
-    saveUpdate({adviceData:{},edition}, this.id)
+    console.log({ adviceData: {}, edition }, this.id);
+    saveUpdate({ adviceData: {}, edition }, this.id)
 
   }
 
   saveAdviceEdit = () => {
     const { saveUpdate, report } = this.props;
     const { adviceData } = report;
-    saveUpdate({adviceData, edition:{}}, this.id)
+    saveUpdate({ adviceData, edition: {} }, this.id)
   }
 
   print = () => {
@@ -76,7 +76,13 @@ class ReportPage extends Component {
     const { report, t, changeEditStatus } = this.props;
     const { isEditting } = report
     const { size } = this.state;
-
+    console.log('aaaaaa', report.alreadyDecodedData)
+    let isShow = false;
+    if(report.alreadyDecodedData){
+      const { prArr, Spo2Arr } = report.alreadyDecodedData;
+      if(prArr.length>0&&Spo2Arr.length>0) isShow = true;
+    }
+    
     return (
       <div className="container">
         <div className="wrapper">
@@ -87,9 +93,9 @@ class ReportPage extends Component {
                 icon={<LeftOutlined />}
                 size={size}
                 onClick={
-                  () => { 
-                    this.props.history.goBack(); 
-                    if(isEditting){this.exitEdit()}
+                  () => {
+                    this.props.history.goBack();
+                    if (isEditting) { this.exitEdit() }
                   }
                 }
               >
@@ -101,8 +107,8 @@ class ReportPage extends Component {
                 isEditting
                   ?
                   <div className="hide-print option-btns">
-                    <Button shape="round" icon={<SaveOutlined />} size={size} onClick={ this.saveUserEdit }> {t('Save')} </Button>
-                    <Button shape="round" icon={<CloseSquareOutlined />} size={size}  onClick={this.exitEdit} > {t('Exit')} </Button>
+                    <Button shape="round" icon={<SaveOutlined />} size={size} onClick={this.saveUserEdit}> {t('Save')} </Button>
+                    <Button shape="round" icon={<CloseSquareOutlined />} size={size} onClick={this.exitEdit} > {t('Exit')} </Button>
                   </div>
                   :
                   <div className="hide-print option-btns">
@@ -122,14 +128,24 @@ class ReportPage extends Component {
               <SleepStage></SleepStage>
               <StagePieChart></StagePieChart>
             </div>
-            <div className="print-page">
-              <ReportHeader></ReportHeader>
-              <SpoAbstract></SpoAbstract>
-              <SpoRange></SpoRange>
-              <PrAbstract></PrAbstract>
-              <Advice></Advice>
-            </div>
-            <div className="print-page">
+            {
+              isShow ?
+                <div className="print-page">
+                  <ReportHeader></ReportHeader>
+                  <SpoAbstract></SpoAbstract>
+                  <SpoRange></SpoRange>
+                  <PrAbstract></PrAbstract>
+                  <Advice></Advice>
+                </div>
+              :
+              <div className="print-page">
+                <ReportHeader></ReportHeader>
+                <Advice></Advice>
+              </div>
+            }
+            {
+              isShow ?
+              <div className="print-page">
               <ReportHeader></ReportHeader>
               <SpoChart></SpoChart>
               <PrChart></PrChart>
@@ -137,9 +153,24 @@ class ReportPage extends Component {
               <StageChart></StageChart>
               {/* <BodyMoveTimeChart></BodyMoveTimeChart> */}
             </div>
-            <div className="print-page">
-              <BreathWave></BreathWave>
+              :
+              <div className="print-page">
+              <ReportHeader></ReportHeader>
+              <EventsChart></EventsChart>
+              <StageChart></StageChart>
             </div>
+            }
+
+            {/* <div className="print-page">
+              <ReportHeader></ReportHeader>
+              <SpoChart></SpoChart>
+              <PrChart></PrChart>
+              <EventsChart></EventsChart>
+              <StageChart></StageChart>
+            </div> */}
+            {/* <div className="print-page">
+              <BreathWave></BreathWave>
+            </div> */}
           </Skeleton>
         </div>
       </div>
@@ -180,8 +211,8 @@ const mapDispatchToProps = dispatch => ({
   cancelUpdate() {
     dispatch(Creator.cancelUpdate())
   },
-  saveUpdate(data,id) {
-    dispatch(Creator.saveUpdate(data,id))
+  saveUpdate(data, id) {
+    dispatch(Creator.saveUpdate(data, id))
   }
 });
 

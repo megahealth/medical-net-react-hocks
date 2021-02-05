@@ -37,22 +37,22 @@ class SpoRange extends Component {
           <span>
             <span>&lt;95%</span>
             <span className="table-value">{ parseFloat(spo2Less95Time / 60, 10).toFixed(1) }</span>
-            <span className="table-value">{ spo2Less95TimePercent }</span>
+            <span className="table-value">{ parseFloat(spo2Less95TimePercent).toFixed(1) }</span>
           </span>
           <span>
             <span>&lt;90%</span>
             <span className="table-value">{ parseFloat(spo2Less90Time / 60, 10).toFixed(1) }</span>
-            <span className="table-value">{ spo2Less90TimePercent }</span>
+            <span className="table-value">{ parseFloat(spo2Less90TimePercent).toFixed(1) }</span>
           </span>
           <span>
             <span>&lt;85%</span>
             <span className="table-value">{ parseFloat(spo2Less85Time / 60, 10).toFixed(1) }</span>
-            <span className="table-value">{ spo2Less85TimePercent }</span>
+            <span className="table-value">{ parseFloat(spo2Less85TimePercent).toFixed(1) }</span>
           </span>
           <span>
             <span>&lt;80%</span>
             <span className="table-value">{ parseFloat(spo2Less80Time / 60, 10).toFixed(1) }</span>
-            <span className="table-value">{ spo2Less80TimePercent }</span>
+            <span className="table-value">{ parseFloat(spo2Less80TimePercent).toFixed(1) }</span>
           </span>
         </div>
       </div>

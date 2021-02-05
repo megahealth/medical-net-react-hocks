@@ -56,7 +56,7 @@ class RespiratoryEvents extends Component {
     return {
       BEMeanlen: breathList.length!=0?parseInt((total / breathList.length).toFixed(0), 10):BEMeanlen,
       BEMaxlen: max,
-      BEMaxlentime: sleepStageStart + maxDuration * 1000,
+      BEMaxlentime: (startSleepTime + maxDuration * 1000),
       BEOHCnt: breathTypeEnt.t2 + breathTypeEnt.t3,
       BECCnt: breathTypeEnt.t1,
       BEMCnt: breathTypeEnt.t0,
@@ -79,7 +79,7 @@ class RespiratoryEvents extends Component {
       events.BEMCnt = this.countRespiratoryEvents().BEMCnt;
       events.BECnt = this.countRespiratoryEvents().BECnt;
       events.BETotalTime = this.countRespiratoryEvents().BETotalTime;
-      events.BETotalrate = this.countRespiratoryEvents().BETotalrate;
+      events.BETotalrate = parseFloat(this.countRespiratoryEvents().BETotalrate).toFixed(1);
     } else {
       events.BEMeanlen = BEMeanlen;
       events.BEMaxlen = BEMaxlen;
@@ -89,9 +89,8 @@ class RespiratoryEvents extends Component {
       events.BEMCnt = BEMCnt;
       events.BECnt = BECnt;
       events.BETotalTime = BETotalTime;
-      events.BETotalrate = BETotalrate;
+      events.BETotalrate = parseFloat(BETotalrate).toFixed(1);
     }
-    console.log('xff',events)
     return (
       <div className="block">
         <Title level={2}>{t('Sleep Respiratory Event')}</Title>
@@ -116,7 +115,7 @@ class RespiratoryEvents extends Component {
             <span>{t('BECCnt')}</span>
           </span>
           <span>
-            <span>{ moment(events.BEMaxlentime).format('HH:mm') }</span>
+            <span>{ moment(events.BEMaxlentime).format("HH:mm") }</span>
             <span>{t('BEMaxlentime')}</span>
             <span>{ events.BETotalrate }</span>
             <span>{t('BETotalrate')}</span>

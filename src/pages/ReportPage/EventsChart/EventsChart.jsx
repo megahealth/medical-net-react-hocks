@@ -20,21 +20,25 @@ class EventsChart extends Component {
     const sleepStageEnd = startSleepTime + endStatusTimeMinute * 60 * 1000;
 
     const breathEventChartData = [];
-    const data = (breathList && breathEvent) || [];
+    const data = (breathList) || [];
     for (let i = 0; i < data.length; i++) {
-      const breathEventTime = new Date(data[i][0] * 1000);
+      console.log(sleepStageStart + data[i][0] * 1000);
+      const breathEventTime = new Date(sleepStageStart + data[i][0] * 1000);
       const breathEventData = data[i][1];
       breathEventChartData.push([breathEventTime, breathEventData]);
     }
-
     const option = {
       animation: false,
       grid: {
-        left: '2%',
+        left: '4%',
         right: '3%',
         bottom: '5%',
         top: '14%',
         containLabel: true
+      },
+      tooltip: {
+        trigger: 'axis',
+        show: true,
       },
       xAxis: [
         {
@@ -53,7 +57,7 @@ class EventsChart extends Component {
           axisLabel: {
             showMinLabel: true,
             showMaxLabel: true,
-            formatter: (value, index) => moment(value).format('HH:mm')
+            formatter: (value, index) =>moment(value).format('HH:mm')
           },
           splitLine: {
             show: true,

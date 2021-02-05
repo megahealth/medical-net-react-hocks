@@ -95,7 +95,7 @@ class Advice extends Component {
   getSleepAdvice = (adviceData) => {
     var ahiGrade = this.getAhiGrade(adviceData.ahi);
     var spoGrade = this.getSpoGrade(adviceData.spo2Min);
-    var spo = `夜间平均血氧饱和度为${adviceData.spo2Avg||'--'}%，最低血氧饱和度为${adviceData.spo2Min||'--'}%`;
+    var spo = (adviceData.spo2Avg&&adviceData.spo2Min)?`夜间平均血氧饱和度为${parseFloat(adviceData.spo2Avg).toFixed(1) ||'--'}%，最低血氧饱和度为${parseFloat(adviceData.spo2Min).toFixed(1)||'--'}%`:"";
     var breathe = '';
     switch (ahiGrade) {
       case 1:
@@ -130,7 +130,7 @@ class Advice extends Component {
     您的总睡眠时间为${adviceData.totalRecordTime||'--'}，睡眠效率(TST/TIB)为${adviceData.sleepEfficiency||'--'}%，其中深睡期占比${adviceData.deepSleepPercent||'--'}%，浅睡期占比${adviceData.lightSleepPercent||'--'}%，快速眼动期占比${adviceData.remSleepPercent||'--'}%。`
     +'\n'+
     `睡眠呼吸综述:
-    您的AHI指数为${adviceData.ahi||'--'}，${ breathe?breathe+',':'' }${ spo }`
+    您的AHI指数为${adviceData.ahi||'--'}，${ breathe?breathe:'' }${ spo }`
     +'\n'+(ahiGrade == 0?'经检测,您当前的您当前这份报告被判定为无效报告。出现此现象的原因可能是：':'建议：')+'\n'
     ;
     return sleepAdvice;
@@ -138,7 +138,6 @@ class Advice extends Component {
 
   render() {
     const { t, adviceData, edition } = this.props;
-    console.log('hhhh',adviceData, edition)
     return (
       <div className="block">
         <Title level={2}>{t('Sleep Evaluation Recommendations')}</Title>

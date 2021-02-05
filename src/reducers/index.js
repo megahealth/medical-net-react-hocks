@@ -75,7 +75,7 @@ const report = (state = DefaultState.report, action) => {
         ...state,
         loading: false,
         data: action.payload.data,
-        alreadyDecodedData: action.payload.alreadyDecodedData ? action.payload.alreadyDecodedData : state.alreadyDecodedData,
+        alreadyDecodedData: action.payload.alreadyDecodedData,
         waveData: action.payload.waveData,
         edition: action.payload.data.customInfo || (action.payload.data.idPatient ? action.payload.data.idPatient.attributes : action.payload.data.patientInfo),
         adviceData: action.payload.adviceData || {},
