@@ -431,7 +431,6 @@ Creator.getDeviceDetail = asyncActionFactory(
     }
     const device = res[0] ? res[0].attributes : res.attributes;
     const deviceId = res[0] ? res[0].id : res.id;
-    console.log('res',device)
     if (device) {
       // 查询报告数量
       const queryReportsCount = new AV.Query('Reports');
@@ -459,7 +458,7 @@ Creator.getDeviceDetail = asyncActionFactory(
         deviceId: deviceId,
         roleType: roleType,
         device: device,
-        ringArr: _parseRingInfo(ringArr)
+        ringArr: ringArr&&ringArr.length>0?_parseRingInfo(ringArr):[]
       }))
     }
   }
