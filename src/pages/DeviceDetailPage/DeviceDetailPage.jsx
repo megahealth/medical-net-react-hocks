@@ -16,6 +16,7 @@ const optionsWithDisabled = [
   { label: '儿童', value: 1 },
 ];
 const format = 'HH:mm';
+var intervalGetRingArr = null;
 class DeviceDetailPage extends Component {
   constructor(props) {
     super(props);
@@ -29,6 +30,12 @@ class DeviceDetailPage extends Component {
   }
   async componentDidMount() {
     this.props.getDeviceDetail(this.id);
+    intervalGetRingArr = setInterval(() => {
+      this.props.getDeviceDetail(this.id);
+    }, 5000);
+  }
+  componentWillUnmount() {
+    clearInterval(intervalGetRingArr);
   }
   changeLed = (checked) => {
     const led = checked ? -1 : 0;
@@ -48,8 +55,8 @@ class DeviceDetailPage extends Component {
   }
   ringList = (ringArr) => {
     return ringArr.map(item => {
-      const ringInfo = item.attributes;
-      return (<tr key={item.id} style={ringInfo.active ? styleColor.background_blue : styleColor.background_gry}>
+      const ringInfo = item;
+      return (<tr key={item.sn} style={ringInfo.active ? styleColor.background_blue : styleColor.background_gry}>
         <td>{ringInfo.sn}</td>
         <Translation>{t => <td>{t(ringInfo.typeOfSN)}</td>}</Translation>
         <td>{ringInfo.mac}</td>

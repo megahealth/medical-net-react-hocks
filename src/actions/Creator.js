@@ -418,10 +418,11 @@ Creator.getDeviceDetail = asyncActionFactory(
     let { idBaseOrg } = user.attributes;
     const queryDevice = new AV.Query('Device');
     queryDevice.include('idPatient')
-    queryDevice.select(['deviceSN', 'period', 'modeType', 'versionNO', 'workStatus', 'monitorStatus', 'wifiName', 'idPatient', 'ledOnTime']);
+    queryDevice.select(['deviceSN', 'period', 'modeType', 'versionNO', 'workStatus', 'monitorStatus', 'wifiName', 'idPatient', 'ledOnTime','localIP']);
     if (roleType == 5 || roleType == 6) {
       try {
         res = await queryDevice.get(id);
+        
       } catch (error) {
         dispatch(fail({ errorcode: error }));
       }
@@ -430,6 +431,7 @@ Creator.getDeviceDetail = asyncActionFactory(
     }
     const device = res[0] ? res[0].attributes : res.attributes;
     const deviceId = res[0] ? res[0].id : res.id;
+    console.log('res',device)
     if (device) {
       // 查询报告数量
       const queryReportsCount = new AV.Query('Reports');
@@ -441,8 +443,16 @@ Creator.getDeviceDetail = asyncActionFactory(
       try {
         count = await queryReportsCount.count();
         device.count = count;
-        ringArr = await queryRing.find();
       } catch (error) {
+        console.log('error1',error);
+        dispatch(fail({ errorcode: error }));
+      }
+      try {
+        var url = "http://" + device.localIP + ":8080/v2/getBoundDevices?type=MegaRing";
+        res = await axios.get(url);
+        ringArr = res.data.result.boundDevices;
+      } catch (error) {
+        console.log('error1',error);
         dispatch(fail({ errorcode: error }));
       }
       dispatch(success({
@@ -737,10 +747,10 @@ async function handleUser(datas) {
 // 设备型号
 function _parseRingInfo(ringArr) {
   return ringArr.map(item => {
-    const ringInfo = item.attributes;
+    const ringInfo = item;
     var typeOfSN = ringInfo.sn.slice(0, 4);
     var newTypeOfRing = typeOfSN == 'P11B' ? 'Ceramics' : 'Metal';
-    item.attributes.typeOfSN = newTypeOfRing
+    item.typeOfSN = newTypeOfRing
     return item
   })
 }

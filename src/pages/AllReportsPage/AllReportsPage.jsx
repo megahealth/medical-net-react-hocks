@@ -13,13 +13,6 @@ class AllReportsPage extends Component {
   columns = [
     {
       title: <Translation>
-        {t => <span>{t('Column Head Index')}</span>}
-      </Translation>,
-      dataIndex: 'index',
-      align: 'center'
-    },
-    {
-      title: <Translation>
         {t => <span>{t('Column Head Name')}</span>}
       </Translation>,
       dataIndex: 'name',

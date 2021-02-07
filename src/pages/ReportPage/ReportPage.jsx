@@ -76,7 +76,6 @@ class ReportPage extends Component {
     const { report, t, changeEditStatus } = this.props;
     const { isEditting } = report
     const { size } = this.state;
-    console.log('aaaaaa', report.alreadyDecodedData)
     let isShow = false;
     if(report.alreadyDecodedData){
       const { prArr, Spo2Arr } = report.alreadyDecodedData;
