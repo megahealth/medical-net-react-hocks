@@ -4,10 +4,12 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import ReactEcharts from 'echarts-for-react';
 import { withTranslation } from 'react-i18next';
-
+import AV from 'leancloud-storage';
 class EventsChart extends Component {
 
   getOption = () => {
+    const currentUser = AV.User.current();
+    console.log(currentUser)
     const {
       startSleepTime,
       startStatusTimeMinute,
@@ -22,7 +24,13 @@ class EventsChart extends Component {
     const breathEventChartData = [];
     const data = (breathList) || [];
     for (let i = 0; i < data.length; i++) {
-      const breathEventTime = new Date(sleepStageStart + data[i][0] * 1000);
+      var breathEventTime;
+      if(currentUser.id == '5c665a7b2438920054eb3f93'){
+        breathEventTime = new Date(sleepStageStart + data[i][0] * 1000);
+      }else{
+        breathEventTime = new Date(data[i][0] * 1000);
+      }
+      
       const breathEventData = data[i][1];
       breathEventChartData.push([breathEventTime, breathEventData]);
     }

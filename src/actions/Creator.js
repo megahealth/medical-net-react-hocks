@@ -65,12 +65,12 @@ Creator.getAllReportsData = asyncActionFactory(
     if (filter && filter.endDate) {
       Reports.lessThan('createdAt', filter.endDate);
     }
-    if (filter && filter.deviceId){
-      const device = AV.Object.createWithoutData('Device',filter.deviceId);
-      Reports.equalTo('idDevice',device)
+    if (filter && filter.deviceId) {
+      const device = AV.Object.createWithoutData('Device', filter.deviceId);
+      Reports.equalTo('idDevice', device)
     }
 
-      const user = AV.User.current();
+    const user = AV.User.current();
     const idBaseOrg = user.attributes.idBaseOrg;
     const roleType = user.attributes.roleType;
     if (limit) Reports.limit(limit);
@@ -88,7 +88,7 @@ Creator.getAllReportsData = asyncActionFactory(
       Reports.equalTo('idGroup', idGroup);
     }
     Reports.descending('createdAt');
-    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'idPatient', 'idReport', 'idDevice', 'patientInfo', 'extraCheckTimeMinute', 'idGroup','startSleepTime', 'startStatusTimeMinute', 'endStatusTimeMinute']);
+    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'idPatient', 'idReport', 'idDevice', 'patientInfo', 'extraCheckTimeMinute', 'idGroup', 'startSleepTime', 'startStatusTimeMinute', 'endStatusTimeMinute']);
     Reports.include(['idPatient', 'idDevice']);
     let total, result;
     try {
@@ -105,7 +105,7 @@ Creator.getAllReportsData = asyncActionFactory(
         let sn = item.get('idDevice') && (item.get('idDevice').get('deviceSN') || '--');
         let idDevice = item.get('idDevice') && (item.get('idDevice').id || '--');
         let idReport = item.get('idReport') || '';
-        const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute,  } = item.attributes;
+        const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute, } = item.attributes;
         const start = startSleepTime;
         const sleepStageStart = start + (startStatusTimeMinute === -1 ? 0 : startStatusTimeMinute) * 60 * 1000;
         const sleepStageEnd = start + (endStatusTimeMinute === -1 ? 0 : endStatusTimeMinute) * 60 * 1000;
@@ -228,7 +228,7 @@ Creator.getReportData = asyncActionFactory(
     const waveData = waveRes && waveRes.data;
     decodeRingData(id, ringData, tempSleepId, fileid).then((alreadyDecodedData) => {
       const adviceData = DataToEditData(data, alreadyDecodedData)
-      if(!alreadyDecodedData){
+      if (!alreadyDecodedData) {
         alreadyDecodedData = {
           AHI: 0,
           BECCnt: 0,
@@ -411,18 +411,17 @@ Creator.getDeviceDetail = asyncActionFactory(
   ['GET_DEVICE_DETAIL_DATA', 'GET_DEVICE_DETAIL_SUCCESS', 'GET_DEVICE_DETAIL_FAILED'],
   (getting, success, fail, id) => async (dispatch) => {
     dispatch(getting())
-    let count, ringArr;
+    let count;
+    let res = [];
     const user = AV.User.current();
-    let res = []
     const roleType = user.attributes.roleType
     let { idBaseOrg } = user.attributes;
     const queryDevice = new AV.Query('Device');
     queryDevice.include('idPatient')
-    queryDevice.select(['deviceSN', 'period', 'modeType', 'versionNO', 'workStatus', 'monitorStatus', 'wifiName', 'idPatient', 'ledOnTime','localIP']);
+    queryDevice.select(['deviceSN', 'period', 'modeType', 'versionNO', 'workStatus', 'monitorStatus', 'wifiName', 'idPatient', 'ledOnTime', 'localIP']);
     if (roleType == 5 || roleType == 6) {
       try {
         res = await queryDevice.get(id);
-        
       } catch (error) {
         dispatch(fail({ errorcode: error }));
       }
@@ -432,38 +431,43 @@ Creator.getDeviceDetail = asyncActionFactory(
     const device = res[0] ? res[0].attributes : res.attributes;
     const deviceId = res[0] ? res[0].id : res.id;
     if (device) {
+      // 获取戒指列表
+      Creator.getRingArr(device)
       // 查询报告数量
       const queryReportsCount = new AV.Query('Reports');
       const idDevice = new AV.Object.createWithoutData('Device', deviceId);
       queryReportsCount.equalTo('idDevice', idDevice);
-      // 查询戒指列表
-      const queryRing = new AV.Query('BoundDevice');
-      queryRing.equalTo('mPlusSn', device.deviceSN);
       try {
         count = await queryReportsCount.count();
         device.count = count;
       } catch (error) {
-        console.log('error1',error);
-        dispatch(fail({ errorcode: error }));
-      }
-      try {
-        var url = "http://" + device.localIP + ":8080/v2/getBoundDevices?type=MegaRing";
-        res = await axios.get(url);
-        ringArr = res.data.result.boundDevices;
-      } catch (error) {
-        console.log('error1',error);
+        console.log('error1', error);
         dispatch(fail({ errorcode: error }));
       }
       dispatch(success({
         deviceId: deviceId,
         roleType: roleType,
         device: device,
-        ringArr: ringArr&&ringArr.length>0?_parseRingInfo(ringArr):[]
       }))
     }
   }
 )
-
+// 获取戒指列表
+Creator.getRingArr = async (device) => {
+  let ringArr;
+  let res = [];
+  try {
+    var url = "http://" + device.localIP + ":8080/v2/getBoundDevices?type=MegaRing";
+    res = await axios.get(url);
+    ringArr = res.data.result.boundDevices;
+  } catch (error) {
+    console.log('error1', error);
+  }
+  return ({
+    type: TYPES.GET_RING_ARR,
+    payload: { ringArr: ringArr && ringArr.length > 0 ? _parseRingInfo(ringArr) : [] }
+  })
+}
 // 设备详情页呼吸灯开关
 Creator.changeLED = asyncActionFactory(
   ['CHANGE_DEVICE_LED', 'CHANGE_DEVICE_LED_SUCCESS', 'CHANGE_DEVICE_LED_FAILED'],
@@ -529,7 +533,7 @@ function DataToEditData(data, alreadyDecodedData) {
   var obj = {}
   if (data.editedData) {
     // 暂不使用编辑数据替代原有数据
-  // if (false) {
+    // if (false) {
     const sleepTimeObj = getSleepTime(data)
     obj = {
       ...data.editedData
@@ -598,8 +602,8 @@ function getSleepPercent(data, alreadyDecodedData) {
   let remSleepPercent = 0;
   let lightSleepPercent = 0;
   let deepSleepPercent = 0;
-  if(alreadyDecodedData){
-    const {Waketime,Wakerate,REMtime,REMrate,LightSleeptime,LightSleeprate,DeepSleeptime,DeepSleeprate} = alreadyDecodedData
+  if (alreadyDecodedData) {
+    const { Waketime, Wakerate, REMtime, REMrate, LightSleeptime, LightSleeprate, DeepSleeptime, DeepSleeprate } = alreadyDecodedData
     wakeTime = Waketime;
     remSleep = REMtime;
     lightSleep = LightSleeptime;
@@ -608,7 +612,7 @@ function getSleepPercent(data, alreadyDecodedData) {
     remSleepPercent = REMrate ? parseFloat(REMrate).toFixed(1) : 0;
     lightSleepPercent = LightSleeprate ? parseFloat(LightSleeprate).toFixed(1) : 0;
     deepSleepPercent = DeepSleeprate ? parseFloat(DeepSleeprate).toFixed(1) : 0;
-  }else{
+  } else {
     if (sleepData.length != 0) {
       for (let i = 0, j = sleepData.length; i < j; i++) {
         all++;
@@ -647,7 +651,7 @@ function getSleepPercent(data, alreadyDecodedData) {
     lightSleepPercent,
     remSleepPercent,
     totalSleepTime: `${totalSleepMilliseconds.hours()}时${totalSleepMilliseconds.minutes()}分`,
-    totalSleepMilliseconds : (lightSleep + remSleep + deepSleep) * 60 * 1000
+    totalSleepMilliseconds: (lightSleep + remSleep + deepSleep) * 60 * 1000
   };
 }
 
@@ -659,7 +663,7 @@ function getSleepTime(data, alreadyDecodedData) {
   const sleepStageEnd = start + (endStatusTimeMinute === -1 ? 0 : endStatusTimeMinute) * 60 * 1000;
   const end = start + (extraCheckTimeMinute === -1 ? 0 : extraCheckTimeMinute) * 60 * 1000;
   const totalMilliseconds = moment.duration(sleepStageEnd - sleepStageStart);
-  const sleepEfficiency = (getSleepPercent(data, alreadyDecodedData).totalSleepMilliseconds*100/(sleepStageEnd - sleepStageStart)).toFixed(1);
+  const sleepEfficiency = (getSleepPercent(data, alreadyDecodedData).totalSleepMilliseconds * 100 / (sleepStageEnd - sleepStageStart)).toFixed(1);
   return {
     ahi: data.AHI.toFixed(1),
     fallAsleep: moment(start).format('HH:mm'),
@@ -668,11 +672,11 @@ function getSleepTime(data, alreadyDecodedData) {
     secEnd: moment(sleepStageEnd).format('HH:mm'),
     totalRecord: `${totalMilliseconds.hours()}时${totalMilliseconds.minutes()}分`,
     sleepEfficiency: sleepEfficiency,
-    wakeTime:getSleepPercent(data, alreadyDecodedData).wakeTime,
-    remSleep:getSleepPercent(data, alreadyDecodedData).remSleep,
-    lightSleep:getSleepPercent(data, alreadyDecodedData).lightSleep,
-    deepSleep:getSleepPercent(data, alreadyDecodedData).deepSleep,
-    wakeTimePer:getSleepPercent(data, alreadyDecodedData).wakeTimePer,
+    wakeTime: getSleepPercent(data, alreadyDecodedData).wakeTime,
+    remSleep: getSleepPercent(data, alreadyDecodedData).remSleep,
+    lightSleep: getSleepPercent(data, alreadyDecodedData).lightSleep,
+    deepSleep: getSleepPercent(data, alreadyDecodedData).deepSleep,
+    wakeTimePer: getSleepPercent(data, alreadyDecodedData).wakeTimePer,
     totalRecordTime: getSleepPercent(data, alreadyDecodedData).totalSleepTime,
     deepSleepPercent: getSleepPercent(data, alreadyDecodedData).deepSleepPercent,
     lightSleepPercent: getSleepPercent(data, alreadyDecodedData).lightSleepPercent,

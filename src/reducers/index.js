@@ -159,6 +159,10 @@ const deviceDetail = (state = DefaultState.deviceDetail, action) => {
         roleType: action.payload.roleType,
         deviceId: action.payload.deviceId,
         device: action.payload.device,
+      })
+    case TYPES.GET_RING_ARR:
+      return ({
+        ...state,
         ringArr: action.payload.ringArr
       })
     case TYPES.GET_DEVICE_DETAIL_FAILED:

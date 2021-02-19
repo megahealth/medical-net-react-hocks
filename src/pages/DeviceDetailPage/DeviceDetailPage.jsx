@@ -34,7 +34,6 @@ class DeviceDetailPage extends Component {
       this.props.getDeviceDetail(this.id);
     }, 5000);
     if (!(navigator.userAgent.match(/(iPhone|iPod|Android|ios|iOS|iPad|Backerry|WebOS|Symbian|Windows Phone|Phone)/i))) {
-      window.alert('请保持平板使用移动数据网络!')
       clearInterval(intervalGetRingArr);
     }
   }

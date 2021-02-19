@@ -41,6 +41,7 @@ export const CHANGE_DEVICE_LED_SUCCESS = '打开/关闭呼吸灯成功';
 export const CHANGE_DEVICE_LED_FAILED = '打开/关闭呼吸灯失败';
 
 export const CHANGE_DEVICE_PERIOD_AND_MODE = '更新监测时段和模式';
+export const GET_RING_ARR = '获取戒指列表';
 
 export const CHANGE_REPORT_NUM = '更新报告病历号';
 export const CHANGE_REPORT_NUM_SUCCESS = '更新报告病历号成功';
