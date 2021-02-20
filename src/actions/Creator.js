@@ -44,6 +44,11 @@ Creator.startAnimation = () => ({
   type: TYPES.START_ANIMATION
 });
 
+Creator.setLocale = (language) => ({
+  type: TYPES.SET_LOCALE,
+  payload: language
+});
+
 // 获取全部报告
 Creator.getAllReportsData = asyncActionFactory(
   ['GET_ALL_REPORTS_DATA', 'GET_ALL_REPORTS_DATA_SUCCESS', 'GET_ALL_REPORTS_DATA_FAILED'],
@@ -458,7 +463,7 @@ Creator.getRingArr = async (device) => {
   let res = [];
   try {
     var url = "http://" + device.localIP + ":8080/v2/getBoundDevices?type=MegaRing";
-    res = await axios.get(url);
+    res = await axios.get(url, {timeout: 3000});
     ringArr = res.data.result.boundDevices;
   } catch (error) {
     console.log('error1', error);

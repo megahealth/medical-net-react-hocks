@@ -15,7 +15,7 @@ class MyApp extends Component {
     this.state = {  }
   }
   render() { 
-    return (   
+    return (
       <div className="container">
         <Header />
         <div className="content">

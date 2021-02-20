@@ -119,7 +119,7 @@ class DeviceDetailPage extends Component {
     return (
       <div className="content-r">
         <div className="device-detail">
-          <div className="simple-card" style={{ padding: '20px 10px' }}>
+          <div className="simple-card">
             <div className="card-title">
               <Translation>{t => <span>{t('Device information')}</span>}</Translation>
               <a style={{ float: 'right', marginRight: '20px' }} onClick={this.openModel}>修改</a>
@@ -150,7 +150,7 @@ class DeviceDetailPage extends Component {
             </table>
           </div>
         </div>
-        <div className="device-page">
+        <div className="device-detail">
           <div className="simple-card">
             <div className="card-title">
               <Translation>{t => <span>{t('Ring information')}</span>}</Translation>

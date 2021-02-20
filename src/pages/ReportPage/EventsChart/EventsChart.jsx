@@ -9,7 +9,6 @@ class EventsChart extends Component {
 
   getOption = () => {
     const currentUser = AV.User.current();
-    console.log(currentUser)
     const {
       startSleepTime,
       startStatusTimeMinute,

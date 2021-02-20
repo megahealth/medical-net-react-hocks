@@ -2,6 +2,17 @@ import { combineReducers } from 'redux';
 
 import * as TYPES from '../actions/Types';
 import DefaultState from './DefaultState';
+import enUS from 'antd/lib/locale/en_US';
+import zhCN from 'antd/lib/locale/zh_CN';
+// locale
+const locale = (state = DefaultState.locale, action) => {
+  switch (action.type) {
+    case TYPES.SET_LOCALE:
+      return action.payload==='en' ? enUS : zhCN;
+    default:
+      return state;
+  }
+};
 
 // 首页数据
 const home = (state = DefaultState.home, action) => {
@@ -231,6 +242,7 @@ const account = (state = DefaultState.account, action) => {
 }
 
 const Reducers = combineReducers({
+  locale,
   home,
   allReports,
   report,

@@ -1,4 +1,10 @@
+import enUS from 'antd/lib/locale/en_US';
+import zhCN from 'antd/lib/locale/zh_CN';
+
+const language = localStorage.getItem('language')
+
 const DefaultState = {
+  locale: language === 'en' ? enUS : zhCN,
   // 首页数据
   home: {
     loading: false,
@@ -11,7 +17,9 @@ const DefaultState = {
     reportsData: [],
     pagination: {
       current: 1,
-      pageSize: 10,
+      // pageSize: 10,
+      showSizeChanger: false,
+      showQuickJumper: true,
       total: 0
     },
     dateRange: {
