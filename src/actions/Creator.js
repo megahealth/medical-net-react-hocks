@@ -44,6 +44,11 @@ Creator.startAnimation = () => ({
   type: TYPES.START_ANIMATION
 });
 
+Creator.setLocale = (language) => ({
+  type: TYPES.SET_LOCALE,
+  payload: language
+});
+
 // 获取全部报告
 Creator.getAllReportsData = asyncActionFactory(
   ['GET_ALL_REPORTS_DATA', 'GET_ALL_REPORTS_DATA_SUCCESS', 'GET_ALL_REPORTS_DATA_FAILED'],
