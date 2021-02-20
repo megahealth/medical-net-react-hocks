@@ -7,7 +7,7 @@ import Sidebar from './components/Sidebar/Sidebar';
 import SidebarTabs from './common/SidebarTabs';
 import AllReportsPage from './pages/AllReportsPage/AllReportsPage';
 import DeviceDetailPage from './pages/DeviceDetailPage/DeviceDetailPage';
-import Device from './pages/DevicePage/DevicePage'
+import Device from './pages/DevicePage/DevicePage';
 
 class MyApp extends Component {
   constructor(props) {

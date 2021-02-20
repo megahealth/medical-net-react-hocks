@@ -46,3 +46,13 @@ export const GET_RING_ARR = '获取戒指列表';
 export const CHANGE_REPORT_NUM = '更新报告病历号';
 export const CHANGE_REPORT_NUM_SUCCESS = '更新报告病历号成功';
 export const CHANGE_REPORT_NUM_FAILED = '更新报告病历号失败';
+
+export const GET_ACCOUNT = '获取账号列表';
+export const GET_ACCOUNT_SUCCESS = '获取账号列表成功';
+export const GET_ACCOUNT_FAILED = '获取账号列表失败';
+
+export const ADD_ACCOUNT = '添加账号';
+export const ADD_ACCOUNT_SUCCESS = '添加账号成功';
+export const ADD_ACCOUNT_FAILED = '添加账号失败';
+
+export const CHANGE_ACCOUNT_MODAL_STATUS = '开关模态框';

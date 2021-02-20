@@ -80,7 +80,7 @@ const report = (state = DefaultState.report, action) => {
         edition: action.payload.data.customInfo || (action.payload.data.idPatient ? action.payload.data.idPatient.attributes : action.payload.data.patientInfo),
         adviceData: action.payload.adviceData || {},
         reportNum: action.payload.reportNum,
-        id:action.payload.id,
+        id: action.payload.id,
       };
     case TYPES.GET_REPORT_DATA_FAILED:
       return {
@@ -108,7 +108,7 @@ const report = (state = DefaultState.report, action) => {
     case TYPES.CHANGE_REPORT_NUM:
       return ({
         ...state,
-        data:{
+        data: {
           ...state.data,
           idModifiedReport: action.payload.idModifiedReport,
         },
@@ -176,9 +176,9 @@ const deviceDetail = (state = DefaultState.deviceDetail, action) => {
     case TYPES.CHANGE_DEVICE_LED_SUCCESS:
       return ({
         ...state,
-        device:{
+        device: {
           ...state.device,
-          ledOnTime:action.payload.ledOnTime,
+          ledOnTime: action.payload.ledOnTime,
         }
       })
     case TYPES.CHANGE_DEVICE_LED_FAILED:
@@ -188,7 +188,7 @@ const deviceDetail = (state = DefaultState.deviceDetail, action) => {
     case TYPES.CHANGE_DEVICE_PERIOD_AND_MODE:
       return ({
         ...state,
-        device:{
+        device: {
           ...state.device,
           modeType: action.payload.modeType,
           period: action.payload.period
@@ -198,12 +198,45 @@ const deviceDetail = (state = DefaultState.deviceDetail, action) => {
       return state;
   }
 }
+
+// 账号管理
+const account = (state = DefaultState.account, action) => {
+  switch (action.type) {
+    case TYPES.CHANGE_ACCOUNT_MODAL_STATUS:
+      return ({
+        ...state,
+        visible: action.payload.visible,
+      })
+    case TYPES.GET_ACCOUNT:
+      return ({
+        ...state,
+        tableLoading:true
+      })
+    case TYPES.GET_ACCOUNT_SUCCESS:
+      return ({
+        ...state,
+        tableLoading: false,
+        pagination: action.payload.pagination,
+        list: action.payload.list,
+        searchName: action.payload.searchName,
+      })
+    case TYPES.GET_ACCOUNT_FAILED:
+      return ({
+        ...state,
+        tableLoading: false,
+      })
+    default:
+      return state;
+  }
+}
+
 const Reducers = combineReducers({
   home,
   allReports,
   report,
   allDevice,
   deviceDetail,
+  account,
 });
 
 export default Reducers;

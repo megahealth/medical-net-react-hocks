@@ -501,6 +501,48 @@ Creator.changeReportNum = (params) => {
     payload: { idModifiedReport, reportNum }
   })
 }
+
+// 账号管理 开启或关闭模态框
+Creator.changeAccountModalStatus = (visible) => {
+  return ({
+    type: TYPES.CHANGE_ACCOUNT_MODAL_STATUS,
+    payload: { visible:visible }
+  })
+}
+// 账号管理 查询账号列表
+Creator.getAccountList = asyncActionFactory(
+  ['GET_ACCOUNT', 'GET_ACCOUNT_SUCCESS', 'GET_ACCOUNT_FAILED'],
+  (getting, success, fail, pagination, searchName ) => async (dispatch) => {
+    dispatch(getting());
+    let queryAccount,total;
+    const { pageSize, current } = pagination
+    const q1 = new AV.Query('_User');
+    q1.equalTo('roleType',5);
+    const q2 = new AV.Query('_User');
+    q2.equalTo('roleType',6);
+    if(searchName&&searchName!=undefined){
+      const q3 = new AV.Query('_User');
+      q3.contains('username', searchName);
+      const q = AV.Query.or(q1,q2);
+      queryAccount = AV.Query.and(q,q3);
+    }else{
+      queryAccount = AV.Query.or(q1,q2);
+    }
+    queryAccount.limit(pageSize);
+    queryAccount.skip((current-1)*pageSize);
+    try {
+      queryAccount.descending('createdAt');
+      const res = await queryAccount.find();
+      total =  await queryAccount.count();
+      dispatch(success({ pagination: { pageSize,current,total }, list:res, searchName: searchName }))
+    } catch (error) {
+      dispatch(fail({ errorcode: error }));
+    }
+    
+  }
+)
+
+
 //设备 
 function deviceStatus(workStatus, monitorStatus) {
   switch (workStatus) {

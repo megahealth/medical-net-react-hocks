@@ -19,7 +19,8 @@ import ValidReportsPage from './pages/ValidReportsPage/ValidReportsPage';
 import DevicePage from './pages/DevicePage/DevicePage';
 import DeviceDetailPage from './pages/DeviceDetailPage/DeviceDetailPage';
 import ReportPage from './pages/ReportPage/ReportPage';
-import MyApp from './app'
+import MyApp from './app';
+import AddAccount from './pages/AddAccount/AddAccount';
 
 AV.applicationId = undefined;
 AV.init({
@@ -31,6 +32,7 @@ const App = () => (
   <div className="app-container">
     <Switch>
       <Route path="/" exact component={LoginPage}></Route>
+      <Route path="/addaccount" exact component={AddAccount}></Route>
       <Route path='/app' component={MyApp}></Route>
       <Route path="/validreports" exact component={ValidReportsPage}></Route>
       {/* <Route path="/device" exact component={DevicePage}></Route> */}

@@ -148,6 +148,26 @@ const DefaultState = {
     edition: {},
     adviceData: {},
     id:'',
+  },
+  account: {
+    pagination:{
+      pageSize:10,
+      current:1,
+      total:0
+    },
+    userData:{
+      username: '',
+      name: '',
+      password: '',
+      roleType: null,
+      inHotel: '',
+    },
+    searchName:'',
+    list: [],
+    isAdding: false,
+    visible: false,
+    addLoading: false,
+    tableLoading: false,
   }
 };
 
