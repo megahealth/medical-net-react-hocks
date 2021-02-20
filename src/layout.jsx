@@ -12,7 +12,7 @@ import MyApp from './app'
 import LoginPage from './pages/LoginPage/LoginPage';
 import ValidReportsPage from './pages/ValidReportsPage/ValidReportsPage';
 import ReportPage from './pages/ReportPage/ReportPage';
-
+import AddAccount from './pages/AddAccount/AddAccount'
 class Layout extends Component {
   constructor(props) {
     super(props);
@@ -41,6 +41,7 @@ class Layout extends Component {
           <div className="app-container">
             <Switch>
               <Route path="/" exact component={LoginPage}></Route>
+              <Route path="/addaccount" exact component={AddAccount}></Route>
               <Route path='/app' component={MyApp}></Route>
               <Route path="/validreports" exact component={ValidReportsPage}></Route>
               <Route path="/report/:id" exact component={ReportPage}></Route>
