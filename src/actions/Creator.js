@@ -458,7 +458,7 @@ Creator.getRingArr = async (device) => {
   let res = [];
   try {
     var url = "http://" + device.localIP + ":8080/v2/getBoundDevices?type=MegaRing";
-    res = await axios.get(url);
+    res = await axios.get(url, {timeout: 3000});
     ringArr = res.data.result.boundDevices;
   } catch (error) {
     console.log('error1', error);
