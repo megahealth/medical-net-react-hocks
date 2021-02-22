@@ -15,14 +15,14 @@ class Header extends Component {
   //   AV.User.logOut();
   //   history.push('/');
   // }
-  logOut() {
-    Modal.alert('退出登录', '确定退出登录吗？', [
+  logOut = (t) => {
+    Modal.alert(t('Log out'), t("Are you sure to log out?"), [
       {
-        text: '取消',
+        text: t('NO'),
         onPress: () => console.log('cancel')
       },
       {
-        text: '退出',
+        text: t('YES'),
         onPress: () => {
           AV.User.logOut();
           window.location.hash = '/';
@@ -46,7 +46,7 @@ class Header extends Component {
         <div>
           <Translation>
             {
-              t => <div onClick={this.logOut}>（{name}）{t('Log Out')}</div>
+              t => <div onClick={() => this.logOut(t)}>（{name}）{t('Log Out')}</div>
             }
           </Translation>
           <ChangeLang></ChangeLang>

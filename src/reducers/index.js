@@ -173,8 +173,16 @@ const deviceDetail = (state = DefaultState.deviceDetail, action) => {
       })
     case TYPES.GET_RING_ARR:
       return ({
+        ...state
+      })
+    case TYPES.GET_RING_ARR_SUCCESS:
+      return ({
         ...state,
-        ringArr: action.payload.ringArr
+        ringArr:action.payload.ringArr,
+      })
+    case TYPES.GET_RING_ARR_FAILED:
+      return ({
+        ...state
       })
     case TYPES.GET_DEVICE_DETAIL_FAILED:
       return ({
@@ -235,6 +243,19 @@ const account = (state = DefaultState.account, action) => {
       return ({
         ...state,
         tableLoading: false,
+      })
+    case TYPES.ADD_ACCOUNT:
+      return ({
+        ...state
+      })
+    case TYPES.ADD_ACCOUNT_SUCCESS:
+      return ({
+        ...state,
+        visible:action.payload.visible,
+      })
+    case TYPES.ADD_ACCOUNT_FAILED:
+      return ({
+        ...state
       })
     default:
       return state;

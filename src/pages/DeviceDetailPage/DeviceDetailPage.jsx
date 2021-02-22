@@ -11,10 +11,6 @@ import { Toast, Modal } from 'antd-mobile';
 import { PlusOutlined } from '@ant-design/icons';
 import { Translation } from 'react-i18next';
 
-const optionsWithDisabled = [
-  { label: '成人', value: 0 },
-  { label: '儿童', value: 1 },
-];
 const format = 'HH:mm';
 var intervalGetRingArr = null;
 class DeviceDetailPage extends Component {
@@ -40,6 +36,12 @@ class DeviceDetailPage extends Component {
   componentWillUnmount() {
     clearInterval(intervalGetRingArr);
   }
+  optionsWithDisabled = (t) => {
+    return [
+      { label: t('Adult'), value: 0 },
+      { label: t('Children'), value: 1 },
+    ]
+  } 
   changeLed = (checked) => {
     const led = checked ? -1 : 0;
     this.props.changeLED(led, this.props.deviceDetail.deviceId)
@@ -90,26 +92,26 @@ class DeviceDetailPage extends Component {
     const { modeType, timeStart, timeEnd } = this.state;
     const period = timeStart + '-' + timeEnd
     if (device.modeType == modeType && device.period == period) {
-      Toast.info('数据未发生变化！',2)
+      Toast.info('数据未发生变化！', 2)
     } else {
-      Toast.info('ok！',2)
-      const updateDevice = AV.Object.createWithoutData('Device',this.id);
-      if(device.modeType != modeType) updateDevice.set('modeType', modeType)
-      if(device.period != period) updateDevice.set('period', period)
+      Toast.info('ok！', 2)
+      const updateDevice = AV.Object.createWithoutData('Device', this.id);
+      if (device.modeType != modeType) updateDevice.set('modeType', modeType)
+      if (device.period != period) updateDevice.set('period', period)
       updateDevice.save().then(res => {
         this.props.changeMonitorAndMode(this.state);
-        Toast.success('修改成功！',1)
-        setTimeout(()=>{
+        Toast.success('修改成功！', 1)
+        setTimeout(() => {
           this.setState({
             modal: false,
             timeStart: '',
             timeEnd: '',
             modeType: null,
           })
-        },1000)
+        }, 1000)
       }).catch(error => {
         console.log(error);
-        Toast.fail('修改失败！',1)
+        Toast.fail('修改失败！', 1)
       })
     }
   }
@@ -122,7 +124,9 @@ class DeviceDetailPage extends Component {
           <div className="simple-card">
             <div className="card-title">
               <Translation>{t => <span>{t('Device information')}</span>}</Translation>
-              <a style={{ float: 'right', marginRight: '20px' }} onClick={this.openModel}>修改</a>
+              <a style={{ float: 'right', marginRight: '20px' }} onClick={this.openModel}>
+                <Translation>{t => <span>{t('Change')}</span>}</Translation>
+              </a>
             </div>
             <table>
               <thead>
@@ -213,48 +217,53 @@ class DeviceDetailPage extends Component {
             <Switch size='default' checked={device.ledOnTime == 0 ? false : true} onChange={this.changeLed} style={{ float: 'right' }} />
           </div>
         </div>
-        <Modal
-          className="modal1"
-          visible={this.state.modal}
-          transparent
-          maskClosable={true}
-          onClose={() => this.setState({ modal: false, modeType: null })}
-          onOk={() => this.onOk()}
-          title="修改设备"
-          footer={[{ text: '取消', onPress: () => { this.setState({ modal: false, modeType: null }) } }, { text: '确定', onPress: () => { this.onOk() } }]}
-        >
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: '16px' }}>监测时段</label><br />
-            <TimePicker
-              allowClear={false}
-              showNow={false}
-              onChange={this.changeMonitorStart}
-              defaultValue={moment(this.state.timeStart, format)}
-              format={format}
-              size="large"
-            />
-            <label style={{ fontSize: '16px' }}>~</label>
-            <TimePicker
-              allowClear={false}
-              showNow={false}
-              onChange={this.changeMonitorEnd}
-              defaultValue={moment(this.state.timeEnd, format)}
-              format={format}
-              size="large"
-            />
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: '16px' }}>模式</label><br />
-            <Radio.Group
-              size='large'
-              options={optionsWithDisabled}
-              onChange={this.changeModel}
-              value={this.state.modeType}
-              optionType="button"
-              buttonStyle="solid"
-            />
-          </div>
-        </Modal>
+        <Translation>
+          {t =>
+              <Modal
+                className="modal1"
+                visible={this.state.modal}
+                transparent
+                maskClosable={true}
+                onClose={() => this.setState({ modal: false, modeType: null })}
+                onOk={() => this.onOk()}
+                title={t("Modify the equipment")}
+                footer={[{ text: t('Close'), onPress: () => { this.setState({ modal: false, modeType: null }) } }, { text: t('Submit'), onPress: () => { this.onOk() } }]}
+              >
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ fontSize: '16px' }}>{t('Monitor period')}</label><br />
+                  <TimePicker
+                    allowClear={false}
+                    showNow={false}
+                    onChange={this.changeMonitorStart}
+                    defaultValue={moment(this.state.timeStart, format)}
+                    format={format}
+                    size="large"
+                  />
+                  <label style={{ fontSize: '16px' }}>~</label>
+                  <TimePicker
+                    allowClear={false}
+                    showNow={false}
+                    onChange={this.changeMonitorEnd}
+                    defaultValue={moment(this.state.timeEnd, format)}
+                    format={format}
+                    size="large"
+                  />
+                </div>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ fontSize: '16px' }}>{t('Mode')}</label><br />
+                  <Radio.Group
+                    size='large'
+                    options={this.optionsWithDisabled(t)}
+                    onChange={this.changeModel}
+                    value={this.state.modeType}
+                    optionType="button"
+                    buttonStyle="solid"
+                  />
+                </div>
+              </Modal>
+
+          }
+        </Translation>
       </div>
 
     );

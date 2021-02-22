@@ -118,6 +118,13 @@ const resources = {
       "Add ring":"Add ring",
       "Metal":"Metal",
       "Ceramics":"Ceramics",
+      "Change": "Change",
+      "Modify the equipment":"Modify the equipment",
+      "Close":"Close",
+      "Submit":"Submit",
+      "NO":"NO",
+      "YES":"YES",
+      "Are you sure to log out?":"Are you sure to log out?",
     }
   },
   'zh-CN': {
@@ -240,6 +247,13 @@ const resources = {
       "Add ring":"添加戒指",
       "Metal":"金属",
       "Ceramics":"陶瓷",
+      "Change": "修改",
+      "Modify the equipment":"修改设备",
+      "Close":'关闭',
+      "Submit":"提交",
+      "NO":"取消",
+      "YES":"确定",
+      "Are you sure to log out?":"确定退出登录吗？",
     }
   }
 };

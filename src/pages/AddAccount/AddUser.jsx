@@ -23,6 +23,7 @@ class AddUserForm extends Component {
 
   onFinish = (values) => {
     console.log('Success:', values);
+    this.props.addAccount(values)
   };
 
   onFinishFailed = (errorInfo) => {
@@ -137,7 +138,8 @@ AddUserForm.propTypes = {
   account: PropTypes.shape({
     visible: PropTypes.bool
   }).isRequired,
-  changeAccountModalStatus: PropTypes.func.isRequired
+  changeAccountModalStatus: PropTypes.func.isRequired,
+  addAccount: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => (
@@ -150,6 +152,9 @@ const mapDispatchToProps = dispatch => (
   {
     changeAccountModalStatus(visible) {
       dispatch(Creator.changeAccountModalStatus(visible));
+    },
+    addAccount(accountData){
+      dispatch(Creator.addAccount(accountData))
     }
   }
 );

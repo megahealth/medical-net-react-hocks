@@ -38,7 +38,7 @@ class AddAccount extends Component {
     list.forEach((items,index) => {
       const item = items.attributes;
       data.push({
-        index: index,
+        index: index+1,
         id: items.id,
         username: item.username,
         name: item.name,
@@ -148,7 +148,7 @@ class AddAccount extends Component {
               </div>
             </div>
             <div className='list-content'>
-              <Table columns={columns} dataSource={data} rowKey="index" onChange={this.onPageChange} pagination={pager} loading={tableLoading} />
+              <Table bordered columns={columns} dataSource={data} rowKey="index" onChange={this.onPageChange} pagination={pager} loading={tableLoading} />
             </div>
           </div>
         </div>
