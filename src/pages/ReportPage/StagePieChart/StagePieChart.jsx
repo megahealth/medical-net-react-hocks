@@ -81,7 +81,7 @@ class StagePieChart extends Component {
         itemHeight: 10,
         textStyle: {
           color: '#333',
-          fontSize: 16
+          fontSize: 10
         },
         formatter(name) {
           switch (name) {
@@ -175,7 +175,7 @@ class StagePieChart extends Component {
   render() {
     return (
       <div className="block">
-        <ReactEcharts option={this.getOption()} style={{ height: '1.5rem', fontSize:'30px' }} />
+        <ReactEcharts option={this.getOption()} style={{ height: '1.4rem' }} />
       </div>
     );
   }
