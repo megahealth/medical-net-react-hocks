@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import styleColor from '../../common/styleColor'
 import AV from 'leancloud-storage';
 import Creator from '../../actions/Creator';
-import { Button, Switch, Input, Radio, TimePicker } from 'antd';
+import { Input, Radio, TimePicker } from 'antd';
 import moment from 'moment';
-import { Toast, Modal } from 'antd-mobile';
+import { Toast, Modal, Button, Switch } from 'antd-mobile';
 import { PlusOutlined } from '@ant-design/icons';
 import { Translation } from 'react-i18next';
 
@@ -214,7 +214,13 @@ class DeviceDetailPage extends Component {
         <div className="simple-card">
           <div className="breath-light">
             <Translation>{t => <span>{t('Breathing light switch')}</span>}</Translation>
-            <Switch size='default' checked={device.ledOnTime == 0 ? false : true} onChange={this.changeLed} style={{ float: 'right' }} />
+            {/* <Switch size='default' checked={device.ledOnTime == 0 ? false : true} onChange={this.changeLed} style={{ float: 'right' }} /> */}
+            <Switch
+              style={{ fontSize:'0.3rem' }}
+              checked={device.ledOnTime == 0 ? false : true} 
+              onChange={this.changeLed}
+              platform="ios"
+            />
           </div>
         </div>
         <Translation>

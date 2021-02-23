@@ -96,7 +96,7 @@ class AllReportsPage extends Component {
   }
 
   render() {
-    const { allReports, getAllReportsData } = this.props;
+    const { allReports, getAllReportsData, setFilter } = this.props;
     return (
       <React.Fragment>
         {
@@ -104,7 +104,16 @@ class AllReportsPage extends Component {
             ? <div className="content-loading"><Skeleton /></div>
             : <div className="content-r">
               <div className="content-r-c">
-                <div style={{ position:'relative', height:'50px' }}><Button type='primary' style={{ width:'80px', marginBottom:'10px', position:'absolute',right:'0', fontSize:'24px',height:'40px',lineHeight:'40px' }}>刷新</Button></div>
+                <div style={{ position:'relative', height:'0.5rem',marginTop:'0.1rem' }}>
+                  <Button 
+                    type='primary' 
+                    style={{ width:'1rem', marginBottom:'0.1rem', position:'absolute',right:'0', fontSize:'0.3rem',height:'0.4rem',lineHeight:'0.4rem' }}
+                    onClick = { ()=>{
+                      setFilter({reportType: ['all'],startDate: null,endDate: null,deviceId: null,}); 
+                      getAllReportsData(10,1, {reportType: ['all'],startDate: null,endDate: null,deviceId: null,})
+                    }}
+                  >重载</Button>
+                </div>
                 <Table
                   onRow={item => {
                     return { onClick: () => this.toReport(item) };

@@ -131,7 +131,13 @@ class DevicePage extends Component {
             : <div className="content-r">
               <div className="content-r-c">
                 <div className="device-page">
-                <div style={{ position:'relative', height:'50px' }}><Button type='primary' style={{ width:'80px', marginBottom:'10px', position:'absolute',right:'0', fontSize:'24px',height:'40px',lineHeight:'40px' }}>刷新</Button></div>
+                <div style={{ position:'relative', height:'0.5rem',marginTop:'0.1rem' }}>
+                  <Button 
+                    type='primary' 
+                    style={{ width:'1rem', marginBottom:'0.1rem', position:'absolute',right:'0', fontSize:'0.3rem',height:'0.4rem',lineHeight:'0.4rem' }}
+                    onClick={ ()=>{ this.props.getAllDevice(pagination) } }
+                  >刷新</Button>
+                </div>
                   <Table
                     onRow={item => {
                       return { onClick: () => this.toDeviceDetail(item.key) };

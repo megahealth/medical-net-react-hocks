@@ -35,6 +35,7 @@ a, a:link, a:hover, a:active, a:visited {
   height: 100%;
   .ant-pagination,.ant-table-pagination,.ant-table-pagination-right{
     font-size: 30px!important;
+    padding-top: 10px;
     li{
       width: 60px;
       height: 40px;
@@ -55,7 +56,7 @@ a, a:link, a:hover, a:active, a:visited {
   position: relative;
   .content {
     height: 100%;
-    padding-top: 102px;
+    padding-top: 122px;
     box-sizing: border-box;
     display: flex;
     .content-r {

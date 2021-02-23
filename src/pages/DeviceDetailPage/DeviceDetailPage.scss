@@ -1,5 +1,5 @@
 .card-title {
-  font-size: 26px;
+  font-size: 0.3rem;
   font-weight: bold;
   color: #333;
   padding-left: 10px;
@@ -46,7 +46,7 @@
 }
 
 .device-detail table thead tr{
-  font-size: 24px;
+  font-size: 0.24rem;
   font-weight: bold;
   color: #333;
   border-bottom: 6px solid #fff;
@@ -66,41 +66,41 @@
 .device-detail table tbody tr td{
   padding: 15px 0 20px 20px;
 }
-.device-page .simple-card{
+.device-detail .simple-card{
   padding: 20px 10px;
 }
-.device-page table {
+.device-detail table {
   width: 100%;
   background: rgba(248,248,248,1);
 }
 
-.device-page table thead{
+.device-detail table thead{
   line-height: 70px;
-  font-size:20px;
+  font-size:0.26rem;
   font-weight:500;
   color:#333;
   border-bottom: 6px solid #fff;
 }
 
-.device-page table thead tr th {
+.device-detail table thead tr th {
   text-align: center;
 }
 
-.device-page table tbody tr {
-  height: 70px;
-  font-size: 18px;
+.device-detail table tbody tr {
+  height: 0.7rem;
+  font-size: 0.26rem;
   font-weight: 400;
   color: #333;
-  line-height: 70px;
+  line-height: 0.7rem;
   padding: 0 10px;
   border-bottom: 6px solid #fff;
 }
 
-.device-page table tbody tr td{
+.device-detail table tbody tr td{
   text-align: center;
 }
 
-// .device-page table tbody tr td>span {
+// .device-detail table tbody tr td>span {
 //   height: 16px;
 //   width: 10px;
 //   display: inline-block;
@@ -109,36 +109,36 @@
 //   margin-left: 2px;
 // }
 
-// .device-page table tbody tr .low-battery>span:nth-child(1) {
+// .device-detail table tbody tr .low-battery>span:nth-child(1) {
 //   background: #FF0012;
 // }
 
-// .device-page table tbody tr .low-battery>span:nth-child(2) {
+// .device-detail table tbody tr .low-battery>span:nth-child(2) {
 //   background: #FF0012;
 // }
 
-// .device-page table tbody tr .low-battery>span:nth-child(3) {
+// .device-detail table tbody tr .low-battery>span:nth-child(3) {
 //   background: #999999;
 // }
 
-// .device-page table tbody tr .low-battery>span:nth-child(4) {
+// .device-detail table tbody tr .low-battery>span:nth-child(4) {
 //   background: #999999;
 // }
 
 
-// .device-page table tbody tr .full-battery>span:nth-child(1) {
+// .device-detail table tbody tr .full-battery>span:nth-child(1) {
 //   background: #00E700;
 // }
 
-// .device-page table tbody tr .full-battery>span:nth-child(2) {
+// .device-detail table tbody tr .full-battery>span:nth-child(2) {
 //   background: #00E700;
 // }
 
-// .device-page table tbody tr .full-battery>span:nth-child(3) {
+// .device-detail table tbody tr .full-battery>span:nth-child(3) {
 //   background: #00E700;
 // }
 
-// .device-page table tbody tr .full-battery>span:nth-child(4) {
+// .device-detail table tbody tr .full-battery>span:nth-child(4) {
 //   background: #00E700;
 // }
 
@@ -165,11 +165,22 @@
 
 .breath-light {
   /* line-height: 80px; */
-  font-size: 24px;
+  font-size: 0.3rem!important;
+  height: 0.6rem;
   font-weight: 400;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  // .ant-switch{
+  //   width: 1.5rem;
+  //   height: 0.5rem;
+  //   // .ant-switch-handle{
+  //   //   width: 0.4rem;
+  //   //   height: 0.4rem;
+  //   //   border-radius: 0.2rem!important;
+  //   // }
+  // }
+
 }
 
 .light-switch {
@@ -177,8 +188,14 @@
 }
 
 .add-ring {
-  line-height: 70px;
-  text-align: center;
+  .am-button{
+    width: 2rem;
+    height: 0.7rem;
+    margin: 10px auto;
+    line-height: 0.7rem;
+    font-size: 0.26rem;
+    text-align: center;
+  }
 }
 
 .modal1{

@@ -43,7 +43,7 @@ class StageChart extends Component {
         left: '-1%',
         right: '3%',
         bottom: '8%',
-        top: '20%',
+        top: '25%',
         containLabel: true,
       },
       // dataZoom: [{

@@ -39,7 +39,7 @@ class EventsChart extends Component {
         left: '4%',
         right: '3%',
         bottom: '5%',
-        top: '14%',
+        top: '20%',
         containLabel: true
       },
       tooltip: {

@@ -40,7 +40,7 @@ class PrChart extends Component {
           left: '2%',
           right: '3%',
           bottom: '5%',
-          top: '14%',
+          top: '20%',
           containLabel: true
         },
         // dataZoom: [{
