@@ -153,7 +153,7 @@ class SpoChart extends Component {
         <div className="short-line center">
           <span></span>
         </div>
-        <ReactEcharts option={this.getOption()} style={{ height:'2.4rem' }} />
+        <ReactEcharts option={this.getOption()} style={{ height:'2.6rem' }} />
       </div>
     );
   }

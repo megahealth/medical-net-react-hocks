@@ -146,7 +146,7 @@ class PrChart extends Component {
   render() {
     return (
       <div className="block">
-        <ReactEcharts option={this.getOption()}  style={{ height:'2.4rem' }} />
+        <ReactEcharts option={this.getOption()}  style={{ height:'2.6rem' }} />
       </div>
     );
   }
