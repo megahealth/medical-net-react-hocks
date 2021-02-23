@@ -117,6 +117,7 @@ class ReportPage extends Component {
               }
             </div>
           </div>
+          
           <Skeleton paragraph={{ rows: 15 }} loading={report.loading}>
             <div className="print-page">
               <ReportHeader showInput={true}></ReportHeader>

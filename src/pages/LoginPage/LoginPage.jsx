@@ -54,7 +54,6 @@ class LoginPage extends Component {
     }
 
     AV.User.logIn(username, password).then(user => {
-      console.log('xff',user);
       const history = createHashHistory();
       if(user.id === '5b73f33cfe88c2005b88dc8a'){
         history.push('/addaccount');

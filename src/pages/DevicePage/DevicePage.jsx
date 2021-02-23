@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { createHashHistory } from 'history';
 import AV from 'leancloud-storage';
 import { Table, Skeleton,Space,Input } from 'antd';
-import { Toast, Modal} from 'antd-mobile';
+import { Toast, Modal, Button} from 'antd-mobile';
 import Creator from '../../actions/Creator';
 import { Translation } from 'react-i18next';
 
@@ -130,15 +130,19 @@ class DevicePage extends Component {
             ? <div className="content-loading"><Skeleton /></div>
             : <div className="content-r">
               <div className="content-r-c">
-                <Table
-                  onRow={item => {
-                    return { onClick: () => this.toDeviceDetail(item.key) };
-                  }}
-                  columns={this.columns}
-                  dataSource={deviceList}
-                  pagination={pagination}
-                  onChange={res => this.props.getAllDevice({ ...pagination, current: res.current })}
-                ></Table>
+                <div className="device-page">
+                <div style={{ position:'relative', height:'50px' }}><Button type='primary' style={{ width:'80px', marginBottom:'10px', position:'absolute',right:'0', fontSize:'24px',height:'40px',lineHeight:'40px' }}>刷新</Button></div>
+                  <Table
+                    onRow={item => {
+                      return { onClick: () => this.toDeviceDetail(item.key) };
+                    }}
+                    columns={this.columns}
+                    dataSource={deviceList}
+                    pagination={pagination}
+                    onChange={res => this.props.getAllDevice({ ...pagination, current: res.current })}
+                  ></Table>
+                </div>
+                
               </div>
             </div>
         }

@@ -4,7 +4,7 @@ import { createHashHistory } from 'history';
 import { connect } from 'react-redux';
 import { Table, Skeleton, Space } from 'antd';
 import { Translation } from 'react-i18next';
-import { Modal, Toast } from 'antd-mobile'
+import { Modal, Toast, Button } from 'antd-mobile'
 import Creator from '../../actions/Creator';
 import AV from 'leancloud-storage';
 import './AllReportsPage.scss';
@@ -104,6 +104,7 @@ class AllReportsPage extends Component {
             ? <div className="content-loading"><Skeleton /></div>
             : <div className="content-r">
               <div className="content-r-c">
+                <div style={{ position:'relative', height:'50px' }}><Button type='primary' style={{ width:'80px', marginBottom:'10px', position:'absolute',right:'0', fontSize:'24px',height:'40px',lineHeight:'40px' }}>刷新</Button></div>
                 <Table
                   onRow={item => {
                     return { onClick: () => this.toReport(item) };

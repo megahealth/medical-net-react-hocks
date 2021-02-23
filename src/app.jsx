@@ -19,7 +19,6 @@ class MyApp extends Component {
       <div className="container">
         <Header />
         <div className="content">
-          <Sidebar tabs={SidebarTabs} />
           <Switch>
             <Route path="/app/allreports" exact component={AllReportsPage}></Route>
             <Route path="/app/devicedetail" exact component={DeviceDetailPage}></Route>
@@ -27,6 +26,8 @@ class MyApp extends Component {
             <Route path="/app/device" exact component={Device}></Route>
             <Redirect to="/app/allreports"/>
           </Switch>
+          <br/>
+          <Sidebar tabs={SidebarTabs} />
         </div>
       </div>
     );
