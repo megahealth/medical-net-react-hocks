@@ -25,12 +25,17 @@ class PrChart extends Component {
       let base = +new Date(realStart);
       const oneStep = 10 * 1000;
       const newPrArr = [];
+      let minSpo = 100;
+      let maxSpo = 50;
       for (let i = 0; i < len; i += 10) {
         const now = new Date(base += oneStep);
         const spo = prArr[i];
+        if(spo>maxSpo) maxSpo = parseInt(spo);
+        if(spo !=0 && spo<minSpo) minSpo = parseInt(spo);
         newPrArr.push([now, spo]);
       }
-
+      maxSpo += 10 - maxSpo%10
+      minSpo -= minSpo%10
       const option = {
         animation: false,
         tooltip: {
@@ -100,8 +105,8 @@ class PrChart extends Component {
           name: t('Heart Rate BPM'),
           type: 'value',
           nameRotate: '0.1',
-          min: 40,
-          max: 100,
+          min: minSpo,
+          max: maxSpo,
           boundaryGap: [0, '100%'],
           axisLine: {
             lineStyle: {
