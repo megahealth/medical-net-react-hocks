@@ -235,7 +235,7 @@ const resources = {
       "Ring SN": "戒指SN",
       "Model": "型号",
       "Battery": "电量",
-      "Data status": "血氧数据",
+      "Data status": "数据",
       "Breathing light switch": "呼吸灯开关",
       "Monitoring switch": "定时监测",
       "Change Password": "修改账号密码",
