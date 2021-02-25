@@ -5,12 +5,22 @@ import { connect } from 'react-redux';
 import { Typography } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { withTranslation } from 'react-i18next';
+import AV from 'leancloud-storage';
+import Creator from '../../../actions/Creator'
+
 const { Title } = Typography;
 
 class SpoChart extends Component {
+  state = {
+    isShow: false
+  }
   spoTime = {
-    minTime : null,
-    maxTime : null,
+    minTime: null,
+    maxTime: null,
+  }
+  oldSpoTime = {
+    minTime: null,
+    maxTime: null,
   }
   getOption = () => {
     const {
@@ -23,22 +33,22 @@ class SpoChart extends Component {
       modifiedReport
     } = this.props;
     const len = spoArr.length;
-    console.log(spoArr);
     if (len >= 0) {
       let startSpoTime, endSpoTime;
-      if(modifiedReport&&modifiedReport.attributes){
+      if (modifiedReport && modifiedReport.attributes) {
         startSpoTime = modifiedReport.attributes.startSpoTime;
         endSpoTime = modifiedReport.attributes.endSpoTime;
       }
-      console.log(modifiedReport,startSpoTime, endSpoTime);
       const sleepStageStart = (startSleepTime + startStatusTimeMinute * 60 * 1000);
       const sleepStageEnd = (startSleepTime + endStatusTimeMinute * 60 * 1000);
-      if(!startSpoTime||!endSpoTime){
-        startSpoTime = sleepStageStart/1000;
-        endSpoTime = sleepStageEnd/1000;
+      if (!startSpoTime || !endSpoTime) {
+        startSpoTime = sleepStageStart / 1000;
+        endSpoTime = sleepStageEnd / 1000;
       }
       this.spoTime.minTime = sleepStageStart;
       this.spoTime.maxTime = sleepStageEnd;
+      this.oldSpoTime.minTime = sleepStageStart;
+      this.oldSpoTime.maxTime = sleepStageEnd;
       const realStart = 1000 * spoStart;
       let base = +new Date(realStart);
       const oneStep = 10 * 1000;
@@ -48,16 +58,16 @@ class SpoChart extends Component {
       let sw = true;
       for (let i = 0; i < len; i += 10) {
         base += oneStep;
-        if(base>=startSpoTime*1000 && base<=endSpoTime*1000){
+        if (base >= startSpoTime * 1000 && base <= endSpoTime * 1000) {
           const now = new Date(base);
           const spo = spoArr[i];
-          if(spo>maxSpo) maxSpo = parseInt(spo);
-          if(spo !=0 && spo<minSpo) minSpo = parseInt(spo);
+          if (spo > maxSpo) maxSpo = parseInt(spo);
+          if (spo != 0 && spo < minSpo) minSpo = parseInt(spo);
           newSpoArr.push([now, spo]);
         }
       }
-      maxSpo += 10 - maxSpo%10
-      minSpo -= minSpo%10
+      maxSpo += 10 - maxSpo % 10
+      minSpo -= minSpo % 10
       const option = {
         animation: false,
         tooltip: {
@@ -99,34 +109,32 @@ class SpoChart extends Component {
         // },
         dataZoom: [
           {
-              type: 'slider',
-              show: true,
-              labelFormatter:(value) => {
-                if(sw){
-                  console.log('start',value);
-                  sw = !sw
-                  this.spoTime.minTime = value;
-                }else{
-                  console.log('end',value);
-                  sw = !sw
-                  this.spoTime.maxTime = value;
-                }
-                
-              },
-              // startValue: this.state.minTime,
-              // endValue: this.state.maxTime,
-              handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-              handleSize: '80%',
-              handleStyle: {
-                  color: '#fff',
-                  shadowBlur: 3,
-                  shadowColor: 'rgba(0, 0, 0, 0.6)',
-                  shadowOffsetX: 2,
-                  shadowOffsetY: 2
-              },
-              textStyle: false
+            type: 'slider',
+            show: this.state.isShow,
+            labelFormatter: (value) => {
+              if (sw) {
+                sw = !sw
+                this.spoTime.minTime = value;
+              } else {
+                sw = !sw
+                this.spoTime.maxTime = value;
+              }
+
+            },
+            startValue: this.spoTime.minTime,
+            endValue: this.spoTime.maxTime,
+            handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+            handleSize: '80%',
+            handleStyle: {
+              color: '#fff',
+              shadowBlur: 3,
+              shadowColor: 'rgba(0, 0, 0, 0.6)',
+              shadowOffsetX: 2,
+              shadowOffsetY: 2
+            },
+            textStyle: false
           }
-      ],
+        ],
         xAxis: {
           type: 'time',
           splitNumber: 12,
@@ -199,24 +207,70 @@ class SpoChart extends Component {
     }
     return {};
   }
-  log = () => {
-    console.log(this.spoTime);
-  } 
+  tailor = async () => {
+    // 如果数值没有改变则不进行后面的操作
+    if(this.oldSpoTime.minTime == this.spoTime.minTime && this.oldSpoTime.maxTime == this.spoTime.maxTime){
+      return;
+    }
+    const start = parseInt(this.spoTime.minTime / 1000)
+    const end = parseInt(this.spoTime.maxTime / 1000)
+    const { modifiedReport, updateModifiedReport, id } = this.props;
+    if (modifiedReport && modifiedReport.id) {
+      const updateModified = AV.Object.createWithoutData('ModifiedReport', modifiedReport.id)
+      updateModified.set('startSpoTime', start);
+      updateModified.set('endSpoTime', end);
+      await updateModified.save();
+      const query = new AV.Query('ModifiedReport');
+      const res = await query.get(modifiedReport.id);
+      updateModifiedReport(res)
+      this.changeEditStatus()
+    } else {
+      const CreateModified = AV.Object.extend('ModifiedReport');
+      const createModified = new CreateModified();
+      createModified.set('startSpoTime', start);
+      createModified.set('endSpoTime', end);
+      const modifiedReport =  await createModified.save();
+      const updateReport = AV.Object.createWithoutData('Reports',id);
+      updateReport.set('idModifiedReport',modifiedReport);
+      await updateReport.save();
+      const query = new AV.Query('ModifiedReport');
+      const res = await query.get(modifiedReport.id);
+      updateModifiedReport(res)
+      this.changeEditStatus()
+    }
+  }
+  changeEditStatus = () => {
+    this.setState({
+      isShow: !this.state.isShow
+    })
+  }
+  resetModified = async () => {
+    const { modifiedReport, updateModifiedReport, id } = this.props;
+    if (modifiedReport && modifiedReport.id) {
+      const updateModified = AV.Object.createWithoutData('ModifiedReport', modifiedReport.id)
+      updateModified.set('startSpoTime', null);
+      updateModified.set('endSpoTime', null);
+      await updateModified.save();
+      const query = new AV.Query('ModifiedReport');
+      const res = await query.get(modifiedReport.id);
+      updateModifiedReport(res)
+    }
+  }
   render() {
     const { t } = this.props;
 
     return (
-      <div className="block">
+      <div className="block" style={{ position:'relative' }}>
         <Title level={2}>{t('Trend Chart')}</Title>
         <div className="short-line center">
           <span></span>
         </div>
-        <div>
-          <button>1</button>
-          <button>1</button>
-          <button onClick={this.log}>1</button>
+        <div className='echart-handle print-hide'>
+          <button onClick={this.changeEditStatus}>编辑</button>
+          <button onClick={this.tailor}>裁剪</button>
+          <button onClick={ this.resetModified }>重置</button>
         </div>
-        <ReactEcharts option={this.getOption()} style={{ height:'2.6rem' }} />
+        <ReactEcharts option={this.getOption()} style={{ height: '2.6rem' }} />
       </div>
     );
   }
@@ -228,7 +282,9 @@ SpoChart.propTypes = {
   endStatusTimeMinute: PropTypes.number.isRequired,
   spoStart: PropTypes.number.isRequired,
   spoArr: PropTypes.array.isRequired,
-  modifiedReport: PropTypes.object
+  modifiedReport: PropTypes.object,
+  id:PropTypes.string.isRequired,
+  updateModifiedReport: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
@@ -239,12 +295,15 @@ const mapStateToProps = state => (
     endStatusTimeMinute: state.report.data.endStatusTimeMinute,
     spoStart: state.report.alreadyDecodedData.timeStart,
     spoArr: state.report.alreadyDecodedData.Spo2Arr,
+    id:state.report.id,
   }
 );
 
 const mapDispatchToProps = dispatch => (
   {
-
+    updateModifiedReport(idModifiedReport) {
+      dispatch(Creator.updateModifiedReport(idModifiedReport))
+    }
   }
 );
 

@@ -61,4 +61,6 @@ export const ADD_ACCOUNT = '添加账号';
 export const ADD_ACCOUNT_SUCCESS = '添加账号成功';
 export const ADD_ACCOUNT_FAILED = '添加账号失败';
 
+export const UPDATE_REPORT_STATE_MODIFIED = '更新裁剪数值';
+
 export const CHANGE_ACCOUNT_MODAL_STATUS = '开关模态框';

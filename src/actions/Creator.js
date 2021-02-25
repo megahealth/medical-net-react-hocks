@@ -494,6 +494,14 @@ Creator.changeLED = asyncActionFactory(
   }
 )
 
+// 更新裁剪后的数值
+Creator.updateModifiedReport = (idModifiedReport) => {
+  return ({
+    type: TYPES.UPDATE_REPORT_STATE_MODIFIED,
+    payload: { idModifiedReport }
+  })
+}
+
 // 设备详情页监控时段和模式的修改
 Creator.changeMonitorAndMode = (params) => {
   const { modeType, timeEnd, timeStart } = params;

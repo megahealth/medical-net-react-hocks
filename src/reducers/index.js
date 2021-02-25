@@ -125,6 +125,14 @@ const report = (state = DefaultState.report, action) => {
         },
         reportNum: action.payload.reportNum,
       })
+    case TYPES.UPDATE_REPORT_STATE_MODIFIED:
+      return {
+        ...state,
+        data:{
+          ...state.data,
+          idModifiedReport: action.payload.idModifiedReport,
+        },
+      }
     default:
       return state;
   }
