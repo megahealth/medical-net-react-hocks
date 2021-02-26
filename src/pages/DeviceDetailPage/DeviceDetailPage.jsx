@@ -60,9 +60,9 @@ class DeviceDetailPage extends Component {
 
   }
   ringSnSelected = (mac,index,ringArr) => {
-    console.log('xff',mac,index,ringArr);
+    // console.log('xff',mac,index,ringArr);
     let text = '';
-    if(!ringArr[index].active){
+    if(ringArr[index].active){
       Toast.info('该设备已被启用，请勿重复启用！')
     }else{
       if (ringArr.length > 1) {
@@ -95,18 +95,38 @@ class DeviceDetailPage extends Component {
       mac: mac,
       deviceType: 'MegaRing'
     }
-    console.log('zff',mac,text,localIP);
-    var url = "http://" + this.localIP + ":8080/updateBoundDevice";
+    var url = "http://" + localIP + ":8080/updateBoundDevice";
     try {
       Toast.loading('戒指启动中...', 0)
-      const res = await axios.post(url, JSON.stringify(changeRingParam));
-      console.log(res);
+      const res = await axios({
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        method: 'post',
+        url: url,
+        data: changeRingParam,
+      });
       Toast.success('启用设备成功！')
+      this.props.getDeviceDetail(this.id);
     } catch (error) {
       console.log(error);
       Toast.fail('启用设备失败！')
     }
     
+  }
+  unBindRingV2 = async (mac) => {
+    const { device } = this.props.deviceDetail;
+    const localIP = device.localIP
+    var url = "http://" + localIP + ":8080/unbindDevice?type=MegaRing&&mac=" + mac;
+    try {
+      Toast.loading('戒指解绑中...', 0)
+      await axios.get(url);
+      Toast.success('启用解绑成功！')
+      this.props.getDeviceDetail(this.id);
+    } catch (error) {
+      console.log(error);
+      Toast.fail('启用解绑失败！')
+    }
   }
   ringList = (ringArr) => {
     return ringArr.map((item,index) => {
@@ -116,9 +136,9 @@ class DeviceDetailPage extends Component {
         key={item.sn} style={styleColor[item.ringStatus]} 
         onClick={()=>alert(item.sn,null, [
           { text: '启用', onPress: () => this.ringSnSelected(item.mac,index,ringArr) },
-          { text: '解绑', onPress: () => alert('确定要解绑吗！',null,[
-            {text: 'Cancel', onPress: ()=>{ console.log('zzzzzzzz'); }},
-            {text: 'Ok', onPress: ()=>{ console.log('zzzzzzzz'); }}
+          { text: '解绑', onPress: () => alert(item.ringStatus == 'background_greed'?'确定解绑？解绑操作将导致监测中戒指血氧数据丢失！':'确定解绑？',null,[
+            {text: 'Cancel', onPress: ()=>{}},
+            {text: 'Ok', onPress: ()=>{ this.unBindRingV2(item.mac) }}
           ]) },
           { text: '关闭', onPress: () => {} },
         ])}>
@@ -129,7 +149,7 @@ class DeviceDetailPage extends Component {
           ?
             <td>----</td>
           :
-          <td>
+          <td className="batter-status">
             <span style={ringInfo.battery > 50 ? styleColor.background_greed : (ringInfo.battery >= 25 ? styleColor.background_red : styleColor.background_gry_600)}></span>
             <span style={ringInfo.battery > 50 ? styleColor.background_greed : (ringInfo.battery > 25 ? styleColor.background_red : styleColor.background_gry_600)}></span>
             <span style={ringInfo.battery > 50 ? styleColor.background_greed : styleColor.background_gry_600}></span>

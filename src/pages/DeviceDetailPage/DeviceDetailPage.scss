@@ -223,3 +223,15 @@
   height: 0.4rem;
   font-size: 16px;
 }
+.batter-status{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1rem;
+  span{
+    display: block;
+    margin-right: 0.05rem;
+    width: 0.15rem;
+    height: 0.3rem;
+  }
+}
