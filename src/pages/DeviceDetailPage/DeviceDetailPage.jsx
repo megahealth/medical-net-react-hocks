@@ -30,9 +30,9 @@ class DeviceDetailPage extends Component {
     intervalGetRingArr = setInterval(() => {
       this.props.getDeviceDetail(this.id);
     }, 5000);
-    if (!(navigator.userAgent.match(/(iPhone|iPod|Android|ios|iOS|iPad|Backerry|WebOS|Symbian|Windows Phone|Phone)/i))) {
-      clearInterval(intervalGetRingArr);
-    }
+    // if (!(navigator.userAgent.match(/(iPhone|iPod|Android|ios|iOS|iPad|Backerry|WebOS|Symbian|Windows Phone|Phone)/i))) {
+    //   clearInterval(intervalGetRingArr);
+    // }
   }
   componentWillUnmount() {
     clearInterval(intervalGetRingArr);

@@ -190,7 +190,8 @@ const deviceDetail = (state = DefaultState.deviceDetail, action) => {
       })
     case TYPES.GET_RING_ARR_FAILED:
       return ({
-        ...state
+        ...state,
+        ringArr:[],
       })
     case TYPES.GET_DEVICE_DETAIL_FAILED:
       return ({
