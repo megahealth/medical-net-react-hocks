@@ -134,7 +134,7 @@ class DevicePage extends Component {
                 <div style={{ position:'relative', height:'0.5rem',marginTop:'0.1rem' }}>
                   <Button 
                     type='primary' 
-                    style={{ width:'1rem', marginBottom:'0.1rem', position:'absolute',right:'0', fontSize:'0.3rem',height:'0.4rem' }}
+                    style={{ width:'100px', marginBottom:'0.1rem', position:'absolute',right:'0', fontSize:'20px' }}
                     onClick={ ()=>{ this.props.getAllDevice(pagination) } }
                   >刷新</Button>
                 </div>

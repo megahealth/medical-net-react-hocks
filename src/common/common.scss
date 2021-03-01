@@ -8,7 +8,6 @@ html, body {
 body {
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
   font-size: 12px;
-  padding-top: 40px;
 }
 
 /* 清除滚动条 */
@@ -34,12 +33,12 @@ a, a:link, a:hover, a:active, a:visited {
 #app {
   height: 100%;
   .ant-pagination,.ant-table-pagination,.ant-table-pagination-right{
-    font-size: 30px!important;
+    font-size: 20px!important;
     padding-top: 10px;
     li{
-      width: 60px;
-      height: 40px;
-      line-height: 40px;
+      width: 40px;
+      height: 30px;
+      line-height: 30px;
     }
     .ant-pagination-options{
       display: none;
@@ -56,12 +55,12 @@ a, a:link, a:hover, a:active, a:visited {
   position: relative;
   .content {
     height: 100%;
-    padding-top: 122px;
+    padding-top: 62px;
     box-sizing: border-box;
     display: flex;
     .content-r {
       flex: 1;
-      padding: 20px;
+      padding: 10px;
       overflow: auto;
       background: #f8f8f8;
       .content-r-c {
