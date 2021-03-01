@@ -472,6 +472,7 @@ Creator.getRingArr = asyncActionFactory(
         ringArr: ringArr && ringArr.length > 0 ? _parseRingInfo(ringArr) : []
       }))
     } catch (error) {
+      console.log('getRing',error)
       dispatch(fail({
         errorcode:error
       }))
@@ -492,6 +493,14 @@ Creator.changeLED = asyncActionFactory(
     })
   }
 )
+
+// 更新裁剪后的数值
+Creator.updateModifiedReport = (idModifiedReport) => {
+  return ({
+    type: TYPES.UPDATE_REPORT_STATE_MODIFIED,
+    payload: { idModifiedReport }
+  })
+}
 
 // 设备详情页监控时段和模式的修改
 Creator.changeMonitorAndMode = (params) => {
@@ -891,7 +900,23 @@ function _parseRingInfo(ringArr) {
     const ringInfo = item;
     var typeOfSN = ringInfo.sn.slice(0, 4);
     var newTypeOfRing = typeOfSN == 'P11B' ? 'Ceramics' : 'Metal';
+    var ringStatus;
+    if(ringInfo.active){
+      if(ringInfo.connectStatus == 2){
+        if(ringInfo.powerStatus == 3) ringStatus = 'background_red';
+        if(ringInfo.monitor == 1) {
+          ringStatus = 'background_greed'
+        }else{
+          ringStatus = 'background_blue'
+        }
+      }else{
+        ringStatus = 'background_yellow'
+      }
+    }else{
+      ringStatus = 'background_gry'
+    }
     item.typeOfSN = newTypeOfRing
+    item.ringStatus = ringStatus
     return item
   })
 }

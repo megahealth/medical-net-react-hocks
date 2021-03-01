@@ -19,7 +19,7 @@ class MyApp extends Component {
       <div className="container">
         <Header />
         <div className="content">
-          <Sidebar tabs={SidebarTabs} />
+        <Sidebar tabs={SidebarTabs} />
           <Switch>
             <Route path="/app/allreports" exact component={AllReportsPage}></Route>
             <Route path="/app/devicedetail" exact component={DeviceDetailPage}></Route>

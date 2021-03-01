@@ -39,7 +39,7 @@ class EventsChart extends Component {
         left: '4%',
         right: '3%',
         bottom: '5%',
-        top: '14%',
+        top: '20%',
         containLabel: true
       },
       tooltip: {
@@ -116,7 +116,7 @@ class EventsChart extends Component {
   render() {
     return (
       <div className="block">
-        <ReactEcharts option={this.getOption()}  style={{ height:'2.4rem' }} />
+        <ReactEcharts option={this.getOption()}  style={{ height:'2.6rem' }} />
       </div>
     );
   }

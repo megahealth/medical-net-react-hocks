@@ -32,6 +32,18 @@ a, a:link, a:hover, a:active, a:visited {
 
 #app {
   height: 100%;
+  .ant-pagination,.ant-table-pagination,.ant-table-pagination-right{
+    font-size: 20px!important;
+    padding-top: 10px;
+    li{
+      width: 40px;
+      height: 30px;
+      line-height: 30px;
+    }
+    .ant-pagination-options{
+      display: none;
+    }
+  }
 }
 
 .app-container {
@@ -40,17 +52,19 @@ a, a:link, a:hover, a:active, a:visited {
 
 .container {
   height: 100%;
+  position: relative;
   .content {
     height: 100%;
-    padding-top: 102px;
+    padding-top: 104px;
     box-sizing: border-box;
     display: flex;
     .content-r {
       flex: 1;
-      padding: 20px;
+      padding: 10px;
       overflow: auto;
       background: #f8f8f8;
       .content-r-c {
+        margin-bottom: 120px;
         box-shadow: 0 0 10px #eee;
       } 
     }
@@ -63,4 +77,32 @@ a, a:link, a:hover, a:active, a:visited {
   margin-bottom: 10px;
   min-height: 80px;
   box-shadow: 0 0 10px #eee;
+}
+
+.am-modal-transparent{
+  width: 4rem!important;
+}
+.am-modal{
+  .am-modal-content{
+    .am-modal-header{
+      .am-modal-title{
+        font-size: 0.3rem;
+      }
+    }
+    .am-modal-body{
+      .am-modal-alert-content{
+        font-size: 0.2rem;
+      }
+    }
+    .am-modal-footer{
+      .am-modal-button-group-h{
+        height: 0.6rem;
+      }
+      .am-modal-button{
+        height: 0.6rem!important;
+        line-height: 0.6rem!important;
+        font-size: 0.3rem!important;
+      }
+    }
+  }
 }

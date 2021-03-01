@@ -1,5 +1,8 @@
 .advice {
   margin-top: 20px;
+  .ant-input{
+    font-size: 0.22rem!important;
+  }
 }
 
 .signature{
@@ -14,10 +17,11 @@
   justify-content: start;
   align-items: center;
   height: 0.4rem;
+  font-size: 0.22rem;
 }
 .signature div:nth-child(2){
-  width: 1.5rem;
+  width: 2rem;
 }
 .signature div:nth-child(1){
-  width: 2rem;
+  width: 3rem;
 }

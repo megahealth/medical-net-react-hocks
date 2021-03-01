@@ -146,7 +146,7 @@ class Advice extends Component {
         </div>
         <div className="advice">
           <TextArea 
-            autoSize={{ minRows: 5, maxRows: 20 }} 
+            autoSize={{ minRows: 5, maxRows: 40 }} 
             bordered = {false}
             name="ahiAdvice" 
             // value={adviceData.ahiAdvice?adviceData.ahiAdvice:str} 

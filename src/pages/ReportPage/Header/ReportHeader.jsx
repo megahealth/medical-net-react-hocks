@@ -75,10 +75,11 @@ class ReportHeader extends Component {
         <div className="header-info">
           {
             showInput
-              ? <div style={{ display: 'flex', justifyContent:'space-evenly', alignItems: 'center', width: '1.75rem' }}>
-                <span style={{ display: 'block', width: '0.65rem' }}>病例号：</span>
+              ? <div style={{ display: 'flex', justifyContent:'space-evenly', alignItems: 'center' }}>
+                <span style={{ display: 'block' }}>病例号：</span>
                 <div style={{ borderBottom: '1px solid black', width:'1rem' }}>
                   <Input
+                    style={{fontSize:'18px'}}
                     bordered={false}
                     value={this.state.reportNum == null ? reportNum : this.state.reportNum}
                     onFocus={this.inputFocus}

@@ -4,7 +4,7 @@ import { createHashHistory } from 'history';
 import { connect } from 'react-redux';
 import { Table, Skeleton, Space } from 'antd';
 import { Translation } from 'react-i18next';
-import { Modal, Toast } from 'antd-mobile'
+import { Modal, Toast, Button } from 'antd-mobile'
 import Creator from '../../actions/Creator';
 import AV from 'leancloud-storage';
 import './AllReportsPage.scss';
@@ -96,7 +96,7 @@ class AllReportsPage extends Component {
   }
 
   render() {
-    const { allReports, getAllReportsData } = this.props;
+    const { allReports, getAllReportsData, setFilter } = this.props;
     return (
       <React.Fragment>
         {
@@ -104,6 +104,16 @@ class AllReportsPage extends Component {
             ? <div className="content-loading"><Skeleton /></div>
             : <div className="content-r">
               <div className="content-r-c">
+                <div style={{ position:'relative', height:'0.5rem',marginTop:'0.1rem' }}>
+                  <Button 
+                    type='primary' 
+                    style={{ width:'100px', marginBottom:'10px', position:'absolute',right:'0', fontSize:'20px' }}
+                    onClick = { ()=>{
+                      setFilter({reportType: ['all'],startDate: null,endDate: null,deviceId: null,}); 
+                      getAllReportsData(10,1, {reportType: ['all'],startDate: null,endDate: null,deviceId: null,})
+                    }}
+                  >重载</Button>
+                </div>
                 <Table
                   onRow={item => {
                     return { onClick: () => this.toReport(item) };

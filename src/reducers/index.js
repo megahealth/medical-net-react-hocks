@@ -125,6 +125,14 @@ const report = (state = DefaultState.report, action) => {
         },
         reportNum: action.payload.reportNum,
       })
+    case TYPES.UPDATE_REPORT_STATE_MODIFIED:
+      return {
+        ...state,
+        data:{
+          ...state.data,
+          idModifiedReport: action.payload.idModifiedReport,
+        },
+      }
     default:
       return state;
   }
@@ -182,7 +190,8 @@ const deviceDetail = (state = DefaultState.deviceDetail, action) => {
       })
     case TYPES.GET_RING_ARR_FAILED:
       return ({
-        ...state
+        ...state,
+        ringArr:[],
       })
     case TYPES.GET_DEVICE_DETAIL_FAILED:
       return ({

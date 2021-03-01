@@ -65,7 +65,7 @@ class UserInfo extends Component {
           <span>
             <span>
               {/* { edition.name || '--' } */}
-              {isEditting ? <div><Input name="name" style={{ width: 130 }} value={edition.name} onChange={this.handleChange} /></div> : (edition.name || '--')}
+              {isEditting ? <div><Input name="name" style={{ width: '1rem',border:'2px solid #ccc' }} value={edition.name} onChange={this.handleChange} /></div> : (edition.name || '--')}
             </span>
             <span>{t('User Name')}</span>
           </span>
@@ -73,7 +73,7 @@ class UserInfo extends Component {
             <span>
               {/* {edition.gender === "M" ? "男" : "女" || '--'} */}
               {isEditting ? <div>
-                <Select name="gender" showArrow={false} value={selectedGender} onChange={this.handleChange}>
+                <Select name="gender" style={{ width:'1rem',border:'2px solid #ccc' }} showArrow={false} value={selectedGender} onChange={this.handleChange}>
                 <Option value={ male }>{ male }</Option>
                 <Option value={ female }>{ female }</Option>
                 </Select>
@@ -86,7 +86,7 @@ class UserInfo extends Component {
               {/* {edition.age || '--'} */}
               {isEditting ?
                 <div>
-                  <Input name="age" style={{ width: 130 }} value={edition.age} onChange={this.handleChange}/>
+                  <Input name="age" style={{ width: '1rem',border:'2px solid #ccc' }} value={edition.age} onChange={this.handleChange}/>
                 </div> :
                 (edition.age || '--')
               }
@@ -97,7 +97,7 @@ class UserInfo extends Component {
             <span>
               {/* {edition.height + 'cm' || '--'} */}
               {isEditting ? <div>
-                  <Input name="height" style={{ width: 130 }} value={(edition.height)} onChange={this.handleChange} />
+                  <Input name="height" style={{ width: '1rem',border:'2px solid #ccc' }} value={(edition.height)} onChange={this.handleChange} />
                 </div> : (edition.height ? (edition.height + 'cm') : '--')}
             </span>
             <span>{t('User Height')}</span>
@@ -106,7 +106,7 @@ class UserInfo extends Component {
             <span>
               {/* {edition.weight + 'Kg' || '--'} */}
               {isEditting ? <div>
-                  <Input name="weight" style={{ width: 130 }} value={edition.weight} onChange={this.handleChange} />
+                  <Input name="weight" style={{ width: '1rem',border:'2px solid #ccc' }} value={edition.weight} onChange={this.handleChange} />
                 </div> : (edition.weight ? (edition.weight + 'Kg') : '--')}
             </span>
             <span>{t('User Weight')}</span>

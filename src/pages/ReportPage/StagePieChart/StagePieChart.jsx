@@ -81,7 +81,7 @@ class StagePieChart extends Component {
         itemHeight: 10,
         textStyle: {
           color: '#333',
-          fontSize: 16
+          fontSize: 12
         },
         formatter(name) {
           switch (name) {

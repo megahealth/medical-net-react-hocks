@@ -14,23 +14,42 @@ class PrChart extends Component {
       endStatusTimeMinute,
       spoStart,
       prArr,
-      t
+      t,
+      modifiedReport
     } = this.props;
     const len = prArr.length;
 
     if (len >= 0) {
-      const sleepStageStart = startSleepTime + startStatusTimeMinute * 60 * 1000;
-      const sleepStageEnd = startSleepTime + endStatusTimeMinute * 60 * 1000;
+      let startSpoTime, endSpoTime;
+      if (modifiedReport && modifiedReport.attributes) {
+        startSpoTime = modifiedReport.attributes.startSpoTime;
+        endSpoTime = modifiedReport.attributes.endSpoTime;
+      }
+      const sleepStageStart = (startSleepTime + startStatusTimeMinute * 60 * 1000);
+      const sleepStageEnd = (startSleepTime + endStatusTimeMinute * 60 * 1000);
+      if (!startSpoTime || !endSpoTime) {
+        startSpoTime = sleepStageStart / 1000;
+        endSpoTime = sleepStageEnd / 1000;
+      }
       const realStart = 1000 * spoStart;
       let base = +new Date(realStart);
       const oneStep = 10 * 1000;
       const newPrArr = [];
+      let minSpo = 100;
+      let maxSpo = 50;
       for (let i = 0; i < len; i += 10) {
-        const now = new Date(base += oneStep);
-        const spo = prArr[i];
-        newPrArr.push([now, spo]);
+        base += oneStep;
+        if (base >= startSpoTime * 1000 && base <= endSpoTime * 1000) {
+          const now = new Date(base);
+          const spo = prArr[i];
+          if(spo>maxSpo) maxSpo = parseInt(spo);
+          if(spo !=0 && spo<minSpo) minSpo = parseInt(spo);
+          newPrArr.push([now, spo]);
+        }
+        
       }
-
+      maxSpo += 10 - maxSpo%10
+      minSpo -= minSpo%10
       const option = {
         animation: false,
         tooltip: {
@@ -40,7 +59,7 @@ class PrChart extends Component {
           left: '2%',
           right: '3%',
           bottom: '5%',
-          top: '14%',
+          top: '20%',
           containLabel: true
         },
         // dataZoom: [{
@@ -100,8 +119,8 @@ class PrChart extends Component {
           name: t('Heart Rate BPM'),
           type: 'value',
           nameRotate: '0.1',
-          min: 40,
-          max: 100,
+          min: minSpo,
+          max: maxSpo,
           boundaryGap: [0, '100%'],
           axisLine: {
             lineStyle: {
@@ -146,7 +165,7 @@ class PrChart extends Component {
   render() {
     return (
       <div className="block">
-        <ReactEcharts option={this.getOption()}  style={{ height:'2.4rem' }} />
+        <ReactEcharts option={this.getOption()}  style={{ height:'2.6rem' }} />
       </div>
     );
   }
@@ -158,10 +177,12 @@ PrChart.propTypes = {
   endStatusTimeMinute: PropTypes.number.isRequired,
   spoStart: PropTypes.number.isRequired,
   prArr: PropTypes.array.isRequired,
+  modifiedReport: PropTypes.object,
 };
 
 const mapStateToProps = state => (
   {
+    modifiedReport: state.report.data.idModifiedReport,
     startSleepTime: state.report.data.startSleepTime,
     startStatusTimeMinute: state.report.data.startStatusTimeMinute,
     endStatusTimeMinute: state.report.data.endStatusTimeMinute,
