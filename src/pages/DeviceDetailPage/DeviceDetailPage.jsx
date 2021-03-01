@@ -323,7 +323,7 @@ class DeviceDetailPage extends Component {
                 maskClosable={true}
                 onClose={() => this.setState({ modal: false, modeType: null })}
                 onOk={() => this.onOk()}
-                title={t("Modify the equipment")}
+                title={<span style={{ fontSize:'0.24rem' }}>{ t("Modify the equipment") }</span>}
                 footer={[{ text: t('Close'), onPress: () => { this.setState({ modal: false, modeType: null }) } }, { text: t('Submit'), onPress: () => { this.onOk() } }]}
               >
                 <div style={{ marginBottom: 16 }}>

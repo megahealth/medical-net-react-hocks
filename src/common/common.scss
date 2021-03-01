@@ -79,3 +79,31 @@ a, a:link, a:hover, a:active, a:visited {
   min-height: 80px;
   box-shadow: 0 0 10px #eee;
 }
+
+.am-modal-transparent{
+  width: 4rem!important;
+}
+.am-modal{
+  .am-modal-content{
+    .am-modal-header{
+      .am-modal-title{
+        font-size: 0.3rem;
+      }
+    }
+    .am-modal-body{
+      .am-modal-alert-content{
+        font-size: 0.2rem;
+      }
+    }
+    .am-modal-footer{
+      .am-modal-button-group-h{
+        height: 0.6rem;
+      }
+      .am-modal-button{
+        height: 0.6rem!important;
+        line-height: 0.6rem!important;
+        font-size: 0.3rem!important;
+      }
+    }
+  }
+}

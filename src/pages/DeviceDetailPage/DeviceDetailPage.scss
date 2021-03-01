@@ -207,9 +207,69 @@
     margin-right: 20px;
   }
 }
-.modal1{
-  width: 40%;
+.ant-picker-time-panel{
   font-size: 0.2rem;
+  .ant-picker-time-panel-column{
+    width: 0.8rem;
+    .ant-picker-time-panel-cell-inner{
+      text-align: center;
+      line-height: 0.4rem!important;
+      height: 0.4rem!important;
+    }
+  }
+}
+.ant-picker-footer{
+  .ant-picker-ranges{
+    height: 0.5rem;
+    padding-left: 0;
+    .ant-picker-ok{
+      margin: 0;
+      button{
+        height: 0.4rem;
+        width: 0.6rem;
+        font-size: 0.2rem;
+      }
+    }
+  }
+}
+.modal1{
+  width: 50%;
+  font-size: 0.2rem;
+  .ant-picker-large{
+    width: 40%;
+    .ant-picker-input{
+      input{
+        font-size: 0.2rem;
+      }
+      .ant-picker-suffix{
+        span{
+          svg{
+            width: 0.2rem;
+            height: 0.2rem;
+          }
+        }
+      }
+    }
+  }
+  .ant-radio-group{
+    .ant-radio-button-wrapper{
+      height: 0.4rem;
+      width: 0.8rem;
+      span{
+        line-height: 0.4rem;
+        font-size: 0.24rem;
+      }
+    }
+    
+  }
+  .am-modal-footer{
+    height: 0.6rem;
+    .am-modal-button{
+      font-size: 0.3rem!important;
+      line-height: 0.6rem!important;
+      height: 0.6rem!important;
+    }
+  }
 }
 .am-modal-button{
   height: 0.5rem !important;
