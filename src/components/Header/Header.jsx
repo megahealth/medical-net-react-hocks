@@ -9,12 +9,18 @@ import './Header.scss';
 import LOGO from '../../assets/megahealth.png';
 
 class Header extends Component {
-
-  // logOut = () => {
-  //   const history = createHashHistory();
-  //   AV.User.logOut();
-  //   history.push('/');
-  // }
+  constructor(props) {
+    super(props);
+    this.state = { 
+      routePath:''
+    }
+  }
+  componentDidMount(){
+    console.log(window.location.hash);
+    this.setState({
+      routePath:window.location.hash,
+    })
+  }
   logOut = (t) => {
     Modal.alert(t('Log out'), t("Are you sure to log out?"), [
       {
@@ -33,35 +39,25 @@ class Header extends Component {
   render() {
     const user = AV.User.current();
     const { name } = user.attributes;
+    const { routePath } = this.state;
     return (
-      <div className="header-container">
-        <div>
-          <img src={LOGO} alt="" />
-        </div>
-        <Translation>
-          {
-            t => <div>{t('App Title')}</div>
-          }
-        </Translation>    
-        <div>
-          <Translation>
-            {
-              t => <div onClick={() => this.logOut(t)}>（{name}）{t('Log Out')}</div>
-            }
-          </Translation>
-          <ChangeLang></ChangeLang>
+      <div className="header-container-1" >
+        <div className='header-cont'>
+          <span>筛选</span>
+          <span className='header-title'>报告</span>
+          <span>刷新</span>
         </div>
       </div>
     );
   }
 }
 
-Header.propTypes = {
-  title: PropTypes.string
-};
+// Header.propTypes = {
+//   title: PropTypes.string
+// };
 
-Header.defaultProps = {
-  title: '兆观呼吸睡眠初筛管理工作站'
-};
+// Header.defaultProps = {
+//   title: '兆观呼吸睡眠初筛管理工作站'
+// };
 
 export default Header;

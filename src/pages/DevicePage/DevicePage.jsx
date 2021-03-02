@@ -4,10 +4,12 @@ import './DevicePage.scss';
 import { connect } from 'react-redux';
 import { createHashHistory } from 'history';
 import AV from 'leancloud-storage';
-import { Table, Skeleton,Space,Input } from 'antd';
+import { Skeleton,Space,Input } from 'antd';
 import { Toast, Modal, Button} from 'antd-mobile';
 import Creator from '../../actions/Creator';
 import { Translation } from 'react-i18next';
+
+import Table from '../../components/Table/Table'
 
 class DevicePage extends Component {
   constructor(props){
@@ -130,15 +132,14 @@ class DevicePage extends Component {
             ? <div className="content-loading"><Skeleton /></div>
             : <div className="content-r">
               <div className="content-r-c">
-                <div className="device-page">
-                <div style={{ position:'relative', height:'0.5rem',marginTop:'0.1rem' }}>
+                {/* <div style={{ position:'relative', height:'0.5rem',marginTop:'0.1rem' }}>
                   <Button 
                     type='primary' 
                     style={{ width:'100px', marginBottom:'0.1rem', position:'absolute',right:'0', fontSize:'20px' }}
                     onClick={ ()=>{ this.props.getAllDevice(pagination) } }
                   >刷新</Button>
-                </div>
-                  <Table
+                </div> */}
+                  {/* <Table
                     onRow={item => {
                       return { onClick: () => this.toDeviceDetail(item.key) };
                     }}
@@ -146,8 +147,10 @@ class DevicePage extends Component {
                     dataSource={deviceList}
                     pagination={pagination}
                     onChange={res => this.props.getAllDevice({ ...pagination, current: res.current })}
+                  ></Table> */}
+                  <Table
+                    type='deviceList'
                   ></Table>
-                </div>
                 
               </div>
             </div>

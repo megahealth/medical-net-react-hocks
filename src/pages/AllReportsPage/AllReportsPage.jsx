@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createHashHistory } from 'history';
 import { connect } from 'react-redux';
-import { Table, Skeleton, Space } from 'antd';
+import { Skeleton, Space } from 'antd';
 import { Translation } from 'react-i18next';
 import { Modal, Toast, Button } from 'antd-mobile'
 import Creator from '../../actions/Creator';
 import AV from 'leancloud-storage';
 import './AllReportsPage.scss';
+import Table from '../../components/Table/Table'
 const alert = Modal.alert;
 class AllReportsPage extends Component {
   columns = [
@@ -104,7 +105,7 @@ class AllReportsPage extends Component {
             ? <div className="content-loading"><Skeleton /></div>
             : <div className="content-r">
               <div className="content-r-c">
-                <div style={{ position:'relative', height:'0.5rem',marginTop:'0.1rem' }}>
+                {/* <div style={{ position:'relative', height:'0.5rem',marginTop:'0.1rem' }}>
                   <Button 
                     type='primary' 
                     style={{ width:'100px', marginBottom:'10px', position:'absolute',right:'0', fontSize:'20px' }}
@@ -113,8 +114,8 @@ class AllReportsPage extends Component {
                       getAllReportsData(10,1, {reportType: ['all'],startDate: null,endDate: null,deviceId: null,})
                     }}
                   >重载</Button>
-                </div>
-                <Table
+                </div> */}
+                {/* <Table
                   onRow={item => {
                     return { onClick: () => this.toReport(item) };
                   }}
@@ -122,6 +123,9 @@ class AllReportsPage extends Component {
                   dataSource={allReports.reportsData}
                   pagination={allReports.pagination}
                   onChange={res => getAllReportsData(10, res.current, allReports.filter)}
+                ></Table> */}
+                <Table
+                  type='reportList'
                 ></Table>
               </div>
             </div>

@@ -1,7 +1,10 @@
-import ALL_REPORTS from '../assets/all-reports.png';
+// import ALL_REPORTS from '../assets/all-reports.png';
 // import VALID_REPORTS from '../assets/valid-reports.png';
-import DEVICE from '../assets/device.png';
-import DEVICE_DETAIL from '../assets/device-detail.png';
+// import DEVICE from '../assets/device.png';
+// import DEVICE_DETAIL from '../assets/device-detail.png';
+import DEVICE from '../assets/home.png'
+import ALL_REPORTS from '../assets/report.png'
+import USER from '../assets/my.png'
 
 const SidebarTabs = [
   {
@@ -23,9 +26,15 @@ const SidebarTabs = [
   },
   {
     path: '/app/devicedetail',
-    icon: DEVICE_DETAIL,
+    icon: DEVICE,
     name: 'Device management',
     role:[]
+  },
+  {
+    path: '/app/devicedetail',
+    icon: USER,
+    name: 'Device management',
+    role:[5,6]
   }
 ];
 
