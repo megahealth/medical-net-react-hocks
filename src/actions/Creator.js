@@ -494,6 +494,14 @@ Creator.changeLED = asyncActionFactory(
   }
 )
 
+// 设置头部
+Creator.setHeader = (title) => {
+  return({
+    type: TYPES.SET_HEADER,
+    payload: { title }
+  })
+}
+
 // 更新裁剪后的数值
 Creator.updateModifiedReport = (idModifiedReport) => {
   return ({
@@ -655,21 +663,21 @@ function deviceStatus(workStatus, monitorStatus) {
       switch (monitorStatus) {
         case "0":
           return {
-            str: "Online",
-            color: "rgb(227,207,87)",
+            str: "已连接",
+            color: "#1E58DE",
             wifiConect: true
           };
         case "1":
           return {
-            str: "Monitoring",
+            str: "监测中",
             color: "green",
             wifiConect: true
           };
       }
     default:
       return {
-        str: "Not online",
-        color: "black",
+        str: "未连接",
+        color: '#FC6063',
         wifiConect: false
       };
   }

@@ -11,6 +11,9 @@ const DefaultState = {
     error: false,
     animation: false,
   },
+  header: {
+    title:'22'
+  },
   allReports: {
     loading: false,
     error: false,

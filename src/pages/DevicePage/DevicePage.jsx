@@ -80,7 +80,7 @@ class DevicePage extends Component {
       }
     ];
   }
-  
+
   onChangeNicknameBtn = (e,record)=>{
     e.stopPropagation();
     const user = AV.User.current();
@@ -116,8 +116,9 @@ class DevicePage extends Component {
     
   }
   componentDidMount() {
-    let { allDevice, getAllDevice } = this.props;
+    let { allDevice, getAllDevice, setHeader } = this.props;
     getAllDevice(allDevice.pagination);
+    setHeader('所有设备');
   }
   toDeviceDetail = (id) => {
     const history = createHashHistory();
@@ -150,6 +151,9 @@ class DevicePage extends Component {
                   ></Table> */}
                   <Table
                     type='deviceList'
+                    dataSource={deviceList}
+                    pagination={pagination}
+                    loadMore={res => this.props.getAllDevice({ ...pagination, current: res.current+1 })}
                   ></Table>
                 
               </div>
@@ -188,7 +192,8 @@ DevicePage.propTypes = {
     deviceList: PropTypes.array,
     pagination: PropTypes.object
   }).isRequired,
-  getAllDevice: PropTypes.func.isRequired
+  getAllDevice: PropTypes.func.isRequired,
+  setHeader: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
@@ -202,6 +207,9 @@ const mapDispatchToProps = dispatch => (
     getAllDevice(pagination) {
       dispatch(Creator.getAllDevice(pagination))
     },
+    setHeader(title) {
+      dispatch(Creator.setHeader(title));
+    }
   }
 );
 

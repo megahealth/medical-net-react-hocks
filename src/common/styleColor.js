@@ -1,24 +1,24 @@
 const styleColor = {
   background_blue:{
-    background:'#d2e2ff'
+    color:'#4179E6'
   },
   background_gry:{
-    background:'#f8f8f8'
+    color:'#999999'
   },
   background_yellow:{
-    background:'#ffffac'
+    color:'#ffca3e'
   },
   background_purple:{
-    background:'#ffd6d6'
+    color:'#ffd6d6'
   },
   background_red:{
-    background:'#FF0012'
+    color:'#FF0012'
   },
   background_greed:{
-    background:'#00E700'
+    color:'#00E700'
   },
   background_gry_600:{
-    background:'#999999'
+    color:'#999999'
   }
 }
 

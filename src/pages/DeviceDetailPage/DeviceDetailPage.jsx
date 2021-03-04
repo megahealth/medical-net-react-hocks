@@ -32,9 +32,7 @@ class DeviceDetailPage extends Component {
     intervalGetRingArr = setInterval(() => {
       this.props.getDeviceDetail(this.id);
     }, 5000);
-    // if (!(navigator.userAgent.match(/(iPhone|iPod|Android|ios|iOS|iPad|Backerry|WebOS|Symbian|Windows Phone|Phone)/i))) {
-    //   clearInterval(intervalGetRingArr);
-    // }
+    this.props.setHeader('当前设备')
   }
   componentWillUnmount() {
     clearInterval(intervalGetRingArr);
@@ -207,6 +205,7 @@ class DeviceDetailPage extends Component {
 
   render() {
     const { device, ringArr, roleType } = this.props.deviceDetail;
+    console.log(device, ringArr, roleType);
     return (
       <div className="content-r">
         <div className="content-r-c">
@@ -214,12 +213,17 @@ class DeviceDetailPage extends Component {
             <div className="ipad-device-card">
               <div className='table-device'>
                 <div>
-                  <img src={img_device} alt="" srcset="" />
+                  <img src={img_device} alt="" />
                 </div>
                 <div className='table-text'>
-                  <p><span>设备状态：</span><span style={{ color: '#FC6063' }}>未连接</span></p>
-                  <p><span>设备编号：</span><span>P11D71901000650</span></p>
-                  <p><span>固件版本：</span><span>2.4.9620</span></p>
+                  <p>
+                    <span>设备状态：</span>
+                    <span style={{ color: device.workStatus == '1' ? (device.monitorStatus == 0 ? '#1E58DE' : 'green') : '#FC6063' }}>
+                      { device.workStatus == '1' ? (device.monitorStatus == 0 ? '已连接' : '监测中') : '未连接' }
+                    </span>
+                  </p>
+                  <p><span>设备编号：</span><span>{ device.deviceSN }</span></p>
+                  <p><span>固件版本：</span><span>{ device.versionNO }</span></p>
                 </div>
               </div>
               <div className='card-line'></div>
@@ -237,7 +241,7 @@ class DeviceDetailPage extends Component {
                 <div>
                   <p>
                     <span>定时监测：</span>
-                    <span>23:07 - 07:00</span>
+                    <span>{ device.period }</span>
                   </p>
                   <p>
                     <span>儿童模式：</span>
@@ -249,41 +253,37 @@ class DeviceDetailPage extends Component {
             <div className='ring-list'>
               <p className='ring-list-title'>指环信息</p>
               <ul>
-                <li>
-                  <img src={ring_icon} />
-                  <div>
-                    <p>C11E31910000079</p>
-                    <p>BC:E5:9F:48:98:8F / 3.0.9414</p>
-                  </div>
-                </li>
-                <li>
-                  <img src={ring_icon} />
-                  <div>
-                    <p>C11E31910000079</p>
-                    <p>BC:E5:9F:48:98:8F / 3.0.9414</p>
-                  </div>
-                </li>
-                <li>
-                  <img src={ring_icon} />
-                  <div>
-                    <p>C11E31910000079</p>
-                    <p>BC:E5:9F:48:98:8F / 3.0.9414</p>
-                  </div>
-                </li>
-                <li>
-                  <img src={ring_icon} />
-                  <div>
-                    <p>C11E31910000079</p>
-                    <p>BC:E5:9F:48:98:8F / 3.0.9414</p>
-                  </div>
-                </li>
-                <li>
-                  <img src={ring_icon} />
-                  <div>
-                    <p>C11E31910000079</p>
-                    <p>BC:E5:9F:48:98:8F / 3.0.9414</p>
-                  </div>
-                </li>
+                {
+                  ringArr.length>0?
+                  ringArr.map((ring)=>{
+                    return (
+                      <li 
+                        key={ ring.sn }
+                      >
+                        <img src={ring_icon} />
+                        <div className='ringInfo'>
+                          <p>{ ring.sn }</p>
+                          <p>{ ring.mac } / { ring.swVersion }</p>
+                        </div>
+                        <div className='ringStatus'>
+                          <p>状态：
+                            <span style={styleColor[ring.ringStatus]}>
+                              { 
+                                ring.ringStatus=='background_gry'?'未启用': 
+                                ring.ringStatus=='background_blue'?'已连接':
+                                ring.ringStatus=='background_red'?'已连接/电量低':
+                                ring.ringStatus=='background_yellow'?'未连接':'监测中'
+                              }
+                            </span>
+                          </p>
+                          <p>电量：{ ring.battery==-1?'--':ring.battery }%</p>
+                        </div>
+                      </li>
+                    )
+                  })
+                  :null
+                  
+                }
               </ul>
             </div>
             <div>
@@ -480,6 +480,7 @@ DeviceDetailPage.propTypes = {
   getDeviceDetail: PropTypes.func.isRequired,
   changeLED: PropTypes.func.isRequired,
   changeMonitorAndMode: PropTypes.func.isRequired,
+  setHeader: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
@@ -498,6 +499,9 @@ const mapDispatchToProps = dispatch => (
     },
     changeMonitorAndMode(params, id) {
       dispatch(Creator.changeMonitorAndMode(params))
+    },
+    setHeader(title) {
+      dispatch(Creator.setHeader(title));
     }
   }
 );

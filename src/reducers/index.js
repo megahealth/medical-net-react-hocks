@@ -27,7 +27,20 @@ const home = (state = DefaultState.home, action) => {
   }
 };
 
-// 首页数据
+// 头部数据 
+const header = ( state = DefaultState.header, action ) => {
+  switch (action.type) {
+    case TYPES.SET_HEADER:
+      return {
+        ...state,
+        title: action.payload.title,
+      };
+    default:
+      return state;
+  }
+}
+
+// 报告列表数据
 const allReports = (state = DefaultState.allReports, action) => {
   switch (action.type) {
     case TYPES.GET_ALL_REPORTS_DATA:
@@ -39,7 +52,12 @@ const allReports = (state = DefaultState.allReports, action) => {
       return {
         ...state,
         loading: false,
-        reportsData: action.payload.reports,
+        reportsData: action.payload.current == 1?
+          action.payload.reports
+          :[
+            ...state.reportsData,
+            ...action.payload.reports
+          ],
         pagination: {
           ...state.pagination,
           total: action.payload.total,
@@ -151,7 +169,12 @@ const allDevice = (state = DefaultState.allDevice, action) => {
         ...state,
         loading: false,
         error: false,
-        deviceList: action.payload.deviceList,
+        deviceList: 
+          action.payload.pagination.current == 1?
+          action.payload.deviceList:[
+            ...state.deviceList,
+            ...action.payload.deviceList
+          ],
         pagination: action.payload.pagination
       };
     case TYPES.GET_ALL_DEVICE_DATA_FAILED:
@@ -274,6 +297,7 @@ const account = (state = DefaultState.account, action) => {
 const Reducers = combineReducers({
   locale,
   home,
+  header,
   allReports,
   report,
   allDevice,

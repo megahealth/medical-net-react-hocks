@@ -3,6 +3,8 @@ export const START_ANIMATION = '开始动画';
 
 export const SET_LOCALE = '设置语言';
 
+export const SET_HEADER = '设置头部';
+
 // 获取首页数据
 export const GET_HOME_DATA = '获取首页数据';
 export const GET_HOME_DATA_SUCCESS = '获取首页数据成功';

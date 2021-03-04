@@ -55,8 +55,9 @@ class AllReportsPage extends Component {
     }
   ];
   componentDidMount() {
-    const { allReports, getAllReportsData } = this.props;
+    const { allReports, getAllReportsData, setHeader } = this.props;
     getAllReportsData(10, 1, allReports.filter);
+    setHeader('报告')
   }
   getSameSnReport = (e, id) => {
     const { setFilter,allReports, getAllReportsData } = this.props;
@@ -126,6 +127,9 @@ class AllReportsPage extends Component {
                 ></Table> */}
                 <Table
                   type='reportList'
+                  dataSource={allReports.reportsData}
+                  pagination={allReports.pagination}
+                  loadMore={res => getAllReportsData(10, res.current+1, allReports.filter)}
                 ></Table>
               </div>
             </div>
@@ -145,6 +149,7 @@ AllReportsPage.propTypes = {
   }).isRequired,
   getAllReportsData: PropTypes.func.isRequired,
   setFilter: PropTypes.func.isRequired,
+  setHeader: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
@@ -159,6 +164,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setFilter(filter) {
     dispatch(Creator.setFilter(filter));
+  },
+  setHeader(title) {
+    dispatch(Creator.setHeader(title));
   }
 });
 

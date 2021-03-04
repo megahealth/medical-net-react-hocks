@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Table.scss';
-import { PullToRefresh, Button } from 'antd-mobile';
+import { PullToRefresh, Button, ListView  } from 'antd-mobile';
+import { createHashHistory } from 'history';
 import normal_png from '../../assets/normal.png'
 import middle_png from '../../assets/middle.png'
 import light_png from '../../assets/light.png'
@@ -8,118 +9,76 @@ import invalid_png from '../../assets/invalid.png'
 import heavy_png from '../../assets/heavy.png'
 import delete_png from '../../assets/delete.png'
 import img_device from '../../assets/img_device.png'
+import no_report from '../../assets/noreport.png'
+
 class Table extends Component {
   constructor(props) {
     super(props);
-    this.state = {  }
+  }
+  toDeviceDetail = (id) => {
+    const history = createHashHistory();
+    history.push(`/app/device/${id}`);
   }
   render() { 
-    return ( 
+    console.log(this.props)
+    const { type, dataSource, pagination, loadMore} = this.props;
+    return (
       <div className='table-box'>
         {
-          this.props.type == 'reportList'?
-          <PullToRefresh
-          indicator={{deactivate:' '}}
-          >
-            <div className='table-report'>
-                <div>
-                  <img src={ normal_png } alt="" srcset=""/>
-                </div>
-                <div className='table-text'>
-                  <p><span>2020-06-11</span><span>AHI 1.9</span></p>
-                  <p><span>用户：未登记</span><span>SN：P11D71901000650</span></p>
-                </div>
-                <div className='table-delete'>
-                  <img src={ delete_png } alt="" srcset=""/>
-                </div>
+          type == 'reportList'?
+            dataSource.length>0?
+            <div>
+              {dataSource.map((report) => {
+                return (
+                  <div className='table-report' key={ report.id }>
+                    <div>
+                      <img src={ 
+                        report.AHI.degree == "无效"? invalid_png: 
+                        report.AHI.degree == "正常"? normal_png:
+                        report.AHI.degree == "轻度"? light_png:
+                        report.AHI.degree == "中度"? middle_png:
+                        report.AHI.degree == "重度"? heavy_png :invalid_png
+                      }
+                      />
+                    </div>
+                    <div className='table-text'>
+                      <p><span>{ report.date }</span><span>AHI { report.AHI.ahi }</span></p>
+                      <p><span>用户：{ report.name }</span><span>SN：{ report.sn }</span></p>
+                    </div>
+                    <div className='table-delete'>
+                      <img src={ delete_png } alt=""/>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
-            <div className='table-report'>
-                <div>
-                  <img src={ middle_png } alt="" srcset=""/>
-                </div>
-                <div className='table-text'>
-                  <p><span>2020-06-11</span><span>AHI 1.9</span></p>
-                  <p><span>用户：未登记</span><span>SN：P11D71901000650</span></p>
-                </div>
-                <div className='table-delete'>
-                  <img src={ delete_png } alt="" srcset=""/>
-                </div>
+            :<div className='noreport'>
+              <img src={no_report}/>
             </div>
-            <div className='table-report'>
-                <div>
-                  <img src={ light_png } alt="" srcset=""/>
-                </div>
-                <div className='table-text'>
-                  <p><span>2020-06-11</span><span>AHI 1.9</span></p>
-                  <p><span>用户：未登记</span><span>SN：P11D71901000650</span></p>
-                </div>
-                <div className='table-delete'>
-                  <img src={ delete_png } alt="" srcset=""/>
-                </div>
-            </div>
-            <div className='table-report'>
-                <div>
-                  <img src={ invalid_png } alt="" srcset=""/>
-                </div>
-                <div className='table-text'>
-                  <p><span>2020-06-11</span><span>AHI 1.9</span></p>
-                  <p><span>用户：未登记</span><span>SN：P11D71901000650</span></p>
-                </div>
-                <div className='table-delete'>
-                  <img src={ delete_png } alt="" srcset=""/>
-                </div>
-            </div>
-            <div className='table-report'>
-                <div>
-                  <img src={ heavy_png } alt="" srcset=""/>
-                </div>
-                <div className='table-text'>
-                  <p><span>2020-06-11</span><span>AHI 1.9</span></p>
-                  <p><span>用户：未登记</span><span>SN：P11D71901000650</span></p>
-                </div>
-                <div className='table-delete'>
-                  <img src={ delete_png } alt="" srcset=""/>
-                </div>
-            </div>
-            <div className='table-report'>
-                <div>
-                  <img src={ normal_png } alt="" srcset=""/>
-                </div>
-                <div className='table-text'>
-                  <p><span>2020-06-11</span><span>AHI 1.9</span></p>
-                  <p><span>用户：未登记</span><span>SN：P11D71901000650</span></p>
-                </div>
-                <div className='table-delete'>
-                  <img src={ delete_png } alt="" srcset=""/>
-                </div>
-            </div>
-          </PullToRefresh>
           :
-          <PullToRefresh
-            indicator={{deactivate:' '}}
-          >
-            <div className='table-device'>
-                <div>
-                  <img src={ img_device } alt="" srcset=""/>
+            <div>
+              {dataSource.map((device)=>{
+                return (
+                <div className='table-device' key={device.key} onClick={()=>this.toDeviceDetail(device.key)}>
+                  <div>
+                    <img src={ img_device }/>
+                  </div>
+                  <div className='table-text'>
+                    <p><span>设备状态：</span><span style={{ color:device.status.color }}>{ device.status.str }</span></p>
+                    <p><span>设备编号：</span><span>{ device.deviceSN }</span></p>
+                    <p><span>固件版本：</span><span>{ device.versionNO }</span></p>
+                  </div>
                 </div>
-                <div className='table-text'>
-                  <p><span>设备状态：</span><span style={{ color:'#1E58DE' }}>已连接</span></p>
-                  <p><span>设备编号：</span><span>P11D71901000650</span></p>
-                  <p><span>固件版本：</span><span>2.4.9620</span></p>
-                </div>
+              )
+              })}
+              
             </div>
-            <div className='table-device'>
-                <div>
-                  <img src={ img_device } alt="" srcset=""/>
-                </div>
-                <div className='table-text'>
-                  <p><span>设备状态：</span><span style={{ color:'#FC6063' }}>未连接</span></p>
-                  <p><span>设备编号：</span><span>P11D71901000650</span></p>
-                  <p><span>固件版本：</span><span>2.4.9620</span></p>
-                </div>
-            </div>
-          </PullToRefresh>
         }
+        <div>
+          <div className='more-btn' onClick={()=>loadMore(pagination)}>
+            <span>加载更多</span>
+          </div>
+        </div>
       </div>
       
     );
