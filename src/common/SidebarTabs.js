@@ -31,9 +31,9 @@ const SidebarTabs = [
     role:[]
   },
   {
-    path: '/app/devicedetail',
+    path: '/app/mine',
     icon: USER,
-    name: 'Device management',
+    name: '我的',
     role:[5,6]
   }
 ];

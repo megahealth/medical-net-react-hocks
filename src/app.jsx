@@ -8,6 +8,7 @@ import SidebarTabs from './common/SidebarTabs';
 import AllReportsPage from './pages/AllReportsPage/AllReportsPage';
 import DeviceDetailPage from './pages/DeviceDetailPage/DeviceDetailPage';
 import Device from './pages/DevicePage/DevicePage';
+import Mine from './pages/Mine/Mine'
 
 class MyApp extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ class MyApp extends Component {
             <Route path="/app/devicedetail" exact component={DeviceDetailPage}></Route>
             <Route path="/app/device/:id" exact component={DeviceDetailPage}></Route>
             <Route path="/app/device" exact component={Device}></Route>
+            <Route path="/app/mine" exact component={Mine}></Route>
             <Redirect to="/app/allreports"/>
           </Switch>
         </div>

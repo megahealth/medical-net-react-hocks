@@ -127,7 +127,7 @@ Creator.getAllReportsData = asyncActionFactory(
           'time': `${totalMilliseconds.hours()}时${totalMilliseconds.minutes()}分`,
         }
       });
-      dispatch(success({ reports: arr, total, current }));
+      dispatch(success({ reports: arr, total, current, limit }));
     } catch (error) {
       dispatch(fail({ errorcode: error }));
     }

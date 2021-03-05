@@ -1,0 +1,26 @@
+.mine{
+  .mine-info{
+    font-size: 0.42rem;
+    height: 1.32rem;
+    line-height: 1.32rem;
+    border-bottom: 1px solid #999;
+    label{
+      margin-right: 0.7rem;
+    }
+    span{
+      color: #999;
+    }
+  }
+  .mine-logout{
+    height: 1.33rem;
+    width: 9.17rem;
+    position: absolute;
+    bottom: 1.5rem;
+    left: 0.42rem;
+    .am-button{
+      height: 1.33rem;
+      line-height: 1.33rem;
+      font-size: 0.58rem;
+    }
+  }
+}

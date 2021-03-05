@@ -20,7 +20,7 @@ const DefaultState = {
     reportsData: [],
     pagination: {
       current: 1,
-      // pageSize: 10,
+      pageSize: 10,
       showSizeChanger: false,
       showQuickJumper: true,
       total: 0

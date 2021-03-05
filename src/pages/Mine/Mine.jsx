@@ -4,45 +4,53 @@ import { createHashHistory } from 'history';
 import { connect } from 'react-redux';
 import Creator from '../../actions/Creator';
 import AV from 'leancloud-storage';
-import './Header.scss';
-
-class Header extends Component {
+import { Button,Modal } from 'antd-mobile';
+import './Mine.scss'
+class Mine extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      routePath:''
-    }
+    this.state = {  }
   }
   componentDidMount(){
+    const { setHeader } = this.props;
+    setHeader('我的')
+    console.log(AV.User.current())
   }
-
-  headerLeft = () => {
-    const { title } = this.props; 
-    if(title == '当前设备'){
-      window.history.go(-1)
-    }
+  logOut = (t) => {
+    Modal.alert('退出登录', "确定要退出登录吗？", [
+      {
+        text: '取消',
+        onPress: () => console.log('cancel')
+      },
+      {
+        text: '确定',
+        onPress: () => {
+          AV.User.logOut();
+          window.location.hash = '/';
+        }
+      },
+    ]);
   }
-  render() {
-    const user = AV.User.current();
-    const { getAllReportsData, setFilter } = this.props;
-    return (
-      <div className="header-container-1" >
-        <div className='header-cont'>
-          <span onClick={ this.headerLeft }>{ this.props.title == '当前设备' ? '返回' : '筛选' }</span>
-          <span className='header-title'>{ this.props.title }</span>
-          <span 
-            onClick={()=>{
-              setFilter({reportType: ['all'],startDate: null,endDate: null,deviceId: null,}); 
-              getAllReportsData(10,1, {reportType: ['all'],startDate: null,endDate: null,deviceId: null,})
-            }}
-          >刷新</span>
+  render() { 
+    return ( 
+      <div className="content-r">
+        <div className="content-r-c">
+          <div className="mine">
+            <div className='mine-info'>
+              <label>用户名</label>
+              <span>测试01</span>
+            </div>
+            <div className='mine-logout'>
+              <Button type="warning" onClick={this.logOut}>退出登录</Button>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 }
 
-Header.propTypes = {
+Mine.propTypes = {
   allReports: PropTypes.shape({
     loading: PropTypes.bool,
     error: PropTypes.bool,
@@ -75,4 +83,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Mine);

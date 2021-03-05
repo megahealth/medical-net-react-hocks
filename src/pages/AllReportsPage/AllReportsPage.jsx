@@ -66,27 +66,13 @@ class AllReportsPage extends Component {
     getAllReportsData(10, 1, {...allReports.filter,deviceId:id.idDevice});
   }
   toReport = (report) => {
-    const { allReports, getAllReportsData } = this.props;
-    const pagination = allReports.pagination;
     if(report.AHI.degree == '无效'){
       return (
         alert('删除无效报告','该报告为无效报告，需要删除吗?', [
           { text: '取消'},
           {
             text: '删除',
-            onPress: () =>
-              new Promise((resolve) => {
-                const deleteReport = AV.Object.createWithoutData('Reports', report.id);
-                deleteReport.destroy().then(res => {
-                  Toast.success('删除成功！', 1);
-                  getAllReportsData(pagination.pageSize,pagination.current,allReports.filter)
-                  resolve();
-                }).catch(error => {
-                  console.log(error);
-                  Toast.success('删除失败！', 1);
-                  resolve();
-                })
-              }),
+            onPress: ()=>this.deleteReport(report),
           },
         ])
       )
@@ -95,6 +81,22 @@ class AllReportsPage extends Component {
       history.push(`/report/${report.id}`);
     }
     
+  }
+  deleteReport = (report) => {
+    const { allReports, getAllReportsData } = this.props;
+    const pagination = allReports.pagination;
+    return new Promise((resolve) => {
+      const deleteReport = AV.Object.createWithoutData('Reports', report.id);
+      deleteReport.destroy().then(res => {
+        Toast.success('删除成功！', 1);
+        getAllReportsData(pagination.pageSize,pagination.current,allReports.filter)
+        resolve();
+      }).catch(error => {
+        console.log(error);
+        Toast.success('删除失败！', 1);
+        resolve();
+      })
+    })
   }
 
   render() {
@@ -106,30 +108,19 @@ class AllReportsPage extends Component {
             ? <div className="content-loading"><Skeleton /></div>
             : <div className="content-r">
               <div className="content-r-c">
-                {/* <div style={{ position:'relative', height:'0.5rem',marginTop:'0.1rem' }}>
-                  <Button 
-                    type='primary' 
-                    style={{ width:'100px', marginBottom:'10px', position:'absolute',right:'0', fontSize:'20px' }}
-                    onClick = { ()=>{
-                      setFilter({reportType: ['all'],startDate: null,endDate: null,deviceId: null,}); 
-                      getAllReportsData(10,1, {reportType: ['all'],startDate: null,endDate: null,deviceId: null,})
-                    }}
-                  >重载</Button>
-                </div> */}
-                {/* <Table
-                  onRow={item => {
-                    return { onClick: () => this.toReport(item) };
-                  }}
-                  columns={this.columns}
-                  dataSource={allReports.reportsData}
-                  pagination={allReports.pagination}
-                  onChange={res => getAllReportsData(10, res.current, allReports.filter)}
-                ></Table> */}
                 <Table
                   type='reportList'
                   dataSource={allReports.reportsData}
                   pagination={allReports.pagination}
-                  loadMore={res => getAllReportsData(10, res.current+1, allReports.filter)}
+                  loadMore={res => getAllReportsData( (res.pageSize + 10), res.current, allReports.filter)}
+                  btnClick = { res=>this.toReport(res) }
+                  btnDelete = { res=>alert('删除报告','删除不可恢复，确定要删除吗?', [
+                    { text: '取消'},
+                    {
+                      text: '删除',
+                      onPress: ()=>this.deleteReport(res),
+                    },
+                  ])}
                 ></Table>
               </div>
             </div>

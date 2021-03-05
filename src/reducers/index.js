@@ -52,16 +52,12 @@ const allReports = (state = DefaultState.allReports, action) => {
       return {
         ...state,
         loading: false,
-        reportsData: action.payload.current == 1?
-          action.payload.reports
-          :[
-            ...state.reportsData,
-            ...action.payload.reports
-          ],
+        reportsData: action.payload.reports,
         pagination: {
           ...state.pagination,
           total: action.payload.total,
-          current: action.payload.current
+          current: action.payload.current,
+          pageSize: action.payload.limit>action.payload.total?action.payload.total:action.payload.limit,
         }
       };
     case TYPES.GET_ALL_REPORTS_DATA_FAILED:
@@ -169,13 +165,10 @@ const allDevice = (state = DefaultState.allDevice, action) => {
         ...state,
         loading: false,
         error: false,
-        deviceList: 
-          action.payload.pagination.current == 1?
-          action.payload.deviceList:[
-            ...state.deviceList,
-            ...action.payload.deviceList
-          ],
-        pagination: action.payload.pagination
+        deviceList: action.payload.deviceList,
+        pagination: action.payload.pagination.pageSize > action.payload.pagination.total
+          ?{...action.payload.pagination,pageSize:action.payload.pagination.total}
+          :action.payload.pagination
       };
     case TYPES.GET_ALL_DEVICE_DATA_FAILED:
       return {

@@ -153,7 +153,7 @@ class DevicePage extends Component {
                     type='deviceList'
                     dataSource={deviceList}
                     pagination={pagination}
-                    loadMore={res => this.props.getAllDevice({ ...pagination, current: res.current+1 })}
+                    loadMore={res => this.props.getAllDevice({ ...pagination, pageSize: res.pageSize+10 })}
                   ></Table>
                 
               </div>

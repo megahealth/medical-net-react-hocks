@@ -21,7 +21,7 @@ class Table extends Component {
   }
   render() { 
     console.log(this.props)
-    const { type, dataSource, pagination, loadMore} = this.props;
+    const { type, dataSource, pagination, loadMore, btnClick, btnDelete} = this.props;
     return (
       <div className='table-box'>
         {
@@ -30,7 +30,7 @@ class Table extends Component {
             <div>
               {dataSource.map((report) => {
                 return (
-                  <div className='table-report' key={ report.id }>
+                  <div className='table-report' key={ report.id } onClick={ ()=>btnClick(report) }>
                     <div>
                       <img src={ 
                         report.AHI.degree == "无效"? invalid_png: 
@@ -45,7 +45,10 @@ class Table extends Component {
                       <p><span>{ report.date }</span><span>AHI { report.AHI.ahi }</span></p>
                       <p><span>用户：{ report.name }</span><span>SN：{ report.sn }</span></p>
                     </div>
-                    <div className='table-delete'>
+                    <div className='table-delete' onClick={ (e)=>{
+                      if(e&&e.stopPropagation){e.stopPropagation();}else{window.event.cancelBubble=true;}
+                      btnDelete(report);
+                    }}>
                       <img src={ delete_png } alt=""/>
                     </div>
                   </div>

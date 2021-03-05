@@ -22,7 +22,17 @@ class LoginPage extends Component {
       showPw: false
     };
   }
-
+  componentDidMount(){
+    const user = AV.User.current();
+    if(user){
+      const history = createHashHistory();
+      if(user.id === '5b73f33cfe88c2005b88dc8a'){
+        history.push('/addaccount');
+      }else{
+        history.push('/app');
+      }
+    }
+  }
   showOrHidePw() {
     const { showPw } = this.state;
     this.setState({
