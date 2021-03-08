@@ -57,7 +57,7 @@ class AllReportsPage extends Component {
   componentDidMount() {
     const { allReports, getAllReportsData, setHeader } = this.props;
     getAllReportsData(10, 1, allReports.filter);
-    setHeader('报告')
+    setHeader('报告列表')
   }
   getSameSnReport = (e, id) => {
     const { setFilter,allReports, getAllReportsData } = this.props;

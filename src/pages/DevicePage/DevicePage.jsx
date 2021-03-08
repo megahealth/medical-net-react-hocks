@@ -118,7 +118,7 @@ class DevicePage extends Component {
   componentDidMount() {
     let { allDevice, getAllDevice, setHeader } = this.props;
     getAllDevice(allDevice.pagination);
-    setHeader('所有设备');
+    setHeader('设备列表');
   }
   toDeviceDetail = (id) => {
     const history = createHashHistory();
@@ -133,29 +133,12 @@ class DevicePage extends Component {
             ? <div className="content-loading"><Skeleton /></div>
             : <div className="content-r">
               <div className="content-r-c">
-                {/* <div style={{ position:'relative', height:'0.5rem',marginTop:'0.1rem' }}>
-                  <Button 
-                    type='primary' 
-                    style={{ width:'100px', marginBottom:'0.1rem', position:'absolute',right:'0', fontSize:'20px' }}
-                    onClick={ ()=>{ this.props.getAllDevice(pagination) } }
-                  >刷新</Button>
-                </div> */}
-                  {/* <Table
-                    onRow={item => {
-                      return { onClick: () => this.toDeviceDetail(item.key) };
-                    }}
-                    columns={this.columns}
-                    dataSource={deviceList}
-                    pagination={pagination}
-                    onChange={res => this.props.getAllDevice({ ...pagination, current: res.current })}
-                  ></Table> */}
-                  <Table
-                    type='deviceList'
-                    dataSource={deviceList}
-                    pagination={pagination}
-                    loadMore={res => this.props.getAllDevice({ ...pagination, pageSize: res.pageSize+10 })}
-                  ></Table>
-                
+                <Table
+                  type='deviceList'
+                  dataSource={deviceList}
+                  pagination={pagination}
+                  loadMore={res => this.props.getAllDevice({ ...pagination, pageSize: res.pageSize+10 })}
+                ></Table>
               </div>
             </div>
         }

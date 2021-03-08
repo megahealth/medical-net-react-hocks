@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import styleColor from '../../common/styleColor'
 import AV from 'leancloud-storage';
 import Creator from '../../actions/Creator';
-import { Input, Radio, TimePicker } from 'antd';
+import { Input, Radio, TimePicker  } from 'antd';
 import moment from 'moment';
 import { Toast, Modal, Button, Switch } from 'antd-mobile';
 import { PlusOutlined } from '@ant-design/icons';
@@ -37,27 +37,28 @@ class DeviceDetailPage extends Component {
   componentWillUnmount() {
     clearInterval(intervalGetRingArr);
   }
-  optionsWithDisabled = (t) => {
-    return [
-      { label: t('Adult'), value: 0 },
-      { label: t('Children'), value: 1 },
-    ]
-  }
   changeLed = (checked) => {
     const led = checked ? -1 : 0;
     this.props.changeLED(led, this.props.deviceDetail.deviceId)
   }
   changeMonitorStart = (time) => {
-    this.state.timeStart = time.format('hh:mm');
+    this.state.timeStart = time.format('HH:mm');
   }
   changeMonitorEnd = (time) => {
-    this.state.timeEnd = time.format('hh:mm');
+    this.state.timeEnd = time.format('HH:mm');
   }
   changeModel = (e) => {
-    this.setState({
-      modeType: e.target.value
+    const modeType = e ? 1 : 0;
+    console.log(modeType);
+    const updateDevice = AV.Object.createWithoutData('Device', this.id);
+    updateDevice.set('modeType', modeType)
+    updateDevice.save().then(res => {
+      this.props.changeMonitorAndMode({
+        modeType: modeType,
+      });
+    }).catch(error => {
+      console.log(error);
     })
-
   }
   ringSnSelected = (mac, index, ringArr) => {
     // console.log('xff',mac,index,ringArr);
@@ -176,17 +177,18 @@ class DeviceDetailPage extends Component {
   onOk = () => {
     // this.props.changeMonitorAndMode(this.state)
     const { device } = this.props.deviceDetail;
-    const { modeType, timeStart, timeEnd } = this.state;
+    const { timeStart, timeEnd } = this.state;
     const period = timeStart + '-' + timeEnd
-    if (device.modeType == modeType && device.period == period) {
+    if (device.period == period) {
       Toast.info('数据未发生变化！', 2)
     } else {
       Toast.info('ok！', 2)
       const updateDevice = AV.Object.createWithoutData('Device', this.id);
-      if (device.modeType != modeType) updateDevice.set('modeType', modeType)
-      if (device.period != period) updateDevice.set('period', period)
+      updateDevice.set('period', period)
       updateDevice.save().then(res => {
-        this.props.changeMonitorAndMode(this.state);
+        this.props.changeMonitorAndMode({
+          period:period
+        });
         Toast.success('修改成功！', 1)
         setTimeout(() => {
           this.setState({
@@ -202,7 +204,20 @@ class DeviceDetailPage extends Component {
       })
     }
   }
-
+  addRingBtn = () => {
+    alert('绑定戒指', 
+    <div>
+      <p style={{ textAlign:'left' }}>请按照监护仪语音指令完成绑定</p>
+      <p style={{ textAlign:'left' }}>
+        1.听到开始绑定戒指指令<br/>
+        2.晃动戒值 <br/>
+        3.等待绑定成功指令
+      </p>
+    </div> ,[
+      { text: '了解', onPress: () => {} },
+      // { text: 'Ok', onPress: () => console.log('ok') },
+    ])
+  }
   render() {
     const { device, ringArr, roleType } = this.props.deviceDetail;
     console.log(device, ringArr, roleType);
@@ -228,25 +243,35 @@ class DeviceDetailPage extends Component {
               </div>
               <div className='card-line'></div>
               <div className='card-contrl'>
-                <div>
-                  <p>
+                <div className='card-contrl-tr'>
+                  <div>
                     <span>监测模式：</span>
-                    <span>定时监测</span>
-                  </p>
-                  <p>
+                    <span style={{ color:'#4274e2' }}>定时监测</span>
+                  </div>
+                  <div>
                     <span>呼吸灯开关：</span>
-                    <span>aaaaaaa</span>
-                  </p>
+                    <Switch
+                      style={{ fontSize:'0.4rem' }}
+                      checked={device.ledOnTime == 0 ? false : true} 
+                      onChange={this.changeLed}
+                      platform="ios"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <p>
+                <div className='card-contrl-tr'>
+                  <div>
                     <span>定时监测：</span>
-                    <span>{ device.period }</span>
-                  </p>
-                  <p>
+                    <span style={{ color:'#4274e2' }}  onClick={this.openModel}>{ device.period }</span>
+                  </div>
+                  <div>
                     <span>儿童模式：</span>
-                    <span>bbbbb</span>
-                  </p>
+                    <Switch
+                      style={{ fontSize:'0.4rem' }}
+                      checked={device.modeType == 1 ? true : false} 
+                      onChange={this.changeModel}
+                      platform="ios"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -255,10 +280,20 @@ class DeviceDetailPage extends Component {
               <ul>
                 {
                   ringArr.length>0?
-                  ringArr.map((ring)=>{
+                  ringArr.map((ring,index)=>{
                     return (
                       <li 
                         key={ ring.sn }
+                        onClick={() => alert(ring.sn, null, [
+                          { text: '启用', onPress: () => this.ringSnSelected(ring.mac, index, ringArr) },
+                          {
+                            text: '解绑', onPress: () => alert(ring.ringStatus == 'background_greed' ? '确定解绑？解绑操作将导致监测中戒指血氧数据丢失！' : '确定解绑？', null, [
+                              { text: 'Cancel', onPress: () => { } },
+                              { text: 'Ok', onPress: () => { this.unBindRingV2(ring.mac) } }
+                            ])
+                          },
+                          { text: '关闭', onPress: () => { } },
+                        ])}
                       >
                         <img src={ring_icon} />
                         <div className='ringInfo'>
@@ -287,7 +322,7 @@ class DeviceDetailPage extends Component {
               </ul>
             </div>
             <div>
-              <div className='add-ring-btn'>
+              <div className='add-ring-btn' onClick={ this.addRingBtn }>
                 <span>添加指环</span>
               </div>
             </div>
@@ -302,11 +337,11 @@ class DeviceDetailPage extends Component {
               maskClosable={true}
               onClose={() => this.setState({ modal: false, modeType: null })}
               onOk={() => this.onOk()}
-              title={<span style={{ fontSize: '0.24rem' }}>{t("Modify the equipment")}</span>}
+              title={<span style={{ fontSize: '0.36rem' }}>{t("Modify the equipment")}</span>}
               footer={[{ text: t('Close'), onPress: () => { this.setState({ modal: false, modeType: null }) } }, { text: t('Submit'), onPress: () => { this.onOk() } }]}
             >
               <div style={{ marginBottom: 16 }}>
-                <label style={{ fontSize: '16px' }}>{t('Monitor period')}</label><br />
+                <label style={{ fontSize: '0.3rem',marginBottom: 16 }}>{t('Monitor period')}</label><br /><br />
                 <TimePicker
                   allowClear={false}
                   showNow={false}
@@ -315,7 +350,7 @@ class DeviceDetailPage extends Component {
                   format={format}
                   size="large"
                 />
-                <label style={{ fontSize: '16px' }}>~</label>
+                <label style={{ fontSize: '0.24rem' }}>~</label>
                 <TimePicker
                   allowClear={false}
                   showNow={false}
@@ -325,148 +360,11 @@ class DeviceDetailPage extends Component {
                   size="large"
                 />
               </div>
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ fontSize: '16px' }}>{t('Mode')}</label><br />
-                <Radio.Group
-                  size='large'
-                  options={this.optionsWithDisabled(t)}
-                  onChange={this.changeModel}
-                  value={this.state.modeType}
-                  optionType="button"
-                  buttonStyle="solid"
-                />
-              </div>
             </Modal>
 
           }
         </Translation>
       </div>
-
-      // <div className="content-r">
-      //   <div className="device-detail">
-      //     <div className="simple-card">
-      //       <div className="card-title">
-      //         <Translation>{t => <span>{t('Device information')}</span>}</Translation>
-      //         <a style={{ float: 'right', marginRight: '20px' }} onClick={this.openModel}>
-      //           <Translation>{t => <span>{t('Change')}</span>}</Translation>
-      //         </a>
-      //       </div>
-      //       <table>
-      //         <thead>
-      //           <tr>
-      //             <th><Translation>{t => <span>{t('SN')}</span>}</Translation></th>
-      //             <th><Translation>{t => <span>{t('Monitor period')}</span>}</Translation></th>
-      //             <th><Translation>{t => <span>{t('Mode')}</span>}</Translation></th>
-      //             <th><Translation>{t => <span>{t('Firmware version')}</span>}</Translation></th>
-      //             <th>wifi</th>
-      //             <th><Translation>{t => <span>{t('Device status')}</span>}</Translation></th>
-      //             <th><Translation>{t => <span>{t('Number of reports')}</span>}</Translation></th>
-      //           </tr>
-      //         </thead>
-      //         <tbody>
-      //           <tr>
-      //             <td>{device.deviceSN}</td>
-      //             <td>{device.period}</td>
-      //             <td><Translation>{t => <span>{(device.modeType) == 1 ? t('Children') : t('Adult')}</span>}</Translation></td>
-      //             <td>{device.versionNO}</td>
-      //             <td><Translation>{t => <span>{device.workStatus == '1' ? t(device.wifiName) : t('Not connected')}</span>}</Translation></td>
-      //             <td><Translation>{t => <span>{device.workStatus == '1' ? (device.monitorStatus == 0 ? t('Online') : t('Monitoring')) : t('Not online')}</span>}</Translation></td>
-      //             <td>{device.count}</td>
-      //           </tr>
-      //         </tbody>
-      //       </table>
-      //     </div>
-      //   </div>
-      //   <div className="device-detail">
-      //     <div className="simple-card">
-      //       <div className="card-title">
-      //         <Translation>{t => <span>{t('Ring information')}</span>}</Translation>
-      //       </div>
-      //       <table>
-      //         <thead>
-      //           <tr>
-      //             <th style={{ width: '22%' }}><Translation>{t => <span>{t('Ring SN')}</span>}</Translation></th>
-      //             <th style={{ width: '15%' }}><Translation>{t => <span>{t('Model')}</span>}</Translation></th>
-      //             <th style={{ width: '22%' }}>MAC</th>
-      //             <th style={{ width: '12%' }}><Translation>{t => <span>{t('Battery')}</span>}</Translation></th>
-      //             <th style={{ width: '12%' }}><Translation>{t => <span>{t('Data status')}</span>}</Translation></th>
-      //             <th style={{ width: '17%' }}><Translation>{t => <span>{t('Firmware version')}</span>}</Translation></th>
-      //           </tr>
-      //         </thead>
-      //         <tbody>{this.ringList(ringArr)}</tbody>
-      //       </table>
-      //       <div className="ring-status">
-      //         <span>戒指状态：</span>
-      //         <span><i style={{ backgroundColor:'#f8f8f8' }}></i>未启用</span>
-      //         <span><i style={{ backgroundColor:'#ffffac' }}></i>未连接</span>
-      //         <span><i style={{ backgroundColor:'#FF0012' }}></i>已连接(电量低)</span>
-      //         <span><i style={{ backgroundColor:'#d2e2ff' }}></i>已连接</span>
-      //         <span><i style={{ backgroundColor:'#00E700' }}></i>监测中</span>
-      //         {/* <span><i style={{ backgroundColor:'red' }}></i>已连接</span> */}
-      //       </div>
-      //     </div>
-      //   </div>
-
-      //   <div className="simple-card">
-      //     <div className="breath-light">
-      //       <Translation>{t => <span>{t('Breathing light switch')}</span>}</Translation>
-      //       {/* <Switch size='default' checked={device.ledOnTime == 0 ? false : true} onChange={this.changeLed} style={{ float: 'right' }} /> */}
-      //       <Switch
-      //         style={{ fontSize:'0.3rem' }}
-      //         checked={device.ledOnTime == 0 ? false : true} 
-      //         onChange={this.changeLed}
-      //         platform="ios"
-      //       />
-      //     </div>
-      //   </div>
-      //   <Translation>
-      //     {t =>
-      //         <Modal
-      //           className="modal1"
-      //           visible={this.state.modal}
-      //           transparent
-      //           maskClosable={true}
-      //           onClose={() => this.setState({ modal: false, modeType: null })}
-      //           onOk={() => this.onOk()}
-      //           title={<span style={{ fontSize:'0.24rem' }}>{ t("Modify the equipment") }</span>}
-      //           footer={[{ text: t('Close'), onPress: () => { this.setState({ modal: false, modeType: null }) } }, { text: t('Submit'), onPress: () => { this.onOk() } }]}
-      //         >
-      //           <div style={{ marginBottom: 16 }}>
-      //             <label style={{ fontSize: '16px' }}>{t('Monitor period')}</label><br />
-      //             <TimePicker
-      //               allowClear={false}
-      //               showNow={false}
-      //               onChange={this.changeMonitorStart}
-      //               defaultValue={moment(this.state.timeStart, format)}
-      //               format={format}
-      //               size="large"
-      //             />
-      //             <label style={{ fontSize: '16px' }}>~</label>
-      //             <TimePicker
-      //               allowClear={false}
-      //               showNow={false}
-      //               onChange={this.changeMonitorEnd}
-      //               defaultValue={moment(this.state.timeEnd, format)}
-      //               format={format}
-      //               size="large"
-      //             />
-      //           </div>
-      //           <div style={{ marginBottom: 16 }}>
-      //             <label style={{ fontSize: '16px' }}>{t('Mode')}</label><br />
-      //             <Radio.Group
-      //               size='large'
-      //               options={this.optionsWithDisabled(t)}
-      //               onChange={this.changeModel}
-      //               value={this.state.modeType}
-      //               optionType="button"
-      //               buttonStyle="solid"
-      //             />
-      //           </div>
-      //         </Modal>
-
-      //     }
-      //   </Translation>
-      // </div>
     );
   }
 }

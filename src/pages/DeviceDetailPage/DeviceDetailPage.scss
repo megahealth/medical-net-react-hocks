@@ -95,48 +95,6 @@
   text-align: center;
 }
 
-// .device-detail table tbody tr td>span {
-//   height: 16px;
-//   width: 10px;
-//   display: inline-block;
-//   background: #00E700;
-//   border-radius: 2px;
-//   margin-left: 2px;
-// }
-
-// .device-detail table tbody tr .low-battery>span:nth-child(1) {
-//   background: #FF0012;
-// }
-
-// .device-detail table tbody tr .low-battery>span:nth-child(2) {
-//   background: #FF0012;
-// }
-
-// .device-detail table tbody tr .low-battery>span:nth-child(3) {
-//   background: #999999;
-// }
-
-// .device-detail table tbody tr .low-battery>span:nth-child(4) {
-//   background: #999999;
-// }
-
-
-// .device-detail table tbody tr .full-battery>span:nth-child(1) {
-//   background: #00E700;
-// }
-
-// .device-detail table tbody tr .full-battery>span:nth-child(2) {
-//   background: #00E700;
-// }
-
-// .device-detail table tbody tr .full-battery>span:nth-child(3) {
-//   background: #00E700;
-// }
-
-// .device-detail table tbody tr .full-battery>span:nth-child(4) {
-//   background: #00E700;
-// }
-
 .ring-status {
   font-size: 19px;
   font-weight: 400;
@@ -320,15 +278,19 @@
       border-top: 3px solid #dcdcdc;
     }
     .card-contrl{
-      div{
+      .card-contrl-tr{
         display: flex;
         align-items: center;
         justify-content: space-between;
+        div{
+          margin: 0;
+          margin-bottom: 0.4rem;
+          .checkbox{
+            margin: 0;
+          }
+        }
       }
-      p{
-        margin: 0;
-        margin-bottom: 0.4rem;
-      }
+      
       font-size: 0.3333rem;
     }
   }

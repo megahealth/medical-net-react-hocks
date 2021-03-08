@@ -512,12 +512,19 @@ Creator.updateModifiedReport = (idModifiedReport) => {
 
 // 设备详情页监控时段和模式的修改
 Creator.changeMonitorAndMode = (params) => {
-  const { modeType, timeEnd, timeStart } = params;
-  const period = timeStart + '-' + timeEnd;
-  return ({
-    type: TYPES.CHANGE_DEVICE_PERIOD_AND_MODE,
-    payload: { modeType, period }
-  })
+  const { modeType, period } = params;
+  if(modeType == 0 || modeType == 1){
+    return ({
+      type: TYPES.CHANGE_DEVICE_MODE,
+      payload: { modeType }
+    })
+  }
+  if(period){
+    return ({
+      type: TYPES.CHANGE_DEVICE_PERIOD,
+      payload: { period }
+    })
+  }
 }
 
 // 病例号修改

@@ -45,7 +45,8 @@ export const CHANGE_DEVICE_LED = '打开/关闭呼吸灯';
 export const CHANGE_DEVICE_LED_SUCCESS = '打开/关闭呼吸灯成功';
 export const CHANGE_DEVICE_LED_FAILED = '打开/关闭呼吸灯失败';
 
-export const CHANGE_DEVICE_PERIOD_AND_MODE = '更新监测时段和模式';
+export const CHANGE_DEVICE_PERIOD = '更新监测时段';
+export const CHANGE_DEVICE_MODE = '更新模式';
 
 export const GET_RING_ARR = '获取戒指列表';
 export const GET_RING_ARR_FAILED = '获取戒指列表失败';

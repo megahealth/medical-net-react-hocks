@@ -229,13 +229,20 @@ const deviceDetail = (state = DefaultState.deviceDetail, action) => {
       return ({
         ...state
       })
-    case TYPES.CHANGE_DEVICE_PERIOD_AND_MODE:
+    case TYPES.CHANGE_DEVICE_PERIOD:
+      return ({
+        ...state,
+        device: {
+          ...state.device,
+          period: action.payload.period
+        }
+      })
+    case TYPES.CHANGE_DEVICE_MODE:
       return ({
         ...state,
         device: {
           ...state.device,
           modeType: action.payload.modeType,
-          period: action.payload.period
         }
       })
     default:

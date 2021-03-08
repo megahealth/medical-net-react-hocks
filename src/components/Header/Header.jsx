@@ -9,32 +9,41 @@ import './Header.scss';
 class Header extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      routePath:''
+    this.state = {
+      routePath: ''
     }
   }
-  componentDidMount(){
+  componentDidMount() {
   }
 
   headerLeft = () => {
-    const { title } = this.props; 
-    if(title == '当前设备'){
+    const { title } = this.props;
+    if (title == '当前设备') {
       window.history.go(-1)
     }
   }
+  refresh = () => {
+    const { getAllReportsData, setFilter, getAllDevice, allDevice, title } = this.props;
+    if (title == '报告列表') {
+      setFilter({ reportType: ['all'], startDate: null, endDate: null, deviceId: null, });
+      getAllReportsData(10, 1, { reportType: ['all'], startDate: null, endDate: null, deviceId: null, })
+    }
+    if (title == '设备列表') getAllDevice(allDevice.pagination)
+  }
+
   render() {
     const user = AV.User.current();
-    const { getAllReportsData, setFilter } = this.props;
     return (
       <div className="header-container-1" >
         <div className='header-cont'>
-          <span onClick={ this.headerLeft }>{ this.props.title == '当前设备' ? '返回' : '筛选' }</span>
-          <span className='header-title'>{ this.props.title }</span>
-          <span 
-            onClick={()=>{
-              setFilter({reportType: ['all'],startDate: null,endDate: null,deviceId: null,}); 
-              getAllReportsData(10,1, {reportType: ['all'],startDate: null,endDate: null,deviceId: null,})
-            }}
+          {
+            this.props.title == '当前设备'?
+              <span onClick={this.headerLeft}>返回</span>
+              :null
+          }
+          <span className='header-title'>{this.props.title}</span>
+          <span
+            onClick={this.refresh}
           >刷新</span>
         </div>
       </div>
@@ -43,13 +52,10 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  allReports: PropTypes.shape({
-    loading: PropTypes.bool,
-    error: PropTypes.bool,
-    reportsData: PropTypes.array,
-    pagination: PropTypes.object,
-    filter: PropTypes.object
+  allDevice: PropTypes.shape({
+    pagination: PropTypes.object
   }).isRequired,
+  getAllDevice: PropTypes.func.isRequired,
   getAllReportsData: PropTypes.func.isRequired,
   setFilter: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
@@ -59,7 +65,7 @@ Header.propTypes = {
 const mapStateToProps = state => (
   {
     title: state.header.title,
-    allReports: state.allReports
+    allDevice: state.allDevice,
   }
 );
 
@@ -72,6 +78,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setFilter(filter) {
     dispatch(Creator.setFilter(filter));
+  },
+  getAllDevice(pagination) {
+    dispatch(Creator.getAllDevice(pagination))
   },
 });
 
