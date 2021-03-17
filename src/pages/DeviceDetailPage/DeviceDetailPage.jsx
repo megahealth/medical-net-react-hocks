@@ -220,7 +220,6 @@ class DeviceDetailPage extends Component {
   }
   render() {
     const { device, ringArr, roleType } = this.props.deviceDetail;
-    console.log(device, ringArr, roleType);
     return (
       <div className="content-r">
         <div className="content-r-c">

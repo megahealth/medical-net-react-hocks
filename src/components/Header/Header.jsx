@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Creator from '../../actions/Creator';
 import AV from 'leancloud-storage';
 import './Header.scss';
+import back_png from '../../assets/left.svg'
 
 class Header extends Component {
   constructor(props) {
@@ -39,7 +40,9 @@ class Header extends Component {
         <div className='header-cont'>
           {
             this.props.title == '当前设备'?
-              <span onClick={this.headerLeft}>返回</span>
+              <span onClick={this.headerLeft} style={{ paddingRight:'0.5rem' }}>
+                <img style={{ width:'0.45rem',height:'0.75rem' }} src={back_png} alt=""/>
+              </span>
               :null
           }
           <span className='header-title'>{this.props.title}</span>

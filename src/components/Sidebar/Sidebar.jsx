@@ -10,7 +10,7 @@ class Sidebar extends Component {
   componentWillMount() {
     const user = AV.User.current();
     roleType = user.attributes.roleType;
-    activeIcon = window.location.hash
+    activeIcon = window.location.hash;
   }
   componentWillUpdate(){
     activeIcon = window.location.hash
@@ -26,9 +26,9 @@ class Sidebar extends Component {
               <NavLink to={item.path} activeClassName="active" key={item.path}>
                 <li>
                   {
-                    activeIcon == '#'+item.path?
-                    <img  style={{ width:'0.75rem' }} src={item.activeIcon || item.icon} alt="" />
-                    :<img  style={{ width:'0.75rem' }} src={item.icon} alt="" />
+                    activeIcon.indexOf('#'+item.path) == 0?
+                    <img  style={{ width:'0.55rem',height:'0.55rem' }} src={item.activeIcon || item.icon} alt="" />
+                    :<img  style={{ width:'0.55rem',height:'0.55rem' }} src={item.icon} alt="" />
                   }
                   
                   <Translation>
