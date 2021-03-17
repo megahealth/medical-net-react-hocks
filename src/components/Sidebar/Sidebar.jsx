@@ -5,12 +5,16 @@ import { NavLink } from 'react-router-dom';
 import { Translation } from 'react-i18next';
 import AV from 'leancloud-storage';
 var roleType = null
+var activeIcon = null
 class Sidebar extends Component {
   componentWillMount() {
     const user = AV.User.current();
-    roleType = user.attributes.roleType
+    roleType = user.attributes.roleType;
+    activeIcon = window.location.hash
   }
-
+  componentWillUpdate(){
+    activeIcon = window.location.hash
+  }
   render() {
     const { tabs } = this.props;
     return (
@@ -21,7 +25,12 @@ class Sidebar extends Component {
               item.role.indexOf(roleType)!==-1?
               <NavLink to={item.path} activeClassName="active" key={item.path}>
                 <li>
-                  <img src={item.icon} alt="" />
+                  {
+                    activeIcon == '#'+item.path?
+                    <img  style={{ width:'0.75rem' }} src={item.activeIcon || item.icon} alt="" />
+                    :<img  style={{ width:'0.75rem' }} src={item.icon} alt="" />
+                  }
+                  
                   <Translation>
                   {
                     t => <span>{t(item.name)}</span>

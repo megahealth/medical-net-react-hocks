@@ -228,7 +228,7 @@ class DeviceDetailPage extends Component {
             <div className="ipad-device-card">
               <div className='table-device'>
                 <div>
-                  <img src={img_device} alt="" />
+                  <img  style={{ height:'1.5rem' }} src={img_device} alt="" />
                 </div>
                 <div className='table-text'>
                   <p>
@@ -241,7 +241,6 @@ class DeviceDetailPage extends Component {
                   <p><span>固件版本：</span><span>{ device.versionNO }</span></p>
                 </div>
               </div>
-              <div className='card-line'></div>
               <div className='card-contrl'>
                 <div className='card-contrl-tr'>
                   <div>

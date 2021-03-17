@@ -18,9 +18,10 @@ AV.init({
 });
 
 ReactDOM.render(
-  <Provider store={Store}>
-    <Layout></Layout>
-  </Provider>,
+    <Provider store={Store}>
+      <Layout></Layout>
+    </Provider>
+  ,
   document.getElementById('app')
 );
 

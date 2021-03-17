@@ -17,7 +17,9 @@ body {
   padding: 20px;
   background: #fff;
 }
-
+.container-report{
+  padding-top: 0.8rem;
+}
 .wrapper {
   width: 1200px;
   margin: 20px auto;
@@ -87,6 +89,17 @@ h2 {
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
+  .ant-btn-lg{
+    height: 0.5rem;
+    line-height: 0.5rem;
+    padding: 0 0.25rem;
+    font-size: 0.2rem;
+    span{
+      height: 0.5rem;
+      margin: 0;
+      padding: 0;
+    }
+  }
 }
 
 .option .right button {

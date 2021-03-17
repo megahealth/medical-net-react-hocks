@@ -1,5 +1,6 @@
 .table-box{
   width: 100%;
+  z-index: 100;
   .noreport{
     // width: 100%;
     height: 14rem;
@@ -65,12 +66,22 @@
     }
   }
 }
+.table-device-box{
+  border-radius: 20px;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 0 0.4rem;
+  background-color: #FFFFFF;
+  margin-bottom: 0.28rem;
+  box-shadow: -5px 5px 30px #999999;
+  .table-device:last-child{
+    border-bottom: none;
+  }
+}
 .table-device{
   height: 2rem;
-  margin-bottom: 0.26rem;
-  padding: 0 22px;
-  background-color: #FFFFFF;
-  border-radius: 10px;
+  margin-bottom: 0.33rem;
+  border-bottom: 3px solid #dcdcdc;
   display: flex;
   align-items: center;
   justify-content: left;

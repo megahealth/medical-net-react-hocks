@@ -4,7 +4,7 @@ import { createHashHistory } from 'history';
 import { connect } from 'react-redux';
 import { Skeleton, Space } from 'antd';
 import { Translation } from 'react-i18next';
-import { Modal, Toast, Button } from 'antd-mobile'
+import { Modal, Toast } from 'antd-mobile'
 import Creator from '../../actions/Creator';
 import AV from 'leancloud-storage';
 import './AllReportsPage.scss';

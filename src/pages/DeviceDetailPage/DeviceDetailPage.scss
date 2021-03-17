@@ -267,16 +267,9 @@
   }
   .ipad-device-card{
     border-radius: 40px;
-    box-shadow: 0 4px 5px 5px #ccc;
+    box-shadow: 4px 5px 20px #ccc;
     background-color: #fff;
     padding: 0.4rem 0.5rem;
-    .card-line{
-      margin: 0.5rem auto;
-      width: 8.5rem;
-      opacity: 1;
-      background: #dcdcdc;
-      border-top: 3px solid #dcdcdc;
-    }
     .card-contrl{
       .card-contrl-tr{
         display: flex;
@@ -287,6 +280,39 @@
           margin-bottom: 0.4rem;
           .checkbox{
             margin: 0;
+          }
+          .am-switch{
+            .am-switch-checkbox,.checkbox{
+              width: 0.89rem;
+              height: 0.46rem;
+            }
+            input[type="checkbox"]:checked + .checkbox:after {
+              transform: translateX(0.5rem);
+            }
+            .checkbox:before {
+              content: ' ';
+              position: absolute;
+              width: 0rem!important;
+              height: 0rem!important;
+              border-radius: 0.210938rem;
+              box-sizing: border-box;
+              z-index: 1;
+              transition: all 200ms;
+              transform: scale(1);
+            }
+            .checkbox:after {
+                content: ' ';
+                width: 0.4rem!important;
+                height: 0.4rem!important;
+                border-radius: 0.210938rem;
+                background: #fff;
+                position: absolute;
+                z-index: 2;
+                top: 0.015625rem;
+                left: 0.015625rem;
+                transform: translateX(0);
+                transition: all 200ms;
+            }
           }
         }
       }

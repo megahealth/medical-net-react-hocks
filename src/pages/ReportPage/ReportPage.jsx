@@ -83,7 +83,7 @@ class ReportPage extends Component {
     }
     
     return (
-      <div className="container">
+      <div className="container-report">
         <div className="wrapper">
           <div className="option print-hide">
             <div className="left">
@@ -168,9 +168,9 @@ class ReportPage extends Component {
               <EventsChart></EventsChart>
               <StageChart></StageChart>
             </div> */}
-            {/* <div className="print-page">
+            <div className="print-page">
               <BreathWave></BreathWave>
-            </div> */}
+            </div>
           </Skeleton>
         </div>
       </div>

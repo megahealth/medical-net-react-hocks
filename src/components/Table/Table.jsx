@@ -32,7 +32,7 @@ class Table extends Component {
                 return (
                   <div className='table-report' key={ report.id } onClick={ ()=>btnClick(report) }>
                     <div>
-                      <img src={ 
+                      <img style={{ height:'1.5rem' }} src={ 
                         report.AHI.degree == "无效"? invalid_png: 
                         report.AHI.degree == "正常"? normal_png:
                         report.AHI.degree == "轻度"? light_png:
@@ -59,12 +59,12 @@ class Table extends Component {
               <img src={no_report}/>
             </div>
           :
-            <div>
+            <div className='table-device-box'>
               {dataSource.map((device)=>{
                 return (
                 <div className='table-device' key={device.key} onClick={()=>this.toDeviceDetail(device.key)}>
                   <div>
-                    <img src={ img_device }/>
+                    <img  style={{ height:'1.5rem' }} src={ img_device }/>
                   </div>
                   <div className='table-text'>
                     <p><span>设备状态：</span><span style={{ color:device.status.color }}>{ device.status.str }</span></p>

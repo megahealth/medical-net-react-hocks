@@ -33,8 +33,9 @@ class Header extends Component {
 
   render() {
     const user = AV.User.current();
+    const { title } = this.props
     return (
-      <div className="header-container-1" >
+      <div className={ title=='当前设备'||title == '设备列表'?'header-container-2':'header-container-1' } >
         <div className='header-cont'>
           {
             this.props.title == '当前设备'?
