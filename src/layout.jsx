@@ -14,22 +14,6 @@ import ValidReportsPage from './pages/ValidReportsPage/ValidReportsPage';
 import ReportPage from './pages/ReportPage/ReportPage';
 import AddAccount from './pages/AddAccount/AddAccount';
 
-function IsPC() {  
-  var userAgentInfo = navigator.userAgent;  
-  var Agents = ['Android', 'iPhone',  
-      'SymbianOS', 'Windows Phone',  
-      'iPad', 'iPod'  
-  ];  
-  var flag = true;  
-  for (var i = 0; i < Agents.length; i++) {  
-      if (userAgentInfo.indexOf(Agents[i]) != -1) {  
-          flag = false;  
-          break;  
-      }  
-  }  
-  return flag;  
-} 
-
 class Layout extends Component {
   constructor(props) {
     super(props);
@@ -51,7 +35,6 @@ class Layout extends Component {
 
   render() {
     const { locale } = this.props;
-    console.log('xxxx',IsPC());
     return (
       <ConfigProvider locale={locale}>
         <HashRouter>
