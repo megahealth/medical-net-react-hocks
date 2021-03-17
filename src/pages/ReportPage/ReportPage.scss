@@ -19,9 +19,10 @@ body {
 }
 .container-report{
   padding-top: 0.6rem;
+  width: 100%;
 }
 .wrapper {
-  width: 1200px;
+  width: 9.3rem;
   margin: 20px auto;
 }
 
@@ -130,7 +131,7 @@ h2 {
 .container-report-background{
   background-image: url('../../assets/bg-top.png');
   background-repeat: no-repeat;
-  background-size: auto;
+  background-size: 100% auto;
 }
 @media print {
   body {
