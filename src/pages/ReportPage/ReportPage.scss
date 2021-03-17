@@ -18,7 +18,7 @@ body {
   background: #fff;
 }
 .container-report{
-  padding-top: 0.8rem;
+  padding-top: 0.6rem;
 }
 .wrapper {
   width: 1200px;
@@ -127,10 +127,12 @@ h2 {
     box-shadow: #e0e0e0 0.02rem 0.02rem;
   }
 }
+.container-report-background{
+  background-image: url('../../assets/bg-top.png');
+  background-repeat: no-repeat;
+}
 @media print {
   body {
-    // background: #fff;
-    background: red!important;
     width: 100%;
     padding-top: 0px;
   }
@@ -161,5 +163,8 @@ h2 {
   .chart-continer{
     width: 80%;
     height: 3rem;
+  }
+  .container-report-background{
+    background-image: none;
   }
 }

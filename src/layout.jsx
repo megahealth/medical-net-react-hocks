@@ -38,7 +38,7 @@ class Layout extends Component {
     return (
       <ConfigProvider locale={locale}>
         <HashRouter>
-          <div className="app-container container-pc">
+          <div className="app-container">
             <Switch>
               <Route path="/" exact component={LoginPage}></Route>
               <Route path="/addaccount" exact component={AddAccount}></Route>

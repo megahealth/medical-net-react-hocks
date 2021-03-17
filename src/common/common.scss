@@ -94,18 +94,20 @@ a, a:link, a:hover, a:active, a:visited {
       }
     }
     .am-modal-body{
+      padding: 0 0.5rem!important;
       .am-modal-alert-content{
         font-size: 0.3rem;
+        line-height: 0.6rem;
       }
     }
     .am-modal-footer{
       .am-modal-button-group-h{
-        height: 0.6rem;
+        height: 0.8rem;
       }
       .am-modal-button{
-        height: 0.6rem!important;
-        line-height: 0.6rem!important;
-        font-size: 0.3rem!important;
+        height: 0.8rem!important;
+        line-height: 0.8rem!important;
+        font-size: 0.4rem!important;
       }
     }
   }

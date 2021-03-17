@@ -83,7 +83,7 @@ class ReportPage extends Component {
     }
     
     return (
-      <div className="container-report">
+      <div className="container-report container-report-background">
         <div className="wrapper">
           <div className="option print-hide">
             <div className="left">
