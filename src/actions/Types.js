@@ -67,3 +67,6 @@ export const ADD_ACCOUNT_FAILED = '添加账号失败';
 export const UPDATE_REPORT_STATE_MODIFIED = '更新裁剪数值';
 
 export const CHANGE_ACCOUNT_MODAL_STATUS = '开关模态框';
+
+export const CLEAR_DEVICE_STATE = '退出登录清除设备state';
+export const CLEAR_REPORT_STATE = '退出登录清除报告state';

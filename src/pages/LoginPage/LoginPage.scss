@@ -5,7 +5,7 @@
   background-size: $size;
 }
 
-$input-height: 60px;
+$input-height: 0.83rem;
 
 @mixin span-size {
   display: inline-block;
@@ -15,6 +15,7 @@ $input-height: 60px;
 
 .login-container {
   height: 100%;
+  padding-top: 0.6rem;
   background-color: linear-gradient(167deg,rgba(15,37,76,0.7),rgba(11,63,158,0.7));
   @include bg-attrs(
     $url: '../../assets/login-bg.jpg',
@@ -25,7 +26,7 @@ $input-height: 60px;
   .login-1 {
     padding: 24px 30px;
     img {
-      width: 190px;
+      width: 2.64rem;
       height: auto;
     }
   }
@@ -46,26 +47,28 @@ $input-height: 60px;
     align-items: center;
     justify-content: center;
     .form {
+      width: 7rem;
+      // height: 7rem;
       background: #F8F8F8;
-      padding: 30px 40px 25px;
+      padding: 0.42rem 0.56rem 0.35rem;
       border-radius: 12px;
       input {
         height: $input-height;
         background: rgba(255,255,255,1);
         border: none;
-        font-size: 28px;
+        font-size: 0.39rem;
         color: #333333;
       }
       div:nth-child(1) {
         text-align: center;
-        font-size: 30px;
+        font-size: 0.42rem;
         color: #3161B8;
         font-weight: 600;
       }
       div:nth-child(2), div:nth-child(3) {
         position: relative;
         width: 100%;
-        margin-top: 40px;
+        margin-top: 0.56rem;
         border: 1px solid rgba(223,223,223,1);
         border-radius: 4px;
         display: flex;
@@ -74,17 +77,17 @@ $input-height: 60px;
           background-color: #DFDFDF;
           @include bg-attrs(
             $url: '../../assets/username.png',
-            $size: 32px 34px
+            $size: 0.44rem 0.47rem
           );
         }
         input {
           flex: 1;
-          padding-left: 15px;
+          padding-left: 0.2rem;
           padding-right: $input-height;
         }
       }
       div:nth-child(3) {
-        margin-top: 30px;
+        // margin-top: 0.56rem;
         span {
           background-image: url('../../assets/password.png');
         }
@@ -96,7 +99,7 @@ $input-height: 60px;
           background-color: rgba(255,255,255,1);
           @include bg-attrs(
             $url: '../../assets/pw-hide.png',
-            $size: 34px 20px
+            $size: 00.47rem 0.28rem
           );
         }
         span.eye.show {
@@ -104,14 +107,14 @@ $input-height: 60px;
         }
       }
       div:nth-child(4) {
-        margin-top: 50px;
+        margin-top: 0.69rem;
         button {
           width: 100%;
-          height: 64px;
+          height: 0.89rem;
           background-color: #3161B8;
           border: none;
           border-radius: 8px;
-          font-size: 30px;
+          font-size: 0.42rem;
           color: #FFFFFF;
           font-weight: 500;
         }
@@ -127,7 +130,7 @@ $input-height: 60px;
   }
   .login-3 {
     padding: 20px 30px;
-    font-size: 24px;
+    font-size: 0.33rem;
     color: #B9C3D6;
   }
 }

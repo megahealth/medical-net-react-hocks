@@ -96,9 +96,9 @@ class LoginPage extends Component {
         <div className="login-1">
           <img src={LOGO} alt="" />
         </div>
-        <div className='trans-btn'>
+        {/* <div className='trans-btn'>
           <ChangeLang></ChangeLang>
-        </div>
+        </div> */}
         <div className="login-2">
           <div className="form">
             <div>{t('App Title')}</div>

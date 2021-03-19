@@ -543,6 +543,18 @@ Creator.changeAccountModalStatus = (visible) => {
     payload: { visible:visible }
   })
 }
+// 退出登录清除设备的state（ 防止切换账号出现之前的数据 ）
+Creator.clearDeviceList = () => {
+  return ({
+    type: TYPES.CLEAR_DEVICE_STATE
+  })
+}
+// 退出登录清除报告的state（ 防止切换账号出现之前的数据 ）
+Creator.clearReportList = () => {
+  return ({
+    type: TYPES.CLEAR_REPORT_STATE
+  })
+}
 // 账号管理 查询账号列表
 Creator.getAccountList = asyncActionFactory(
   ['GET_ACCOUNT', 'GET_ACCOUNT_SUCCESS', 'GET_ACCOUNT_FAILED'],

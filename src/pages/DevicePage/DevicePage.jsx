@@ -83,23 +83,23 @@ class DevicePage extends Component {
 
   onChangeNicknameBtn = (e,record)=>{
     e.stopPropagation();
+    console.log(e,record);
     const user = AV.User.current();
     const roleType = user.attributes.roleType;
-    if(roleType == 5){
+    if(roleType == 6){
       this.setState({
         modal:true,
         oldNickname:record.nickName,
         record:record
       })
-    }else{
-      this.toDeviceDetail(record.key);
     }
   }
   changeNickname = (e)=>{
     this.setState({newNickname:e.target.value})
   }
-  onOk = ()=>{
-    AV.Cloud.run('updateName_User', {"userId": this.state.record.userId,"name": this.state.newNickname}).then((data)=> {
+  onOk = (device)=>{
+    console.log('xfff',device);
+    AV.Cloud.run('updateName_User', {"userId": device.id,"name": device.nickName}).then((data)=> {
       Toast.success('修改成功！',3)
       let { allDevice, getAllDevice } = this.props;
       getAllDevice(allDevice.pagination);
@@ -138,6 +138,7 @@ class DevicePage extends Component {
                   dataSource={deviceList}
                   pagination={pagination}
                   loadMore={res => this.props.getAllDevice({ ...pagination, pageSize: res.pageSize+10 })}
+                  btnClick={ device => this.onOk(device) }
                 ></Table>
               </div>
             </div>

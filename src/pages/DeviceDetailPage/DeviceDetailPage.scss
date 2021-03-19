@@ -161,13 +161,13 @@
   }
 }
 .ant-picker-time-panel{
-  font-size: 0.2rem;
+  font-size: 0.3rem;
   .ant-picker-time-panel-column{
-    width: 0.8rem;
+    width: 0.9rem;
     .ant-picker-time-panel-cell-inner{
       text-align: center;
-      line-height: 0.4rem!important;
-      height: 0.4rem!important;
+      line-height: 0.6rem!important;
+      height: 0.6rem!important;
     }
   }
 }
@@ -186,19 +186,19 @@
   }
 }
 .modal1{
-  width: 50%;
-  font-size: 0.2rem;
+  // width: 50%;
+  // font-size: 0.2rem;
   .ant-picker-large{
-    width: 40%;
+    width: 45%;
     .ant-picker-input{
       input{
-        font-size: 0.2rem;
+        font-size: 0.3rem;
       }
       .ant-picker-suffix{
         span{
           svg{
-            width: 0.2rem;
-            height: 0.2rem;
+            width: 0.3rem;
+            height: 0.3rem;
           }
         }
       }
@@ -215,14 +215,14 @@
     }
     
   }
-  .am-modal-footer{
-    height: 0.6rem;
-    .am-modal-button{
-      font-size: 0.3rem!important;
-      line-height: 0.6rem!important;
-      height: 0.6rem!important;
-    }
-  }
+  // .am-modal-footer{
+  //   height: 0.6rem;
+  //   .am-modal-button{
+  //     font-size: 0.3rem!important;
+  //     line-height: 0.6rem!important;
+  //     height: 0.6rem!important;
+  //   }
+  // }
 }
 .am-modal-button{
   height: 0.5rem !important;

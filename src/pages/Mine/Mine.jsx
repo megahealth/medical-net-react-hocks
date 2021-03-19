@@ -9,12 +9,18 @@ import './Mine.scss'
 class Mine extends Component {
   constructor(props) {
     super(props);
-    this.state = {  }
+    this.state = { 
+      name:''
+    }
   }
   componentDidMount(){
     const { setHeader } = this.props;
+    const user = AV.User.current();
     setHeader('我的')
-    console.log(AV.User.current())
+    const name = user.get('name')
+    this.setState({
+      name
+    })
   }
   logOut = (t) => {
     Modal.alert('退出登录', "确定要退出登录吗？", [
@@ -25,6 +31,8 @@ class Mine extends Component {
       {
         text: '确定',
         onPress: () => {
+          this.props.clearDeviceList();
+          this.props.clearReportList();
           AV.User.logOut();
           window.location.hash = '/';
         }
@@ -32,13 +40,14 @@ class Mine extends Component {
     ]);
   }
   render() { 
+    const { name } = this.state;
     return ( 
       <div className="content-r">
         <div className="content-r-c">
           <div className="mine">
             <div className='mine-info'>
               <label>用户名</label>
-              <span>测试01</span>
+              <span>{ name }</span>
             </div>
             <div className='mine-logout'>
               <Button type="warning" onClick={this.logOut}>退出登录</Button>
@@ -51,23 +60,15 @@ class Mine extends Component {
 }
 
 Mine.propTypes = {
-  allReports: PropTypes.shape({
-    loading: PropTypes.bool,
-    error: PropTypes.bool,
-    reportsData: PropTypes.array,
-    pagination: PropTypes.object,
-    filter: PropTypes.object
-  }).isRequired,
-  getAllReportsData: PropTypes.func.isRequired,
-  setFilter: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   setHeader: PropTypes.func.isRequired,
+  clearReportList: PropTypes.func.isRequired,
+  clearDeviceList:PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
   {
-    title: state.header.title,
-    allReports: state.allReports
+    title: state.header.title
   }
 );
 
@@ -75,12 +76,12 @@ const mapDispatchToProps = dispatch => ({
   setHeader(title) {
     dispatch(Creator.setHeader(title));
   },
-  getAllReportsData(limit, current, filter) {
-    dispatch(Creator.getAllReportsData(limit, current, filter));
+  clearDeviceList(){
+    dispatch(Creator.clearDeviceList());
   },
-  setFilter(filter) {
-    dispatch(Creator.setFilter(filter));
-  },
+  clearReportList(){
+    dispatch(Creator.clearReportList());
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Mine);

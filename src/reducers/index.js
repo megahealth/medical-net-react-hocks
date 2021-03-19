@@ -82,6 +82,29 @@ const allReports = (state = DefaultState.allReports, action) => {
           endDate: action.payload.endDate
         },
       }
+    case TYPES.CLEAR_REPORT_STATE:
+      return {
+        loading: false,
+        error: false,
+        reportsData: [],
+        pagination: {
+          current: 1,
+          pageSize: 10,
+          showSizeChanger: false,
+          showQuickJumper: true,
+          total: 0
+        },
+        dateRange: {
+          startDate: new Date(),
+          endDate: new Date()
+        },
+        filter: {
+          reportType: ['all'],
+          startDate: null,
+          endDate: null,
+          deviceId: null,
+        }
+      }
     default:
       return state;
   }
@@ -176,6 +199,17 @@ const allDevice = (state = DefaultState.allDevice, action) => {
         loading: false,
         error: true
       };
+    case TYPES.CLEAR_DEVICE_STATE:
+      return {
+        loading:true,
+        error:false,
+        deviceList:[],
+        pagination:{
+          current:1,
+          pageSize:10,
+          total:0,
+        }
+      }
     default:
       return state
   }

@@ -83,8 +83,8 @@ class DeviceDetailPage extends Component {
         text = '确定启用该戒指？'
       }
       alert(text, null, [
-        { text: 'Cancel', onPress: () => { } },
-        { text: 'Ok', onPress: () => { this.changeActiveRing(mac, text); } }
+        { text: '取消', onPress: () => { } },
+        { text: '确定', onPress: () => { this.changeActiveRing(mac, text); } }
       ])
     }
   }

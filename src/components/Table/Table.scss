@@ -26,14 +26,14 @@
 
 }
 .table-report{
-  height: 2rem;
+  height: 1.5rem;
   margin-bottom: 0.26rem;
   padding: 0 22px;
   background-color: #FFFFFF;
   border-radius: 10px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: left;
   .table-delete{
     width: 0.8rem;
     height: 100%;
@@ -47,8 +47,9 @@
     }
   }
   .table-text{
+    margin-left: 0.4rem;
     span{
-      margin-right: 0.4rem;
+      margin-right: 1rem;
     }
     p{
       margin: 0;
@@ -86,7 +87,7 @@
   align-items: center;
   justify-content: left;
   .table-text{
-    margin-left: 1rem;
+    margin-left: 0.5rem;
     p{
       margin: 0;
       font-size: 0.3333rem;
@@ -98,5 +99,24 @@
         font-weight: 400;
       }
     }
+  }
+  .translate-left{
+    p{
+      font-size: 0.26rem;
+      height:0.5rem;
+      overflow: hidden;
+      input{
+        font-size: 0.26rem;
+        padding-bottom: 5px;
+        display: inline;
+        width: 2rem;
+        border: none;
+        border-bottom: 1px solid #999;
+      }
+    }
+    margin-left: 0;
+    position: absolute;
+    right: 0.8rem;
+    // transform: translateX(-0.5rem);
   }
 }
