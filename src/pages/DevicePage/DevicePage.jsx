@@ -81,15 +81,16 @@ class DevicePage extends Component {
     ];
   }
 
-  onChangeNicknameBtn = (e,record)=>{
-    e.stopPropagation();
-    console.log(e,record);
+  onChangeNicknameBtn = (record)=>{
+    // e.stopPropagation();
+    // console.log(e,record);
     const user = AV.User.current();
     const roleType = user.attributes.roleType;
-    if(roleType == 6){
+    if(roleType == 5){
       this.setState({
         modal:true,
         oldNickname:record.nickName,
+        newNickname:'',
         record:record
       })
     }
@@ -97,18 +98,21 @@ class DevicePage extends Component {
   changeNickname = (e)=>{
     this.setState({newNickname:e.target.value})
   }
-  onOk = (device)=>{
-    console.log('xfff',device);
-    AV.Cloud.run('updateName_User', {"userId": device.id,"name": device.nickName}).then((data)=> {
+  onOk = ()=>{
+    console.log('hhhh',this.state);
+    const {record,newNickname} = this.state
+    AV.Cloud.run('updateName_User', {"userId": record.userId,"name": newNickname}).then((data)=> {
       Toast.success('修改成功！',3)
       let { allDevice, getAllDevice } = this.props;
-      getAllDevice(allDevice.pagination);
-      setTimeout(()=>{
-        this.setState({
-          modal:false,
-          newNickname:''
-        })
-      },1000)
+      getAllDevice({
+        current:1,
+        pageSize:10,
+        total:0,
+      });
+      this.setState({
+        modal:false,
+        newNickname:''
+      })
     }, (error)=> {
       console.log(error);
       Toast.fail('修改失败！',3)
@@ -117,7 +121,11 @@ class DevicePage extends Component {
   }
   componentDidMount() {
     let { allDevice, getAllDevice, setHeader } = this.props;
-    getAllDevice(allDevice.pagination);
+    getAllDevice({
+      current:1,
+      pageSize:10,
+      total:0,
+    });
     setHeader('设备列表');
   }
   toDeviceDetail = (id) => {
@@ -137,8 +145,8 @@ class DevicePage extends Component {
                   type='deviceList'
                   dataSource={deviceList}
                   pagination={pagination}
-                  loadMore={res => this.props.getAllDevice({ ...pagination, pageSize: res.pageSize+10 })}
-                  btnClick={ device => this.onOk(device) }
+                  loadMore={res => this.props.getAllDevice({ ...pagination, current:res.current+1 })}
+                  btnClick={ device => this.onChangeNicknameBtn(device) }
                 ></Table>
               </div>
             </div>
@@ -154,12 +162,12 @@ class DevicePage extends Component {
             footer={[{ text: '取消', onPress: () => { this.setState({modal:false}) } },{ text: '确定', onPress: () => { this.onOk() } }]}
           >
             <div style={{ marginBottom: 16 }}>
-              <label style={{ fontSize:'16px' }}>旧用户昵称</label>
-              <Input placeholder="Please input nickname" className="modal_input" disabled value={this.state.oldNickname} />
+              <label style={{ fontSize:'0.3rem' }}>旧用户昵称</label>
+              <Input placeholder="" className="modal_input" disabled value={this.state.oldNickname} />
             </div>
             <div style={{ marginBottom: 16 }}>
-              <label style={{ fontSize:'16px' }}>新用户昵称</label>
-              <Input placeholder="Please input nickname" className="modal_input" value={this.state.newNickname} 
+              <label style={{ fontSize:'0.3rem' }}>新用户昵称</label>
+              <Input placeholder="新用户昵称" className="modal_input" value={this.state.newNickname} 
                 onChange={(e)=>{ this.setState({newNickname:e.target.value})} }
               />
             </div>

@@ -4,34 +4,34 @@ import { connect } from 'react-redux';
 import { Typography, Input, Select, DatePicker } from 'antd';
 import { withTranslation } from 'react-i18next';
 import Creator from '../../../actions/Creator';
-
+import './UserInfo.scss'
 
 const { Title } = Typography;
 const { Option } = Select;
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
-var male, female, selectedGender
+// var male, female, selectedGender
 
 class UserInfo extends Component {
 
   componentDidMount() {}
 
-  setGender = ()=>{
-    const { edition } = this.props
-    if(localStorage.getItem('language') === "en"){
-      male = 'M';
-      female = 'F';
-      selectedGender = edition.gender?((edition.gender === "男" || edition.gender === "M")?"M":"F"):"--";
-    }else{
-      male = '男';
-      female = '女';
-      selectedGender = edition.gender?((edition.gender === "男" || edition.gender === "M")?"男":"女"):"--";
-    }
-  }
+  // setGender = ()=>{
+  //   const { patientInfo } = this.props
+  //   if(localStorage.getItem('language') === "en"){
+  //     male = 'M';
+  //     female = 'F';
+  //     selectedGender = patientInfo.gender?((patientInfo.gender === "男" || patientInfo.gender === "M")?"M":"F"):"--";
+  //   }else{
+  //     male = '男';
+  //     female = '女';
+  //     selectedGender = patientInfo.gender?((patientInfo.gender === "男" || patientInfo.gender === "M")?"男":"女"):"--";
+  //   }
+  // }
 
   getBMI() {
-    const { edition } = this.props;
-    const height = edition.height;
-    const weight = edition.weight;
+    const { patientInfo } = this.props;
+    const height = patientInfo.height;
+    const weight = patientInfo.weight;
     if (weight > 0 && height > 0) {
       const bmi = parseFloat(weight / (height * height) * 10000).toFixed(1);
       return bmi;
@@ -53,61 +53,55 @@ class UserInfo extends Component {
     handleInputChange(data)
   }
   render() {
-    this.setGender()
-    const { t, isEditting, edition } = this.props;
+    const { t, isEditting, patientInfo } = this.props;
     return (
       <div className="block">
         <Title level={2}>{t('User Info')}</Title>
         <div className="short-line center">
           <span></span>
         </div>
-        <div className="table-data">
+        <div className="table-data user-table">
           <span>
             <span>
-              {/* { edition.name || '--' } */}
-              {isEditting ? <div><Input name="name" style={{ width: '1rem',border:'2px solid #ccc' }} value={edition.name} onChange={this.handleChange} /></div> : (edition.name || '--')}
+              {isEditting ? <div><Input name="name" style={{ width: '1.5rem'}} value={patientInfo.name} onChange={this.handleChange} /></div> : (patientInfo.name || '--')}
             </span>
             <span>{t('User Name')}</span>
           </span>
           <span>
             <span>
-              {/* {edition.gender === "M" ? "男" : "女" || '--'} */}
               {isEditting ? <div>
-                <Select name="gender" style={{ width:'1rem',border:'2px solid #ccc' }} showArrow={false} value={selectedGender} onChange={this.handleChange}>
-                <Option value={ male }>{ male }</Option>
-                <Option value={ female }>{ female }</Option>
+                <Select name="gender" style={{ width:'0.8rem',fontSize:'0.24rem!important' }} showArrow={false} value={patientInfo.gender} onChange={this.handleChange}>
+                <Option value="男">男</Option>
+                <Option value="女">女</Option>
                 </Select>
-              </div> : (selectedGender)}
+              </div> : (patientInfo.gender||'--')}
             </span>
             <span>{t('User Gender')}</span>
           </span>
           <span>
             <span>
-              {/* {edition.age || '--'} */}
               {isEditting ?
                 <div>
-                  <Input name="age" style={{ width: '1rem',border:'2px solid #ccc' }} value={edition.age} onChange={this.handleChange}/>
+                  <Input name="age" style={{ width: '0.8rem' }} value={patientInfo.age} onChange={this.handleChange}/>
                 </div> :
-                (edition.age || '--')
+                (patientInfo.age || '--')
               }
             </span>
             <span>{t('User Age')}</span>
           </span>
           <span>
             <span>
-              {/* {edition.height + 'cm' || '--'} */}
               {isEditting ? <div>
-                  <Input name="height" style={{ width: '1rem',border:'2px solid #ccc' }} value={(edition.height)} onChange={this.handleChange} />
-                </div> : (edition.height ? (edition.height + 'cm') : '--')}
+                  <Input name="height" style={{ width: '1.2rem' }} value={(patientInfo.height)} onChange={this.handleChange} />
+                </div> : (patientInfo.height ? (patientInfo.height + 'cm') : '--')}
             </span>
             <span>{t('User Height')}</span>
           </span>
           <span>
             <span>
-              {/* {edition.weight + 'Kg' || '--'} */}
               {isEditting ? <div>
-                  <Input name="weight" style={{ width: '1rem',border:'2px solid #ccc' }} value={edition.weight} onChange={this.handleChange} />
-                </div> : (edition.weight ? (edition.weight + 'Kg') : '--')}
+                  <Input name="weight" style={{ width: '1.2rem' }} value={patientInfo.weight} onChange={this.handleChange} />
+                </div> : (patientInfo.weight ? (patientInfo.weight + 'Kg') : '--')}
             </span>
             <span>{t('User Weight')}</span>
           </span>
@@ -123,14 +117,14 @@ class UserInfo extends Component {
 
 UserInfo.propTypes = {
   isEditting: PropTypes.bool.isRequired,
-  edition: PropTypes.object.isRequired,
+  patientInfo: PropTypes.object.isRequired,
   handleInputChange: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
   {
     isEditting: state.report.isEditting,
-    edition: state.report.edition
+    patientInfo: state.report.patientInfo
     
   }
 );
@@ -138,7 +132,7 @@ const mapStateToProps = state => (
 const mapDispatchToProps = dispatch => (
   {
     handleInputChange(data){
-      dispatch(Creator.handleInputChange({},data))
+      dispatch(Creator.handleInputChange({},{},data))
     }
   }
 );

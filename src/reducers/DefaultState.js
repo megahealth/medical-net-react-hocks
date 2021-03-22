@@ -157,8 +157,11 @@ const DefaultState = {
     reportNum:'',
     isEditting: false,
     edition: {},
+    patientInfo:{},
     adviceData: {},
     id:'',
+    oldEdition:{},
+    oldPatientInfo:{},
   },
   account: {
     pagination:{

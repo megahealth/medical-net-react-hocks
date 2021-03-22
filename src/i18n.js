@@ -154,7 +154,7 @@ const resources = {
       "User Info": "用户信息",
       "User Name": "姓名",
       "User Gender": "性别",
-      "User Age": "年龄（岁）",
+      "User Age": "年龄",
       "User Height": "身高（cm）",
       "User Weight": "体重（kg）",
       "Data Summary": "数据摘要",

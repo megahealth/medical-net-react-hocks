@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Typography } from 'antd';
+import { Typography,Input } from 'antd';
 import { withTranslation } from 'react-i18next';
+import Creator from '../../../actions/Creator';
 
 const { Title } = Typography;
 
@@ -12,7 +13,7 @@ class SpoAbstract extends Component {
   }
 
   render() {
-    const { Spo2Avg, Spo2Min, diffThdLge3Cnts, diffThdLge3Pr, t } = this.props;
+    const { Spo2Avg, Spo2Min, diffThdLge3Cnts, diffThdLge3Pr, t, isEditting } = this.props;
     return (
       <div className="block">
         <Title level={2}>{t('Blood oxygen statistics')}</Title>
@@ -25,7 +26,11 @@ class SpoAbstract extends Component {
             <span>{t('Average SpO2')}</span>
           </span>
           <span>
-            <span>{ Spo2Min&&Spo2Min.toFixed(1) }</span>
+            {
+              isEditting?
+                <Input type="text" defaultValue={ Spo2Min&&Spo2Min.toFixed(1) }/>
+              :<span>{ Spo2Min&&Spo2Min.toFixed(1) }</span>
+            }
             <span>{t('Lowest SpO2')}</span>
           </span>
           <span>
@@ -47,6 +52,8 @@ SpoAbstract.propTypes = {
   Spo2Min: PropTypes.number.isRequired,
   diffThdLge3Cnts: PropTypes.number.isRequired,
   diffThdLge3Pr: PropTypes.number.isRequired,
+  isEditting: PropTypes.bool.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
@@ -55,12 +62,15 @@ const mapStateToProps = state => (
     Spo2Min: state.report.alreadyDecodedData.Spo2Min,
     diffThdLge3Cnts: state.report.alreadyDecodedData.diffThdLge3Cnts,
     diffThdLge3Pr: state.report.alreadyDecodedData.diffThdLge3Pr,
+    isEditting: state.report.isEditting,
   }
 );
 
 const mapDispatchToProps = dispatch => (
   {
-
+    handleInputChange(data){
+      dispatch(Creator.handleInputChange({},data,{}))
+    }
   }
 );
 

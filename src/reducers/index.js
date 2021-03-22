@@ -125,7 +125,10 @@ const report = (state = DefaultState.report, action) => {
         data: action.payload.data,
         alreadyDecodedData: action.payload.alreadyDecodedData,
         waveData: action.payload.waveData,
-        edition: action.payload.data.customInfo || (action.payload.data.idPatient ? action.payload.data.idPatient.attributes : action.payload.data.patientInfo),
+        edition: {},
+        patientInfo:(action.payload.data.idPatient ? 
+          {...action.payload.data.idPatient.attributes,gender:action.payload.data.idPatient.attributes.gender == 'M'?'男':'女'} 
+          : action.payload.data.patientInfo),
         adviceData: action.payload.adviceData || {},
         reportNum: action.payload.reportNum,
         id: action.payload.id,
@@ -139,19 +142,22 @@ const report = (state = DefaultState.report, action) => {
     case TYPES.CHANGE_EDITE_STATUS:
       return {
         ...state,
-        isEditting: !state.isEditting
+        isEditting: !state.isEditting,
+        oldPatientInfo: !state.isEditting?state.patientInfo:{}
       }
     case TYPES.HANDLE_INPUT_CHANGE:
       let data = action.data;
+      console.log('zzzz',data);
       return {
         ...state,
+        patientInfo: data.patientInfo?{ ...state.patientInfo,...data.patientInfo}:{...state.patientInfo},
         edition: data.edition ? { ...state.edition, ...data.edition } : { ...state.edition },
         adviceData: data.adviceData ? { ...state.adviceData, ...data.adviceData } : { ...state.adviceData }
       };
     case TYPES.CANCEL_UPDATE:
       return {
         ...state,
-        edition: state.data.idPatient ? state.data.idPatient.attributes : state.data.patientInfo
+        patientInfo:state.oldPatientInfo
       }
     case TYPES.CHANGE_REPORT_NUM:
       return ({
@@ -188,9 +194,9 @@ const allDevice = (state = DefaultState.allDevice, action) => {
         ...state,
         loading: false,
         error: false,
-        deviceList: action.payload.deviceList,
-        pagination: action.payload.pagination.pageSize > action.payload.pagination.total
-          ?{...action.payload.pagination,pageSize:action.payload.pagination.total}
+        deviceList: action.payload.pagination.current == 1?action.payload.deviceList:[...state.deviceList,...action.payload.deviceList],
+        pagination: action.payload.pagination.pageSize*action.payload.pagination.current > action.payload.pagination.total
+          ?{...action.payload.pagination,current:action.payload.pagination.current}
           :action.payload.pagination
       };
     case TYPES.GET_ALL_DEVICE_DATA_FAILED:

@@ -6,62 +6,18 @@ import { withTranslation } from 'react-i18next';
 
 class StagePieChart extends Component {
 
-  getSleepPercent() {
-    const { sleepData } = this.props;
-    let wakeTime = 0;
-    let remSleep = 0;
-    let lightSleep = 0;
-    let deepSleep = 0;
-    let all = 0;
-    for (let i = 0, j = sleepData.length; i < j; i++) {
-      all++;
-      switch (sleepData[i]) {
-        case 0:
-          wakeTime++;
-          break;
-        case 2:
-          remSleep++;
-          break;
-        case 3:
-          lightSleep++;
-          break;
-        case 4:
-          deepSleep++;
-          break;
-        default:
-          break;
-      }
-    }
-
-    const remSleepPer = parseFloat((remSleep * 100 / all).toFixed(1));
-    const lightSleepPer = parseFloat((lightSleep * 100 / all).toFixed(1));
-    const deepSleepPer = parseFloat((deepSleep * 100 / all).toFixed(1));
-    const wakeTimePer = parseFloat((wakeTime * 100 / all).toFixed(1));
-
-    return {
-      wakeTime,
-      wakeTimePer,
-      remSleep,
-      remSleepPer,
-      lightSleep,
-      lightSleepPer,
-      deepSleep,
-      deepSleepPer
-    };
-  }
-
   getOption = () => {
-    const { t } = this.props;
+    const { t,adviceData } = this.props;
     const {
       wakeTime,
       wakeTimePer,
       remSleep,
-      remSleepPer,
+      remSleepPercent,
       lightSleep,
-      lightSleepPer,
+      lightSleepPercent,
       deepSleep,
-      deepSleepPer
-    } = this.getSleepPercent();
+      deepSleepPercent
+    } = adviceData;
 
     const option = {
       grid: {
@@ -88,19 +44,19 @@ class StagePieChart extends Component {
             case '清醒期':
               return `清醒期：${wakeTime}分钟(${wakeTimePer}%)`;
             case '眼动期':
-              return `眼动期：${remSleep}分钟(${remSleepPer}%)`;
+              return `眼动期：${remSleep}分钟(${remSleepPercent}%)`;
             case '浅睡期':
-              return `浅睡期：${lightSleep}分钟(${lightSleepPer}%)`;
+              return `浅睡期：${lightSleep}分钟(${lightSleepPercent}%)`;
             case '深睡期':
-              return `深睡期：${deepSleep}分钟(${deepSleepPer}%)`;
+              return `深睡期：${deepSleep}分钟(${deepSleepPercent}%)`;
             case 'Awake':
               return `Awake: ${wakeTime} min (${wakeTimePer}%)`;
             case 'REM':
-              return `REM: ${remSleep} min (${remSleepPer}%)`;
+              return `REM: ${remSleep} min (${remSleepPercent}%)`;
             case 'Light':
-              return `Light: ${lightSleep} min (${lightSleepPer}%)`;
+              return `Light: ${lightSleep} min (${lightSleepPercent}%)`;
             case 'Deep':
-              return `Deep: ${deepSleep} min (${deepSleepPer}%)`;
+              return `Deep: ${deepSleep} min (${deepSleepPercent}%)`;
             default:
               break;
           }
@@ -183,11 +139,13 @@ class StagePieChart extends Component {
 
 StagePieChart.propTypes = {
   sleepData: PropTypes.array.isRequired,
+  adviceData: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => (
   {
     sleepData: state.report.data.sleepData,
+    adviceData: state.report.adviceData,
   }
 );
 

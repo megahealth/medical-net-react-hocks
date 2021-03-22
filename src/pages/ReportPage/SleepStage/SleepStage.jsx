@@ -56,7 +56,6 @@ class SleepStage extends Component {
 
   render() {
     const { t,adviceData } = this.props;
-
     return (
       <div className="block">
         <Title level={2}>{t('Sleep Stage Statistics')}</Title>
@@ -67,7 +66,7 @@ class SleepStage extends Component {
           <span>
             <span>{t('Sleep Stage')}</span>
             <span>{t('Sleep Stage Duration')}</span>
-            <span>{t('Total proportion (%)')}</span>
+            <span>{t('Sleep Stage Percent')}</span>
           </span>
           <span>
             <span>{t('Awake')}</span>

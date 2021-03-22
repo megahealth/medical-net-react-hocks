@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Typography } from 'antd';
+import { Typography,Input } from 'antd';
 import { withTranslation } from 'react-i18next';
 import './AbstractData.scss'
+import Creator from '../../../actions/Creator';
+
+
 const { Title } = Typography;
 
 class AbstractData extends Component {
@@ -14,7 +17,7 @@ class AbstractData extends Component {
   }
 
   render() {
-    const { t } = this.props;
+    const { t, isEditting } = this.props;
 
     return (
       <div className="block">
@@ -24,7 +27,11 @@ class AbstractData extends Component {
         </div>
         <div className="table-data">
           <span style={{ width: '500px' }}>
-            <span>{this.getAHI()}</span>
+            {
+              isEditting?
+                <Input style={{ width: '200px' }} defaultValue={ this.getAHI() } />
+              :<span>{this.getAHI()}</span>
+            }
             <span>AHI</span>
           </span>
           <span>
@@ -56,17 +63,22 @@ class AbstractData extends Component {
 
 AbstractData.propTypes = {
   AHI: PropTypes.number.isRequired,
+  isEditting: PropTypes.bool.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
   {
     AHI: state.report.data.AHI,
+    isEditting: state.report.isEditting,
   }
 );
 
 const mapDispatchToProps = dispatch => (
   {
-
+    handleInputChange(data){
+      dispatch(Creator.handleInputChange({},data,{}))
+    }
   }
 );
 

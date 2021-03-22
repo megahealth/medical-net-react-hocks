@@ -55,17 +55,16 @@ class ReportPage extends Component {
 
   saveUserEdit = () => {
     const { saveUpdate, report } = this.props;
-    const { edition } = report;
-    console.log(report.edition);
-    console.log({ adviceData: {}, edition }, this.id);
-    saveUpdate({ adviceData: {}, edition }, this.id)
+    const { edition,patientInfo } = report;
+    console.log({ adviceData: {}, edition:{}, patientInfo}, this.id);
+    saveUpdate({ adviceData: {}, edition:{}, patientInfo }, this.id)
 
   }
 
   saveAdviceEdit = () => {
     const { saveUpdate, report } = this.props;
-    const { adviceData } = report;
-    saveUpdate({ adviceData, edition: {} }, this.id)
+    const { adviceData,patientInfo } = report;
+    saveUpdate({ adviceData, edition: {},patientInfo }, this.id)
   }
 
   print = () => {
@@ -112,7 +111,11 @@ class ReportPage extends Component {
                   :
                   <div className="hide-print option-btns">
                     <Button shape="round" icon={<PrinterOutlined />} size={size} onClick={this.print}> {t('Print')} </Button>
-                    <Button shape="round" icon={<EditOutlined />} size={size} onClick={changeEditStatus} > {t('Edit')} </Button>
+                    <Button 
+                      shape="round" icon={<EditOutlined />} 
+                      size={size} 
+                      onClick={changeEditStatus} 
+                    > {t('Edit')} </Button>
                   </div>
               }
             </div>
@@ -186,6 +189,7 @@ ReportPage.propTypes = {
     data: PropTypes.object,
     edition: PropTypes.object,
     adviceData: PropTypes.object,
+    patientInfo: PropTypes.object,
   }).isRequired,
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,

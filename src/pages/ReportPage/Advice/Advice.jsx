@@ -137,7 +137,7 @@ class Advice extends Component {
   }
 
   render() {
-    const { t, adviceData, edition } = this.props;
+    const { t, adviceData, edition, isEditting } = this.props;
     return (
       <div className="block">
         <Title level={2}>{t('Sleep Evaluation Recommendations')}</Title>
@@ -171,19 +171,21 @@ Advice.propTypes = {
   edition: PropTypes.object.isRequired,
   adviceData: PropTypes.object.isRequired,
   handleInputChange: PropTypes.func.isRequired,
+  isEditting: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => (
   {
     edition: state.report.edition,
     adviceData: state.report.adviceData,
+    isEditting: state.report.isEditting,
   }
 );
 
 const mapDispatchToProps = dispatch => (
   {
     handleInputChange(data){
-      dispatch(Creator.handleInputChange(data,{}))
+      dispatch(Creator.handleInputChange(data,{},{}))
     }
   }
 );

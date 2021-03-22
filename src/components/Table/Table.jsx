@@ -14,9 +14,6 @@ import no_report from '../../assets/noreport.png'
 class Table extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      nickName:''
-    }
   }
   toDeviceDetail = (id) => {
     const history = createHashHistory();
@@ -26,9 +23,7 @@ class Table extends Component {
     console.log('blur',device);
   }
   render() {
-    console.log(this.props)
     const { type, dataSource, pagination, loadMore, btnClick, btnDelete } = this.props;
-    const { nickName } = this.state;
     const user = AV.User.current();
     const roleType = user.attributes.roleType;
     return (
@@ -83,14 +78,9 @@ class Table extends Component {
                     {
                       roleType == 5 ?
                         <div className='table-text translate-left'>
-                          <p><span></span><span style={{ color: '#D97C2C' }}>{ device.userName }</span></p>
-                          <p onClick={(e)=>{ e.stopPropagation(); }}>
-                            {/* <span></span> */}
-                            {/* <span style={{ color: '#1890FF' }}>{ device.nickName }</span> */}
-                            <input type="text" style={{ color: '#1890FF' }}
-                              defaultValue={ device.nickName } 
-                              onBlur = { (e) =>btnClick({nickName:e.target.value,id:device.userId}) }
-                            />
+                          <p style={{ textAlign:'right' }}><span></span><span style={{ color: '#D97C2C' }}>{ device.userName }</span></p>
+                          <p onClick={(e)=>{ e.stopPropagation();btnClick(device) }}>
+                            <span style={{ color: '#1890FF' }}> { device.nickName }  </span>
                           </p>
                           
                         </div>

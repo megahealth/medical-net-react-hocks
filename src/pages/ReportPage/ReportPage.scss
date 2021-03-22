@@ -42,6 +42,13 @@ body {
 .header-info {
   display: flex;
   justify-content: space-between;
+  .ant-input{
+    width: 1.8rem;
+  }
+  .ant-input:focus{
+    font-size: 0.24rem!important;
+    width: 2.5rem;
+  }
 }
 
 h1,h2 {
@@ -67,6 +74,16 @@ h2 {
   padding: 20px 0;
   display: flex;
   justify-content: space-around;
+  .ant-input{
+    text-align: center;
+    font-size: 0.24rem;
+    height: 0.4rem;
+    line-height: 0.4rem;
+    border: 1px solid #333;
+  }
+  .ant-input:focus{
+    border: 1px solid #40a9ff;
+  }
 }
 
 .table-data>span{

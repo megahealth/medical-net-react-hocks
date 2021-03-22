@@ -1,0 +1,21 @@
+.user-table{
+  .ant-select{
+    width: 0.8rem;
+    .ant-select-selector{
+      border: 1px solid #333;
+      width: 0.8rem;
+      height: 0.4rem!important;
+      .ant-select-selection-item{
+        height: 0.4rem!important;
+        line-height: 0.4rem!important;
+        font-size: 0.24rem;
+      }
+    }
+  }
+  
+}
+.ant-select-item{
+  font-size: 0.24rem;
+  height: 0.4rem;
+  line-height: 0.4rem;
+}

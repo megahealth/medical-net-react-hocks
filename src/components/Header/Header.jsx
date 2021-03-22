@@ -29,7 +29,11 @@ class Header extends Component {
       setFilter({ reportType: ['all'], startDate: null, endDate: null, deviceId: null, });
       getAllReportsData(10, 1, { reportType: ['all'], startDate: null, endDate: null, deviceId: null, })
     }
-    if (title == '设备列表') getAllDevice(allDevice.pagination)
+    if (title == '设备列表') getAllDevice({
+      current:1,
+      pageSize:10,
+      total:0,
+    })
   }
 
   render() {

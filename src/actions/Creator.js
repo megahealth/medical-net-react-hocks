@@ -191,18 +191,17 @@ function decodeRingData(id, ringData, tempSleepId, fileid) {
   });
 }
 
+// 获取报告详情
 Creator.getReportData = asyncActionFactory(
   ['GET_REPORT_DATA', 'GET_REPORT_DATA_SUCCESS', 'GET_REPORT_DATA_FAILED'],
   (getting, success, fail, id) => async (dispatch) => {
     dispatch(getting());
-
     const Reports = new AV.Query('Reports');
     Reports.include('idPatient')
-    Reports.include('customInfo')
+    Reports.include('patientInfo')
     Reports.include('editedData')
     Reports.include('idModifiedReport')
     const result = await Reports.get(id)
-    // console.log(result);
     let data = result.attributes;
     const reportNum = data.idModifiedReport ? data.idModifiedReport.get('reportNumber') : '';
     const { ringData, tempSleepId, idRingReportFile } = data;
@@ -299,9 +298,9 @@ Creator.changeEditStatus = () => ({
 });
 
 // 提交输入框的值
-Creator.handleInputChange = (adviceData, edition) => ({
+Creator.handleInputChange = (adviceData, edition,patientInfo) => ({
   type: TYPES.HANDLE_INPUT_CHANGE,
-  data: { adviceData, edition }
+  data: { adviceData, edition, patientInfo }
 });
 
 // 取消修改
@@ -315,17 +314,15 @@ Creator.saveUpdate = asyncActionFactory(
   (getting, success, fail, data, id) => async (dispatch) => {
     dispatch(getting())
     // console.log(data);
-    const { adviceData, edition } = data
-
+    const { adviceData, edition, patientInfo } = data
 
     const report = AV.Object.createWithoutData('Reports', id);
-    if (edition) {
-      const { name, age, gender, height, weight } = edition;
-      const userInfo = {
-        name, age, gender, height, weight
-      }
+    if (patientInfo) {
+      const { name, age, gender, height, weight } = patientInfo;
+      const userInfo = [name, gender, age, height, weight]
       // console.log(userInfo);
-      report.set('customInfo', userInfo);
+      // report.set('customInfo', userInfo);
+      report.set('patientInfo', userInfo);
       report.set('hasEdited', true);
     }
     if (adviceData) {
@@ -705,7 +702,7 @@ function deviceStatus(workStatus, monitorStatus) {
 // 处理报告数据成养老版editData格式
 function DataToEditData(data, alreadyDecodedData) {
   var obj = {}
-  if (data.editedData) {
+  if (JSON.stringify(data.editedData) !="{}") {
     // 暂不使用编辑数据替代原有数据
     // if (false) {
     const sleepTimeObj = getSleepTime(data)
@@ -813,7 +810,6 @@ function getSleepPercent(data, alreadyDecodedData) {
     lightSleepPercent = (parseFloat((lightSleep * 100 / all).toFixed(1)) ? parseFloat((lightSleep * 100 / all).toFixed(1)) : 0);
     remSleepPercent = (parseFloat((remSleep * 100 / all).toFixed(1)) ? parseFloat((remSleep * 100 / all).toFixed(1)) : 0);
   }
-
   const totalSleepMilliseconds = moment.duration((lightSleep + remSleep + deepSleep) * 60 * 1000);
   return {
     wakeTime,

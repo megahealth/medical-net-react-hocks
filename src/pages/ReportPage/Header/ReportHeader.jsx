@@ -77,9 +77,9 @@ class ReportHeader extends Component {
             showInput
               ? <div style={{ display: 'flex', justifyContent:'space-evenly', alignItems: 'center' }}>
                 <span style={{ display: 'block' }}>病例号：</span>
-                <div style={{ borderBottom: '1px solid black', width:'1rem' }}>
+                <div style={{ borderBottom: '1px solid black' }}>
                   <Input
-                    style={{fontSize:'18px'}}
+                    style={{fontSize:'12px'}}
                     bordered={false}
                     value={this.state.reportNum == null ? reportNum : this.state.reportNum}
                     onFocus={this.inputFocus}
