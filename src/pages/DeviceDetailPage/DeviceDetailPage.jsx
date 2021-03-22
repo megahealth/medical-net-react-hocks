@@ -286,8 +286,8 @@ class DeviceDetailPage extends Component {
                           { text: '启用', onPress: () => this.ringSnSelected(ring.mac, index, ringArr) },
                           {
                             text: '解绑', onPress: () => alert(ring.ringStatus == 'background_greed' ? '确定解绑？解绑操作将导致监测中戒指血氧数据丢失！' : '确定解绑？', null, [
-                              { text: 'Cancel', onPress: () => { } },
-                              { text: 'Ok', onPress: () => { this.unBindRingV2(ring.mac) } }
+                              { text: '取消', onPress: () => { } },
+                              { text: '确定', onPress: () => { this.unBindRingV2(ring.mac) } }
                             ])
                           },
                           { text: '关闭', onPress: () => { } },
@@ -319,11 +319,11 @@ class DeviceDetailPage extends Component {
                 }
               </ul>
             </div>
-            <div>
+            {/* <div>
               <div className='add-ring-btn' onClick={ this.addRingBtn }>
                 <span>添加指环</span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <Translation>
