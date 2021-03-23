@@ -9,6 +9,15 @@ const { Title } = Typography;
 
 class PrAbstract extends Component {
 
+  handleChange = (e) => {
+    var data = {};
+    const { handleInputChange } = this.props;
+    data = {
+      [e.target.name]: e.target.value?parseInt(e.target.value):null
+    }
+    handleInputChange(data)
+  }
+
   render() {
     const {
       prAvg,
@@ -36,7 +45,12 @@ class PrAbstract extends Component {
           <span>
             {
               isEditting?
-              <Input defaultValue={ prMin }/>
+              <Input 
+              value={ prMin }
+              name = "prMin"
+              onChange={ this.handleChange }
+              
+              />
               :<span>{ prMin }</span>
             }
             <span>{t('Lowest HR')}</span>
@@ -48,18 +62,18 @@ class PrAbstract extends Component {
 }
 
 PrAbstract.propTypes = {
-  prAvg: PropTypes.number.isRequired,
-  prMax: PropTypes.number.isRequired,
-  prMin: PropTypes.number.isRequired,
+  prAvg: PropTypes.number,
+  prMax: PropTypes.number,
+  prMin: PropTypes.number,
   isEditting: PropTypes.bool.isRequired,
   handleInputChange: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
   {
-    prAvg: state.report.alreadyDecodedData.prAvg,
-    prMax: state.report.alreadyDecodedData.prMax,
-    prMin: state.report.alreadyDecodedData.prMin,
+    prAvg: state.report.adviceData.prAvg,
+    prMax: state.report.adviceData.prMax,
+    prMin: state.report.adviceData.prMin,
     isEditting: state.report.isEditting,
   }
 );
@@ -67,7 +81,7 @@ const mapStateToProps = state => (
 const mapDispatchToProps = dispatch => (
   {
     handleInputChange(data){
-      dispatch(Creator.handleInputChange({},data,{}))
+      dispatch(Creator.handleInputChange(data,{}))
     }
   }
 );

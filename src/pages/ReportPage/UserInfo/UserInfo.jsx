@@ -132,7 +132,7 @@ const mapStateToProps = state => (
 const mapDispatchToProps = dispatch => (
   {
     handleInputChange(data){
-      dispatch(Creator.handleInputChange({},{},data))
+      dispatch(Creator.handleInputChange({},data))
     }
   }
 );

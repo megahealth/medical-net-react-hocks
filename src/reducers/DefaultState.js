@@ -156,7 +156,6 @@ const DefaultState = {
     waveData: {},
     reportNum:'',
     isEditting: false,
-    edition: {},
     patientInfo:{},
     adviceData: {},
     id:'',

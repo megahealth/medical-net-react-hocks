@@ -93,7 +93,7 @@ Creator.getAllReportsData = asyncActionFactory(
       Reports.equalTo('idGroup', idGroup);
     }
     Reports.descending('createdAt');
-    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'idPatient', 'idReport', 'idDevice', 'patientInfo', 'extraCheckTimeMinute', 'idGroup', 'startSleepTime', 'startStatusTimeMinute', 'endStatusTimeMinute']);
+    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'idPatient', 'idReport', 'idDevice', 'patientInfo', 'extraCheckTimeMinute', 'idGroup', 'startSleepTime', 'startStatusTimeMinute', 'endStatusTimeMinute', 'editedData']);
     Reports.include(['idPatient', 'idDevice']);
     let total, result;
     try {
@@ -110,6 +110,7 @@ Creator.getAllReportsData = asyncActionFactory(
         let sn = item.get('idDevice') && (item.get('idDevice').get('deviceSN') || '--');
         let idDevice = item.get('idDevice') && (item.get('idDevice').id || '--');
         let idReport = item.get('idReport') || '';
+        let ahi = (item.get('editedData')&&parseFloat(item.get('editedData').ahi)) || item.get('AHI').toFixed(1)
         const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute, } = item.attributes;
         const start = startSleepTime;
         const sleepStageStart = start + (startStatusTimeMinute === -1 ? 0 : startStatusTimeMinute) * 60 * 1000;
@@ -123,7 +124,7 @@ Creator.getAllReportsData = asyncActionFactory(
           'idDevice': idDevice,
           'name': (arrname || idname) || '未登记',
           'date': moment(item.createdAt).format('YYYY-MM-DD'),
-          'AHI': ahiDegree(item.get('AHI').toFixed(1)),
+          'AHI': ahiDegree(ahi),
           'time': `${totalMilliseconds.hours()}时${totalMilliseconds.minutes()}分`,
         }
       });
@@ -298,9 +299,9 @@ Creator.changeEditStatus = () => ({
 });
 
 // 提交输入框的值
-Creator.handleInputChange = (adviceData, edition,patientInfo) => ({
+Creator.handleInputChange = (adviceData, patientInfo) => ({
   type: TYPES.HANDLE_INPUT_CHANGE,
-  data: { adviceData, edition, patientInfo }
+  data: { adviceData, patientInfo }
 });
 
 // 取消修改
@@ -313,20 +314,18 @@ Creator.saveUpdate = asyncActionFactory(
   ['SAVE_UPDATE', 'SAVE_UPDATE_SUCCESS', 'SAVE_UPDATE_FAILED'],
   (getting, success, fail, data, id) => async (dispatch) => {
     dispatch(getting())
-    // console.log(data);
-    const { adviceData, edition, patientInfo } = data
+    console.log(data,id);
+    const { adviceData, patientInfo } = data
 
     const report = AV.Object.createWithoutData('Reports', id);
     if (patientInfo) {
       const { name, age, gender, height, weight } = patientInfo;
       const userInfo = [name, gender, age, height, weight]
-      // console.log(userInfo);
       // report.set('customInfo', userInfo);
       report.set('patientInfo', userInfo);
       report.set('hasEdited', true);
     }
     if (adviceData) {
-      // console.log(adviceData);
       report.set('editedData', adviceData);
       report.set('hasEdited', true);
     }
@@ -702,11 +701,12 @@ function deviceStatus(workStatus, monitorStatus) {
 // 处理报告数据成养老版editData格式
 function DataToEditData(data, alreadyDecodedData) {
   var obj = {}
-  if (JSON.stringify(data.editedData) !="{}") {
+  if (data.editedData && JSON.stringify(data.editedData) !="{}") {
     // 暂不使用编辑数据替代原有数据
     // if (false) {
-    const sleepTimeObj = getSleepTime(data)
+    const sleepTimeObj = getSleepTime(data,alreadyDecodedData)
     obj = {
+      ...sleepTimeObj,
       ...data.editedData
     }
     if (!obj.totalRecord) {
@@ -755,10 +755,10 @@ function DataToEditData(data, alreadyDecodedData) {
         spo2Less95Time: alreadyDecodedData.spo2Less95Time,
         spo2Less95TimePercent: alreadyDecodedData.spo2Less95TimePercent,
       }
+      const sleepTimeObj = getSleepTime(data, alreadyDecodedData)
+      obj = { ...obj, ...sleepTimeObj }
     }
   }
-  const sleepTimeObj = getSleepTime(data, alreadyDecodedData)
-  obj = { ...obj, ...sleepTimeObj }
   return obj
 }
 

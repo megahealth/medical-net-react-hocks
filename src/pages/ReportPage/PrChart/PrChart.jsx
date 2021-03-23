@@ -15,7 +15,8 @@ class PrChart extends Component {
       spoStart,
       prArr,
       t,
-      modifiedReport
+      modifiedReport,
+      prMin
     } = this.props;
     const len = prArr.length;
 
@@ -44,7 +45,7 @@ class PrChart extends Component {
           const spo = prArr[i];
           if(spo>maxSpo) maxSpo = parseInt(spo);
           if(spo !=0 && spo<minSpo) minSpo = parseInt(spo);
-          newPrArr.push([now, spo]);
+          newPrArr.push([now, spo>=prMin?spo:null]);
         }
         
       }
@@ -178,6 +179,7 @@ PrChart.propTypes = {
   spoStart: PropTypes.number.isRequired,
   prArr: PropTypes.array.isRequired,
   modifiedReport: PropTypes.object,
+  prMin: PropTypes.number,
 };
 
 const mapStateToProps = state => (
@@ -188,6 +190,7 @@ const mapStateToProps = state => (
     endStatusTimeMinute: state.report.data.endStatusTimeMinute,
     spoStart: state.report.alreadyDecodedData.timeStart,
     prArr: state.report.alreadyDecodedData.prArr,
+    prMin: state.report.adviceData.prMin
   }
 );
 

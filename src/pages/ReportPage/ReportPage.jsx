@@ -55,16 +55,16 @@ class ReportPage extends Component {
 
   saveUserEdit = () => {
     const { saveUpdate, report } = this.props;
-    const { edition,patientInfo } = report;
-    console.log({ adviceData: {}, edition:{}, patientInfo}, this.id);
-    saveUpdate({ adviceData: {}, edition:{}, patientInfo }, this.id)
+    const { adviceData,patientInfo } = report;
+    // console.log({ adviceData, patientInfo}, this.id);
+    saveUpdate({ adviceData,patientInfo }, this.id)
 
   }
 
   saveAdviceEdit = () => {
     const { saveUpdate, report } = this.props;
     const { adviceData,patientInfo } = report;
-    saveUpdate({ adviceData, edition: {},patientInfo }, this.id)
+    saveUpdate({ adviceData,patientInfo }, this.id)
   }
 
   print = () => {
@@ -187,7 +187,6 @@ ReportPage.propTypes = {
     error: PropTypes.bool,
     isEditting: PropTypes.bool,
     data: PropTypes.object,
-    edition: PropTypes.object,
     adviceData: PropTypes.object,
     patientInfo: PropTypes.object,
   }).isRequired,

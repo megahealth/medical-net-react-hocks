@@ -30,7 +30,8 @@ class SpoChart extends Component {
       spoStart,
       spoArr,
       t,
-      modifiedReport
+      modifiedReport,
+      spo2Min
     } = this.props;
     const len = spoArr.length;
     if (len >= 0) {
@@ -63,7 +64,7 @@ class SpoChart extends Component {
           const spo = spoArr[i];
           if (spo > maxSpo) maxSpo = parseInt(spo);
           if (spo != 0 && spo < minSpo) minSpo = parseInt(spo);
-          newSpoArr.push([now, spo]);
+          newSpoArr.push([now, spo>=spo2Min?spo:null]);
         }
       }
       maxSpo += 10 - maxSpo % 10
@@ -284,6 +285,7 @@ SpoChart.propTypes = {
   spoArr: PropTypes.array.isRequired,
   modifiedReport: PropTypes.object,
   id:PropTypes.string.isRequired,
+  spo2Min:PropTypes.number,
   updateModifiedReport: PropTypes.func.isRequired,
 };
 
@@ -296,6 +298,7 @@ const mapStateToProps = state => (
     spoStart: state.report.alreadyDecodedData.timeStart,
     spoArr: state.report.alreadyDecodedData.Spo2Arr,
     id:state.report.id,
+    spo2Min: state.report.adviceData.spo2Min,
   }
 );
 

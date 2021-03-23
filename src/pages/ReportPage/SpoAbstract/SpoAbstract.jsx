@@ -11,9 +11,23 @@ class SpoAbstract extends Component {
   componentDidMount() {
 
   }
-
+  handleChange = (e) => {
+    var value = e.target.value.split('.');
+    var data = {};
+    const { handleInputChange } = this.props;
+    if(value.length == 1){
+      data = {
+        [e.target.name]: value[0]?parseInt(value[0]):null
+      }
+    }else{
+      data = {
+        [e.target.name]: parseFloat(e.target.value)
+      }
+    }
+    handleInputChange(data)
+  }
   render() {
-    const { Spo2Avg, Spo2Min, diffThdLge3Cnts, diffThdLge3Pr, t, isEditting } = this.props;
+    const { spo2Avg, spo2Min, diffThdLge3Cnts, diffThdLge3Pr, t, isEditting } = this.props;
     return (
       <div className="block">
         <Title level={2}>{t('Blood oxygen statistics')}</Title>
@@ -22,14 +36,19 @@ class SpoAbstract extends Component {
         </div>
         <div className="table-data">
           <span>
-            <span>{ Spo2Avg&&Spo2Avg.toFixed(1) }</span>
+            <span>{ spo2Avg&&spo2Avg.toFixed(1) }</span>
             <span>{t('Average SpO2')}</span>
           </span>
           <span>
             {
               isEditting?
-                <Input type="text" defaultValue={ Spo2Min&&Spo2Min.toFixed(1) }/>
-              :<span>{ Spo2Min&&Spo2Min.toFixed(1) }</span>
+                <Input 
+                  type="number" 
+                  name="spo2Min"
+                  value={ spo2Min }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ (spo2Min&&spo2Min.toFixed(1)) ||  '--'}</span>
             }
             <span>{t('Lowest SpO2')}</span>
           </span>
@@ -48,18 +67,18 @@ class SpoAbstract extends Component {
 }
 
 SpoAbstract.propTypes = {
-  Spo2Avg: PropTypes.number.isRequired,
-  Spo2Min: PropTypes.number.isRequired,
-  diffThdLge3Cnts: PropTypes.number.isRequired,
-  diffThdLge3Pr: PropTypes.number.isRequired,
-  isEditting: PropTypes.bool.isRequired,
+  spo2Avg: PropTypes.number,
+  spo2Min: PropTypes.number,
+  diffThdLge3Cnts: PropTypes.number,
+  diffThdLge3Pr: PropTypes.number,
+  isEditting: PropTypes.bool,
   handleInputChange: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
   {
-    Spo2Avg: state.report.alreadyDecodedData.Spo2Avg,
-    Spo2Min: state.report.alreadyDecodedData.Spo2Min,
+    spo2Avg: state.report.adviceData.spo2Avg,
+    spo2Min: state.report.adviceData.spo2Min,
     diffThdLge3Cnts: state.report.alreadyDecodedData.diffThdLge3Cnts,
     diffThdLge3Pr: state.report.alreadyDecodedData.diffThdLge3Pr,
     isEditting: state.report.isEditting,
@@ -69,7 +88,7 @@ const mapStateToProps = state => (
 const mapDispatchToProps = dispatch => (
   {
     handleInputChange(data){
-      dispatch(Creator.handleInputChange({},data,{}))
+      dispatch(Creator.handleInputChange(data,{}))
     }
   }
 );

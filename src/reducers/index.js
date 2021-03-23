@@ -125,7 +125,6 @@ const report = (state = DefaultState.report, action) => {
         data: action.payload.data,
         alreadyDecodedData: action.payload.alreadyDecodedData,
         waveData: action.payload.waveData,
-        edition: {},
         patientInfo:(action.payload.data.idPatient ? 
           {...action.payload.data.idPatient.attributes,gender:action.payload.data.idPatient.attributes.gender == 'M'?'男':'女'} 
           : action.payload.data.patientInfo),
@@ -143,21 +142,21 @@ const report = (state = DefaultState.report, action) => {
       return {
         ...state,
         isEditting: !state.isEditting,
-        oldPatientInfo: !state.isEditting?state.patientInfo:{}
+        oldPatientInfo: !state.isEditting?state.patientInfo:{},
+        oldEdition: !state.isEditting?state.adviceData:{},
       }
     case TYPES.HANDLE_INPUT_CHANGE:
       let data = action.data;
-      console.log('zzzz',data);
       return {
         ...state,
         patientInfo: data.patientInfo?{ ...state.patientInfo,...data.patientInfo}:{...state.patientInfo},
-        edition: data.edition ? { ...state.edition, ...data.edition } : { ...state.edition },
         adviceData: data.adviceData ? { ...state.adviceData, ...data.adviceData } : { ...state.adviceData }
       };
     case TYPES.CANCEL_UPDATE:
       return {
         ...state,
-        patientInfo:state.oldPatientInfo
+        patientInfo:state.oldPatientInfo,
+        adviceData:state.oldEdition
       }
     case TYPES.CHANGE_REPORT_NUM:
       return ({

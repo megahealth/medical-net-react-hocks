@@ -12,8 +12,18 @@ const { Title } = Typography;
 class AbstractData extends Component {
 
   getAHI() {
-    const { AHI } = this.props;
-    return AHI.toFixed(1);
+    const { adviceData } = this.props;
+    var ahi = parseFloat(adviceData.ahi)
+    return ahi.toString();
+  }
+
+  handleChange = (e) => {
+    var data = {};
+    const { handleInputChange } = this.props;
+      data = {
+        [e.target.name]: e.target.value
+    }
+    handleInputChange(data)
   }
 
   render() {
@@ -27,9 +37,16 @@ class AbstractData extends Component {
         </div>
         <div className="table-data">
           <span style={{ width: '500px' }}>
+          {/* <span>{this.getAHI()}</span> */}
             {
               isEditting?
-                <Input style={{ width: '200px' }} defaultValue={ this.getAHI() } />
+                <Input 
+                  type="number"
+                  style={{ width: '200px' }}
+                  name='ahi'
+                  value = { this.getAHI() }
+                  onChange = { this.handleChange }
+                />
               :<span>{this.getAHI()}</span>
             }
             <span>AHI</span>
@@ -65,19 +82,21 @@ AbstractData.propTypes = {
   AHI: PropTypes.number.isRequired,
   isEditting: PropTypes.bool.isRequired,
   handleInputChange: PropTypes.func.isRequired,
+  adviceData: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => (
   {
     AHI: state.report.data.AHI,
     isEditting: state.report.isEditting,
+    adviceData: state.report.adviceData,
   }
 );
 
 const mapDispatchToProps = dispatch => (
   {
     handleInputChange(data){
-      dispatch(Creator.handleInputChange({},data,{}))
+      dispatch(Creator.handleInputChange(data,{}))
     }
   }
 );

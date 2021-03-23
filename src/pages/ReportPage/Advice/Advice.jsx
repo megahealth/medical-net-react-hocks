@@ -9,22 +9,16 @@ import './Advice.scss';
 
 const { Title } = Typography;
 const { TextArea } = Input;
-var str;
 class Advice extends Component {
   componentWillMount() {
-    str = '';
-    const { adviceData } = this.props;
-    str += this.getSleepAdvice(adviceData);
-    str += this.getAhiAdvice()
+    
   }
   handleChange = (e) => {
     var data = {};
-    const { handleInputChange } = this.props
-    // console.log(e.target.value);
+    const { handleInputChange } = this.props;
       data = {
         [e.target.name]: e.target.value
     }
-    // console.log(data)
     handleInputChange(data)
   }
 
@@ -126,18 +120,19 @@ class Advice extends Component {
         break;
     }
     const sleepAdvice = 
-    `睡眠分期分析：
-    您的总睡眠时间为${adviceData.totalRecordTime||'--'}，睡眠效率(TST/TIB)为${adviceData.sleepEfficiency||'--'}%，其中深睡期占比${adviceData.deepSleepPercent||'--'}%，浅睡期占比${adviceData.lightSleepPercent||'--'}%，快速眼动期占比${adviceData.remSleepPercent||'--'}%。`
-    +'\n'+
-    `睡眠呼吸综述:
-    您的AHI指数为${adviceData.ahi||'--'}，${ breathe?breathe:'' }${ spo }`
-    +'\n'+(ahiGrade == 0?'经检测,您当前的您当前这份报告被判定为无效报告。出现此现象的原因可能是：':'建议：')+'\n'
-    ;
+    <div className='sleep-advice'>睡眠分期分析：
+      <p>您的总睡眠时间为{adviceData.totalRecordTime||'--'}，睡眠效率(TST/TIB)为{adviceData.sleepEfficiency||'--'}%，其中深睡期占比{adviceData.deepSleepPercent||'--'}%，浅睡期占比{adviceData.lightSleepPercent||'--'}%，快速眼动期占比{adviceData.remSleepPercent||'--'}%。</p>
+      睡眠呼吸综述: 
+      <p>您的AHI指数为{adviceData.ahi||'--'}，{ breathe?breathe:'' }{ spo }</p>
+      
+      {(ahiGrade == 0?'经检测,您当前的您当前这份报告被判定为无效报告。出现此现象的原因可能是':'建议：')}
+    </div> 
     return sleepAdvice;
   }
 
   render() {
-    const { t, adviceData, edition, isEditting } = this.props;
+    const { t, adviceData, isEditting } = this.props;
+    const str = this.getSleepAdvice(adviceData);
     return (
       <div className="block">
         <Title level={2}>{t('Sleep Evaluation Recommendations')}</Title>
@@ -145,20 +140,41 @@ class Advice extends Component {
           <span></span>
         </div>
         <div className="advice">
+          { str }
           <TextArea 
             autoSize={{ minRows: 5, maxRows: 40 }} 
-            bordered = {false}
+            bordered = {isEditting}
             name="ahiAdvice" 
-            // value={adviceData.ahiAdvice?adviceData.ahiAdvice:str} 
-            value={str} 
-            onChange={ this.handleChange } 
+            value={ adviceData.ahiAdvice || this.getAhiAdvice()}
+            onChange={ (e)=> { if(isEditting) this.handleChange(e)} } 
           />
           <div className='signature'>
             <div>
               <span>签名日期：</span>
+              {
+                isEditting?
+                  <Input 
+                    style={{ width:'1.8rem' }} 
+                    name="reviewDate" 
+                    value={ adviceData.reviewDate }
+                    onChange={ this.handleChange } 
+                  />
+                  :<span>{ adviceData.reviewDate }</span>
+              }
+              
             </div>
             <div>
               <span>医师签名：</span>
+              {
+                isEditting?
+                  <Input 
+                    style={{ width:'1.5rem' }} 
+                    name="reviewDoctor"  
+                    value={ adviceData.reviewDoctor }
+                    onChange={ this.handleChange } 
+                  />
+                  :<span>{ adviceData.reviewDoctor }</span>
+              }
             </div>
           </div>
         </div>
@@ -168,7 +184,6 @@ class Advice extends Component {
 }
 
 Advice.propTypes = {
-  edition: PropTypes.object.isRequired,
   adviceData: PropTypes.object.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   isEditting: PropTypes.bool.isRequired,
@@ -176,7 +191,6 @@ Advice.propTypes = {
 
 const mapStateToProps = state => (
   {
-    edition: state.report.edition,
     adviceData: state.report.adviceData,
     isEditting: state.report.isEditting,
   }
@@ -185,7 +199,7 @@ const mapStateToProps = state => (
 const mapDispatchToProps = dispatch => (
   {
     handleInputChange(data){
-      dispatch(Creator.handleInputChange(data,{},{}))
+      dispatch(Creator.handleInputChange(data,{}))
     }
   }
 );
