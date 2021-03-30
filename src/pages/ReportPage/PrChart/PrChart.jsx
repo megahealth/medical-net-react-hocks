@@ -45,12 +45,13 @@ class PrChart extends Component {
           const spo = prArr[i];
           if(spo>maxSpo) maxSpo = parseInt(spo);
           if(spo !=0 && spo<minSpo) minSpo = parseInt(spo);
-          newPrArr.push([now, spo>=prMin?spo:null]);
+          newPrArr.push([now, spo>=prMin?spo:prMin]);
+          // newPrArr.push([now, spo]);
         }
         
       }
       maxSpo += 10 - maxSpo%10
-      minSpo -= minSpo%10
+      minSpo -= minSpo%10+5
       const option = {
         animation: false,
         tooltip: {

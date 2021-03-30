@@ -99,7 +99,6 @@ class DevicePage extends Component {
     this.setState({newNickname:e.target.value})
   }
   onOk = ()=>{
-    console.log('hhhh',this.state);
     const {record,newNickname} = this.state
     AV.Cloud.run('updateName_User', {"userId": record.userId,"name": newNickname}).then((data)=> {
       Toast.success('修改成功！',3)

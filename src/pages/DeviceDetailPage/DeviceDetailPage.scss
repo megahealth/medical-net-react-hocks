@@ -215,6 +215,15 @@
     }
     
   }
+  .change-picker{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.4rem;
+    span{
+      color: #4274e2;
+    }
+  }
   // .am-modal-footer{
   //   height: 0.6rem;
   //   .am-modal-button{

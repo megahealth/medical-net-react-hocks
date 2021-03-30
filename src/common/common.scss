@@ -6,7 +6,7 @@ html, body {
 }
 
 body {
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
+  font-family: Droidsansfallback,Droid Sans,Heiti SC,HelveticaNeue,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
   font-size: 12px;
 }
 
@@ -124,3 +124,50 @@ a, a:link, a:hover, a:active, a:visited {
     font-size: 0.5rem;
   }
 }
+
+// 时间组件样式修改
+.am-picker-popup-wrap{
+  .am-picker-popup{
+    height: 40%;
+    .am-picker-popup-content{
+      .am-picker-popup-body{
+        
+        .am-picker-popup-header{
+          .am-picker-popup-item{
+            height: 0.6rem;
+            line-height: 0.6rem;
+            font-size: 0.3rem;
+          }
+          .am-picker-popup-header-right,.am-picker-popup-header-left{
+            padding: 0.1rem 0.6rem;
+            text-align: center;
+          }
+        }
+        .am-picker{
+          .am-picker-col{
+            height: 4rem;
+            .am-picker-col-mask{
+              // height: 6rem;
+            }
+            .am-picker-col-indicator {
+              top: 2rem!important;
+              height: 0.5rem;
+            }
+            .am-picker-col-content{
+              padding-top: 2rem!important;
+              .am-picker-col-item {
+                height: 0.5rem;
+                line-height: 0.5rem;
+                font-size: 0.3rem!important;
+              }
+            }
+          }
+          
+          
+        }
+      }
+      height: 100%;
+    }
+  }
+  
+} 

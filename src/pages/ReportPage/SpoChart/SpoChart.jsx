@@ -64,7 +64,8 @@ class SpoChart extends Component {
           const spo = spoArr[i];
           if (spo > maxSpo) maxSpo = parseInt(spo);
           if (spo != 0 && spo < minSpo) minSpo = parseInt(spo);
-          newSpoArr.push([now, spo>=spo2Min?spo:null]);
+          newSpoArr.push([now, spo>=spo2Min?spo:spo2Min]);
+          // newSpoArr.push([now, spo]);
         }
       }
       maxSpo += 10 - maxSpo % 10

@@ -141,13 +141,26 @@ class Advice extends Component {
         </div>
         <div className="advice">
           { str }
-          <TextArea 
-            autoSize={{ minRows: 5, maxRows: 40 }} 
-            bordered = {isEditting}
-            name="ahiAdvice" 
-            value={ adviceData.ahiAdvice || this.getAhiAdvice()}
-            onChange={ (e)=> { if(isEditting) this.handleChange(e)} } 
-          />
+          {
+            isEditting?
+            <TextArea 
+              className='focus-border-blue'
+              autoSize={{ minRows: 5, maxRows: 40 }} 
+              style={{ border:'2px solid #333' }}
+              bordered = {true}
+              name="ahiAdvice" 
+              value={ adviceData.ahiAdvice || this.getAhiAdvice()}
+              onChange={ (e)=> { if(isEditting) this.handleChange(e)} } 
+            />
+            :
+            <TextArea 
+              autoSize={{ minRows: 5, maxRows: 40 }} 
+              bordered = {false}
+              name="ahiAdvice" 
+              value={ adviceData.ahiAdvice || this.getAhiAdvice()}
+            />
+          }
+          
           <div className='signature'>
             <div>
               <span>签名日期：</span>

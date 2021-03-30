@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Typography,Input } from 'antd';
 import { withTranslation } from 'react-i18next';
 import Creator from '../../../actions/Creator';
+import { Toast } from 'antd-mobile';
 
 const { Title } = Typography;
 
@@ -27,7 +28,7 @@ class SpoAbstract extends Component {
     handleInputChange(data)
   }
   render() {
-    const { spo2Avg, spo2Min, diffThdLge3Cnts, diffThdLge3Pr, t, isEditting } = this.props;
+    const { spo2Avg, spo2Min, diffThdLge3Cnts, diffThdLge3Pr, t, isEditting, alreadyDecodedData, handleInputChange } = this.props;
     return (
       <div className="block">
         <Title level={2}>{t('Blood oxygen statistics')}</Title>
@@ -47,8 +48,15 @@ class SpoAbstract extends Component {
                   name="spo2Min"
                   value={ spo2Min }
                   onChange={ this.handleChange }
+                  onBlur={ ()=>{ 
+                    if( spo2Min<alreadyDecodedData.Spo2Min.toFixed(1) ){
+                      const originalSpo2Min = parseFloat(alreadyDecodedData.Spo2Min.toFixed(1))
+                      handleInputChange({ spo2Min:originalSpo2Min })
+                      Toast.fail(`最低血氧饱和度不能低于${ originalSpo2Min }`)
+                    } 
+                  } }
                 />
-              :<span>{ (spo2Min&&spo2Min.toFixed(1)) ||  '--'}</span>
+              :<span>{ spo2Min || '--'}</span>
             }
             <span>{t('Lowest SpO2')}</span>
           </span>
@@ -72,6 +80,7 @@ SpoAbstract.propTypes = {
   diffThdLge3Cnts: PropTypes.number,
   diffThdLge3Pr: PropTypes.number,
   isEditting: PropTypes.bool,
+  alreadyDecodedData: PropTypes.object.isRequired,
   handleInputChange: PropTypes.func.isRequired,
 };
 
@@ -82,6 +91,7 @@ const mapStateToProps = state => (
     diffThdLge3Cnts: state.report.alreadyDecodedData.diffThdLge3Cnts,
     diffThdLge3Pr: state.report.alreadyDecodedData.diffThdLge3Pr,
     isEditting: state.report.isEditting,
+    alreadyDecodedData: state.report.alreadyDecodedData,
   }
 );
 

@@ -297,7 +297,7 @@ class BreathWave extends Component {
         {
           name: t('Breath Wave'),
           nameLocation: 'center',
-          nameGap: '50',
+          nameGap: '30',
           type: 'value',
           // nameRotate: '0.1',
           splitLine: {

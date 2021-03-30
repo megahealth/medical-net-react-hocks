@@ -21,11 +21,12 @@ class ReportHeader extends Component {
     return moment(time).format(t('YYYY-MM-DD'));
   }
   changeInputValue = (e) => {
-    console.log(e.target.value);
-    this.setState({
-      reportNum: e.target.value,
-      status: true
-    })
+    if(e.target.value.length<13){
+      this.setState({
+        reportNum: e.target.value,
+        status: true
+      })
+    }
   }
   inputFocus = () => {
     this.state.reportNum = this.props.reportNum;
@@ -33,9 +34,14 @@ class ReportHeader extends Component {
   }
   inputBlur = () => {
     if (this.state.status) {
-      if (this.props.reportNum != this.state.reportNum) {
-        this.saveChange()
+      if(this.state.reportNum.length<13){
+        if (this.props.reportNum != this.state.reportNum) {
+          this.saveChange()
+        }
+      }else{
+        Toast.fail('病历号长度不能超过12位')
       }
+      
     }
   }
   saveChange = async () => {
@@ -68,8 +74,16 @@ class ReportHeader extends Component {
       status: false
     }
   }
+  handleChange = (e) => {
+    var data = {};
+    const { handleInputChange } = this.props;
+    data = {
+      [e.target.name]: e.target.value
+    }
+    handleInputChange(data)
+  }
   render() {
-    const { deviceSN, t, reportNum, showInput } = this.props;
+    const { deviceSN, t, reportNum, showInput, reportTitle, isEditting } = this.props;
     return (
       <div className="header">
         <div className="header-info">
@@ -97,7 +111,16 @@ class ReportHeader extends Component {
           </span>
         </div>
         <div className="center">
-          <Title>{t('Report Title')}</Title>
+          {
+            isEditting?
+            <Input
+              value={ reportTitle }
+              name = "reportTitle"
+              onChange={ this.handleChange }
+            />
+            :<Title>{reportTitle}</Title>
+          }
+          
           <span>
             {
               this.getReportDate()
@@ -116,6 +139,8 @@ ReportHeader.propTypes = {
   reportNum: PropTypes.string,
   idModifiedReport: PropTypes.object,
   id: PropTypes.string.isRequired,
+  isEditting: PropTypes.bool.isRequired,
+  reportTitle: PropTypes.string.isRequired,
   changeReportNum: PropTypes.func.isRequired,
 };
 
@@ -126,7 +151,9 @@ const mapStateToProps = state => (
     endStatusTimeMinute: state.report.data.endStatusTimeMinute,
     reportNum: state.report.reportNum,
     idModifiedReport: state.report.data.idModifiedReport,
-    id: state.report.id
+    id: state.report.id,
+    reportTitle: state.report.adviceData.reportTitle,
+    isEditting: state.report.isEditting,
   }
 );
 
@@ -134,6 +161,9 @@ const mapDispatchToProps = dispatch => (
   {
     changeReportNum(params) {
       dispatch(Creator.changeReportNum(params))
+    },
+    handleInputChange(data){
+      dispatch(Creator.handleInputChange(data,{}))
     }
   }
 );

@@ -73,6 +73,7 @@ class ReportPage extends Component {
 
   render() {
     const { report, t, changeEditStatus } = this.props;
+    const reportConfig = report.data.idBaseOrg&&report.data.idBaseOrg.get('reportConfig');
     const { isEditting } = report
     const { size } = this.state;
     let isShow = false;
@@ -171,9 +172,14 @@ class ReportPage extends Component {
               <EventsChart></EventsChart>
               <StageChart></StageChart>
             </div> */}
-            <div className="print-page">
-              <BreathWave></BreathWave>
-            </div>
+            {
+              reportConfig&&reportConfig.breathChart?
+              <div className="print-page">
+                <BreathWave></BreathWave>
+              </div>
+              :null
+            }
+            
           </Skeleton>
         </div>
       </div>

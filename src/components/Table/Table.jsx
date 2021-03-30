@@ -19,11 +19,8 @@ class Table extends Component {
     const history = createHashHistory();
     history.push(`/app/device/${id}`);
   }
-  saveInputValue = (device) => {
-    console.log('blur',device);
-  }
   render() {
-    const { type, dataSource, pagination, loadMore, btnClick, btnDelete } = this.props;
+    const { type, dataSource, pagination, loadMore, btnClick } = this.props;
     const user = AV.User.current();
     const roleType = user.attributes.roleType;
     return (

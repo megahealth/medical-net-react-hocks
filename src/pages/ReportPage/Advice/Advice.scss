@@ -5,6 +5,15 @@
     margin: 0;
     padding: 0rem 0.2rem;
   }
+  .ant-input{
+    font-size: 0.22rem;
+    height: 0.4rem;
+    line-height: 0.4rem;
+    
+  }
+  .focus-border-blue:focus{
+    border: 2px solid #40a9ff!important;
+  }
 }
 
 .signature{

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Typography, Input } from 'antd';
 import { withTranslation } from 'react-i18next';
 import Creator from '../../../actions/Creator';
+import { Toast } from 'antd-mobile';
 
 const { Title } = Typography;
 
@@ -24,7 +25,9 @@ class PrAbstract extends Component {
       prMax,
       prMin,
       t,
-      isEditting
+      isEditting,
+      alreadyDecodedData,
+      handleInputChange
     } = this.props;
 
     return (
@@ -49,7 +52,12 @@ class PrAbstract extends Component {
               value={ prMin }
               name = "prMin"
               onChange={ this.handleChange }
-              
+              onBlur={ ()=>{  
+                if( prMin<alreadyDecodedData.prMin ) {
+                  handleInputChange({ prMin:alreadyDecodedData.prMin })
+                  Toast.fail(`最低血氧饱和度不能低于${ alreadyDecodedData.prMin }`)
+                }  
+              } }
               />
               :<span>{ prMin }</span>
             }
@@ -65,6 +73,7 @@ PrAbstract.propTypes = {
   prAvg: PropTypes.number,
   prMax: PropTypes.number,
   prMin: PropTypes.number,
+  alreadyDecodedData: PropTypes.object.isRequired,
   isEditting: PropTypes.bool.isRequired,
   handleInputChange: PropTypes.func.isRequired,
 };
@@ -75,6 +84,7 @@ const mapStateToProps = state => (
     prMax: state.report.adviceData.prMax,
     prMin: state.report.adviceData.prMin,
     isEditting: state.report.isEditting,
+    alreadyDecodedData: state.report.alreadyDecodedData,
   }
 );
 

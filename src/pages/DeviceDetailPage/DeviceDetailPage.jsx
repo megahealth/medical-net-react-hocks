@@ -7,7 +7,7 @@ import AV from 'leancloud-storage';
 import Creator from '../../actions/Creator';
 import { Input, Radio, TimePicker  } from 'antd';
 import moment from 'moment';
-import { Toast, Modal, Button, Switch } from 'antd-mobile';
+import { Toast, Modal, Button, Switch,DatePicker } from 'antd-mobile';
 import { PlusOutlined } from '@ant-design/icons';
 import { Translation } from 'react-i18next';
 import axios from 'axios';
@@ -42,14 +42,20 @@ class DeviceDetailPage extends Component {
     this.props.changeLED(led, this.props.deviceDetail.deviceId)
   }
   changeMonitorStart = (time) => {
-    this.state.timeStart = time.format('HH:mm');
+    // this.state.timeStart = moment(time).format('HH:mm');
+    this.setState({
+      timeStart:moment(time).format('HH:mm')
+    })
   }
   changeMonitorEnd = (time) => {
-    this.state.timeEnd = time.format('HH:mm');
+    console.log(time, moment(time).format('HH:mm'));
+    this.setState({
+      timeEnd:moment(time).format('HH:mm')
+    })
+    // this.state.timeEnd = moment(time).format('HH:mm');
   }
   changeModel = (e) => {
     const modeType = e ? 1 : 0;
-    console.log(modeType);
     const updateDevice = AV.Object.createWithoutData('Device', this.id);
     updateDevice.set('modeType', modeType)
     updateDevice.save().then(res => {
@@ -166,6 +172,7 @@ class DeviceDetailPage extends Component {
   }
   openModel = () => {
     const { device } = this.props.deviceDetail;
+    clearInterval(intervalGetRingArr);
     const time = device.period && device.period.split('-');
     this.setState({
       modal: true,
@@ -182,7 +189,6 @@ class DeviceDetailPage extends Component {
     if (device.period == period) {
       Toast.info('数据未发生变化！', 2)
     } else {
-      Toast.info('ok！', 2)
       const updateDevice = AV.Object.createWithoutData('Device', this.id);
       updateDevice.set('period', period)
       updateDevice.save().then(res => {
@@ -203,6 +209,15 @@ class DeviceDetailPage extends Component {
         Toast.fail('修改失败！', 1)
       })
     }
+    intervalGetRingArr = setInterval(() => {
+      this.props.getDeviceDetail(this.id);
+    }, 5000);
+  }
+  onCloseModel = () => {
+    intervalGetRingArr = setInterval(() => {
+      this.props.getDeviceDetail(this.id);
+    }, 5000);
+    this.setState({ modal: false, modeType: null })
   }
   addRingBtn = () => {
     alert('绑定戒指', 
@@ -333,30 +348,34 @@ class DeviceDetailPage extends Component {
               visible={this.state.modal}
               transparent
               maskClosable={true}
-              onClose={() => this.setState({ modal: false, modeType: null })}
-              onOk={() => this.onOk()}
+              onClose={this.onCloseModel}
+              onOk={this.onOk}
               title={<span style={{ fontSize: '0.36rem' }}>{t("Modify the equipment")}</span>}
-              footer={[{ text: t('Close'), onPress: () => { this.setState({ modal: false, modeType: null }) } }, { text: t('Submit'), onPress: () => { this.onOk() } }]}
+              footer={[{ text: t('Close'), onPress: this.onCloseModel}, { text: t('Submit'), onPress: this.onOk }]}
             >
               <div style={{ marginBottom: 16 }}>
                 <label style={{ fontSize: '0.3rem',marginBottom: 16 }}>{t('Monitor period')}</label><br /><br />
-                <TimePicker
-                  allowClear={false}
-                  showNow={false}
-                  onChange={this.changeMonitorStart}
-                  defaultValue={moment(this.state.timeStart, format)}
-                  format={format}
-                  size="large"
-                />
-                <label style={{ fontSize: '0.24rem' }}>~</label>
-                <TimePicker
-                  allowClear={false}
-                  showNow={false}
-                  onChange={this.changeMonitorEnd}
-                  defaultValue={moment(this.state.timeEnd, format)}
-                  format={format}
-                  size="large"
-                />
+                <div className='change-picker'>
+                  <DatePicker
+                    mode="time"
+                    // minuteStep={2}
+                    use24Hours
+                    value={moment(this.state.timeStart, format)._d}
+                    format={ format }
+                    onChange={this.changeMonitorStart}
+                  >
+                  <span>{this.state.timeStart}</span>
+                  </DatePicker>
+                  <label style={{ fontSize: '0.4rem' }}>~</label>
+                  <DatePicker
+                    mode="time"
+                    use24Hours
+                    value={moment(this.state.timeEnd, format)._d}
+                    onChange={this.changeMonitorEnd}
+                  >
+                  <span>{ this.state.timeEnd }</span>
+                  </DatePicker>
+                </div>
               </div>
             </Modal>
 

@@ -5,7 +5,7 @@ import { Typography,Input } from 'antd';
 import { withTranslation } from 'react-i18next';
 import './AbstractData.scss'
 import Creator from '../../../actions/Creator';
-
+import { Toast } from 'antd-mobile';
 
 const { Title } = Typography;
 
@@ -27,7 +27,7 @@ class AbstractData extends Component {
   }
 
   render() {
-    const { t, isEditting } = this.props;
+    const { t, isEditting,handleInputChange,AHI } = this.props;
 
     return (
       <div className="block">
@@ -45,6 +45,12 @@ class AbstractData extends Component {
                   style={{ width: '200px' }}
                   name='ahi'
                   value = { this.getAHI() }
+                  onBlur = { ()=>{ 
+                    if(this.getAHI() == 'NaN'){
+                      handleInputChange({ahi:AHI})
+                      Toast.fail('AHI值不能为空');
+                    } 
+                  } }
                   onChange = { this.handleChange }
                 />
               :<span>{this.getAHI()}</span>
@@ -54,20 +60,20 @@ class AbstractData extends Component {
           <span>
             <ul className="ahi">
               <li className="first">
-                {this.getAHI() < 5 && this.getAHI() != -1 ? <img src={require('../../../assets/blue.png')} /> : null}
-                <div>{'A<5'}</div> <div>正常</div>
+                {this.getAHI() <= 5 && this.getAHI() != -1 ? <img src={require('../../../assets/blue.png')} /> : null}
+                <div>{'A≤5'}</div> <div>正常</div>
               </li>
               <li className="second">
                 {this.getAHI() > 5 && this.getAHI() <= 15 ? <img src={require('../../../assets/green.png')} /> : null}
-                <div>{'5≤A<15'}</div> <div>轻度</div>
+                <div>{'5<A≤15'}</div> <div>轻度</div>
               </li>
               <li className="third">
                 {this.getAHI() > 15 && this.getAHI() <= 30 ? <img src={require('../../../assets/orange.png')} /> : null}
-                <div>{'15≤A<30'}</div> <div>中度</div>
+                <div>{'15<A≤30'}</div> <div>中度</div>
               </li>
               <li className="forth">
-                {this.getAHI() >= 30 ? <img src={require('../../../assets/red.png')} /> : null}
-                <div>{'30≤A'} </div>
+                {this.getAHI() > 30 ? <img src={require('../../../assets/red.png')} /> : null}
+                <div>{'30>A'} </div>
                 <div>重度</div>
               </li>
             </ul>

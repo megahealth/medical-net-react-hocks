@@ -123,7 +123,7 @@ Creator.getAllReportsData = asyncActionFactory(
           'sn': sn,
           'idDevice': idDevice,
           'name': (arrname || idname) || '未登记',
-          'date': moment(item.createdAt).format('YYYY-MM-DD'),
+          'date': moment(item.get('startSleepTime')).format('YYYY-MM-DD'),
           'AHI': ahiDegree(ahi),
           'time': `${totalMilliseconds.hours()}时${totalMilliseconds.minutes()}分`,
         }
@@ -199,8 +199,7 @@ Creator.getReportData = asyncActionFactory(
     dispatch(getting());
     const Reports = new AV.Query('Reports');
     Reports.include('idPatient')
-    Reports.include('patientInfo')
-    Reports.include('editedData')
+    Reports.include('idBaseOrg')
     Reports.include('idModifiedReport')
     const result = await Reports.get(id)
     let data = result.attributes;
@@ -707,7 +706,7 @@ function DataToEditData(data, alreadyDecodedData) {
     const sleepTimeObj = getSleepTime(data,alreadyDecodedData)
     obj = {
       ...sleepTimeObj,
-      ...data.editedData
+      ...data.editedData,
     }
     if (!obj.totalRecord) {
       obj.totalRecord = sleepTimeObj.totalRecord
@@ -742,7 +741,7 @@ function DataToEditData(data, alreadyDecodedData) {
         prMin: alreadyDecodedData.prMin,
 
         spo2Avg: alreadyDecodedData.Spo2Avg,
-        spo2Min: alreadyDecodedData.Spo2Min,
+        spo2Min: parseFloat(alreadyDecodedData.Spo2Min.toFixed(1)),
         diffThdLge3Cnts: alreadyDecodedData.diffThdLge3Cnts,
         diffThdLge3Pr: alreadyDecodedData.diffThdLge3Pr,
 
@@ -755,9 +754,9 @@ function DataToEditData(data, alreadyDecodedData) {
         spo2Less95Time: alreadyDecodedData.spo2Less95Time,
         spo2Less95TimePercent: alreadyDecodedData.spo2Less95TimePercent,
       }
-      const sleepTimeObj = getSleepTime(data, alreadyDecodedData)
-      obj = { ...obj, ...sleepTimeObj }
     }
+    const sleepTimeObj = getSleepTime(data, alreadyDecodedData)
+    obj = { ...obj, ...sleepTimeObj }
   }
   return obj
 }
@@ -836,6 +835,7 @@ function getSleepTime(data, alreadyDecodedData) {
   const sleepEfficiency = (getSleepPercent(data, alreadyDecodedData).totalSleepMilliseconds * 100 / (sleepStageEnd - sleepStageStart)).toFixed(1);
   return {
     ahi: data.AHI.toFixed(1),
+    reportTitle: (data.idModifiedReport&&data.idModifiedReport.get('reportTitle')) || '睡眠呼吸报告',
     fallAsleep: moment(start).format('HH:mm'),
     getUp: moment(end).format('HH:mm'),
     secStart: moment(sleepStageStart).format('HH:mm'),
