@@ -57,7 +57,8 @@ const allReports = (state = DefaultState.allReports, action) => {
           ...state.pagination,
           total: action.payload.total,
           current: action.payload.current,
-          pageSize: action.payload.limit>action.payload.total?action.payload.total:action.payload.limit,
+          // pageSize: action.payload.limit>action.payload.total?action.payload.total:action.payload.limit,
+          pageSize: action.payload.limit>=action.payload.total?action.payload.total:action.payload.limit,
         }
       };
     case TYPES.GET_ALL_REPORTS_DATA_FAILED:
@@ -125,9 +126,9 @@ const report = (state = DefaultState.report, action) => {
         data: action.payload.data,
         alreadyDecodedData: action.payload.alreadyDecodedData,
         waveData: action.payload.waveData,
-        patientInfo:(action.payload.data.idPatient ? 
+        patientInfo:action.payload.data.patientInfo?action.payload.data.patientInfo:(action.payload.data.idPatient ? 
           {...action.payload.data.idPatient.attributes,gender:action.payload.data.idPatient.attributes.gender == 'M'?'男':'女'} 
-          : action.payload.data.patientInfo),
+          : {}),
         adviceData: action.payload.adviceData || {},
         reportNum: action.payload.reportNum,
         id: action.payload.id,

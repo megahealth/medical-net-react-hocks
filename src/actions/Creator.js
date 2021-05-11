@@ -86,15 +86,23 @@ Creator.getAllReportsData = asyncActionFactory(
       queryRoleType.limit(1000);
       Reports.matchesQuery('idBaseOrg', queryRoleType)
     } else {
-      if (idBaseOrg) Reports.equalTo('idBaseOrg', idBaseOrg);
+      if (idBaseOrg){
+        Reports.equalTo('idBaseOrg', idBaseOrg);
+        const innerQuery = new AV.Query('Device');
+        innerQuery.equalTo('idBaseOrg', idBaseOrg);
+        innerQuery.limit(1000)
+        Reports.matchesQuery('idDevice',innerQuery)
+      } 
     }
     if (idBaseOrg.id === '5b14eb612f301e0038e08fba') {
       let idGroup = AV.Object.createWithoutData('Group', '5f605940e86fc14735ac3c5f');
       Reports.equalTo('idGroup', idGroup);
     }
+    
     Reports.descending('createdAt');
-    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'idPatient', 'idReport', 'idDevice', 'patientInfo', 'extraCheckTimeMinute', 'idGroup', 'startSleepTime', 'startStatusTimeMinute', 'endStatusTimeMinute', 'editedData']);
     Reports.include(['idPatient', 'idDevice']);
+    Reports.select(['objectId', 'tempSleepId', 'createdAt', 'isSync', 'AHI', 'idPatient', 'idReport', 'idDevice','idDevice.deviceSN', 'patientInfo', 'extraCheckTimeMinute', 'idGroup', 'startSleepTime', 'startStatusTimeMinute', 'endStatusTimeMinute', 'editedData']);
+    
     let total, result;
     try {
       total = await Reports.count();
@@ -216,7 +224,7 @@ Creator.getReportData = asyncActionFactory(
       age: data.patientInfo[2],
       height: data.patientInfo[3],
       weight: data.patientInfo[4]
-    } : {};
+    } : null;
     // console.log(data.patientInfo);
     delete data.ringData;
     delete data.ringOriginalData;

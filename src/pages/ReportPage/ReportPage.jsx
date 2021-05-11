@@ -29,9 +29,10 @@ import EventsChart from './EventsChart/EventsChart';
 import StageChart from './StageChart/StageChart';
 import BreathWave from './BreathWave/BreathWave';
 import BodyMoveTimeChart from './BodyMoveTimeChart/BodyMoveTimeChart';
+import moment from 'moment';
 
 import Creator from '../../actions/Creator';
-
+var mPlusObject;
 class ReportPage extends Component {
   constructor(props) {
     super(props);
@@ -68,7 +69,19 @@ class ReportPage extends Component {
   }
 
   print = () => {
-    window.print()
+    const { report } = this.props;
+    console.log('cccccccc',report);
+    const { startSleepTime, endStatusTimeMinute } = report.data;
+    const time = startSleepTime + endStatusTimeMinute * 60 * 1000;
+    const reportDay = moment(time).format('YYYY-MM-DD');
+    document.title = report.patientInfo&&report.patientInfo.name ? (reportDay + "-" + report.patientInfo.name) : (reportDay + "-未填写");
+    let reportId = report.id;
+    if (typeof (mPlusObject) === 'undefined') {
+        window.print();
+    } else {
+        mPlusObject.printReport(reportId);
+    }
+    document.title = '睡眠呼吸评估报告';
   }
 
   render() {
@@ -93,7 +106,8 @@ class ReportPage extends Component {
                 size={size}
                 onClick={
                   () => {
-                    this.props.history.goBack();
+                    // this.props.history.goBack();
+                    this.props.history.push(`/app/allreports?true`);
                     if (isEditting) { this.exitEdit() }
                   }
                 }

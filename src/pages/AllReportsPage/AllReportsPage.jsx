@@ -54,10 +54,28 @@ class AllReportsPage extends Component {
       align: 'center'
     }
   ];
-  componentDidMount() {
+  componentWillMount() {
     const { allReports, getAllReportsData, setHeader } = this.props;
-    getAllReportsData(10, 1, allReports.filter);
+    const {pageSize} = allReports.pagination
+    const isReport = this.props.location.search
+    if(isReport != '?true'){
+      localStorage.removeItem('scrollTop')
+      getAllReportsData(10, 1, allReports.filter);
+    }else{
+      if(allReports.reportsData.length<=0){
+        localStorage.removeItem('scrollTop')
+        getAllReportsData(10, 1, allReports.filter);
+      }
+    }
     setHeader('报告列表')
+  }
+  componentDidMount(){
+    const allReportsLocation =  document.querySelector('.allReportsLocation')
+    const top = localStorage.getItem('scrollTop');
+    if(top){
+      allReportsLocation.scrollTop = parseInt(top);
+      localStorage.removeItem('scrollTop')
+    }
   }
   getSameSnReport = (e, id) => {
     const { setFilter,allReports, getAllReportsData } = this.props;
@@ -77,11 +95,19 @@ class AllReportsPage extends Component {
         ])
       )
     }else{
+      const allReportsLocation =  document.querySelector('.allReportsLocation')
+      localStorage.setItem('scrollTop',this.getscroll(allReportsLocation).top)
       const history = createHashHistory();
       history.push(`/report/${report.id}`);
     }
     
   }
+  getscroll = (el) => { 
+    var _x = el.scrollLeft; 
+    var _y = el.scrollTop;
+    return { top: _y, left: _x }; 
+  };
+
   deleteReport = (report) => {
     const { allReports, getAllReportsData } = this.props;
     const pagination = allReports.pagination;
@@ -104,9 +130,7 @@ class AllReportsPage extends Component {
     return (
       <React.Fragment>
         {
-          allReports.loading
-            ? <div className="content-loading"><Skeleton /></div>
-            : <div className="content-r">
+          <div className="content-r allReportsLocation">
               <div className="content-r-c">
                 <Table
                   type='reportList'

@@ -24,16 +24,17 @@ class Header extends Component {
     }
   }
   refresh = () => {
-    const { getAllReportsData, setFilter, getAllDevice, allDevice, title } = this.props;
-    if (title == '报告列表') {
-      setFilter({ reportType: ['all'], startDate: null, endDate: null, deviceId: null, });
-      getAllReportsData(10, 1, { reportType: ['all'], startDate: null, endDate: null, deviceId: null, })
-    }
-    if (title == '设备列表') getAllDevice({
-      current:1,
-      pageSize:10,
-      total:0,
-    })
+    window.location.reload()
+    // const { getAllReportsData, setFilter, getAllDevice, allDevice, title } = this.props;
+    // if (title == '报告列表') {
+    //   setFilter({ reportType: ['all'], startDate: null, endDate: null, deviceId: null, });
+    //   getAllReportsData(10, 1, { reportType: ['all'], startDate: null, endDate: null, deviceId: null, })
+    // }
+    // if (title == '设备列表') getAllDevice({
+    //   current:1,
+    //   pageSize:10,
+    //   total:0,
+    // })
   }
 
   render() {
