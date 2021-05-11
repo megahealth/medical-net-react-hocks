@@ -130,13 +130,15 @@ class AllReportsPage extends Component {
     return (
       <React.Fragment>
         {
-          <div className="content-r allReportsLocation">
+          allReports.loading
+          ? <div className="content-loading"><Skeleton /></div>
+          : <div className="content-r allReportsLocation">
               <div className="content-r-c">
                 <Table
                   type='reportList'
                   dataSource={allReports.reportsData}
                   pagination={allReports.pagination}
-                  loadMore={res => getAllReportsData( (res.pageSize + 10), res.current, allReports.filter)}
+                  loadMore={res => getAllReportsData( (res.pageSize + 10), res.current, allReports.filter,true)}
                   btnClick = { res=>this.toReport(res) }
                   btnDelete = { res=>alert('删除报告','删除不可恢复，确定要删除吗?', [
                     { text: '取消'},
@@ -174,8 +176,8 @@ const mapStateToProps = state => (
 );
 
 const mapDispatchToProps = dispatch => ({
-  getAllReportsData(limit, current, filter) {
-    dispatch(Creator.getAllReportsData(limit, current, filter));
+  getAllReportsData(limit, current, filter, loadMore) {
+    dispatch(Creator.getAllReportsData(limit, current, filter,loadMore));
   },
   setFilter(filter) {
     dispatch(Creator.setFilter(filter));

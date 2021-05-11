@@ -262,7 +262,7 @@ class SpoChart extends Component {
     const { t } = this.props;
 
     return (
-      <div className="block" style={{ position:'relative' }}>
+      <div className="block print-echart-resize" style={{ position:'relative' }}>
         <Title level={2}>{t('Trend Chart')}</Title>
         <div className="short-line center">
           <span></span>

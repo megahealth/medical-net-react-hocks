@@ -46,7 +46,7 @@ const allReports = (state = DefaultState.allReports, action) => {
     case TYPES.GET_ALL_REPORTS_DATA:
       return {
         ...state,
-        loading: true
+        loading: action.payload.loadMore?false:true
       };
     case TYPES.GET_ALL_REPORTS_DATA_SUCCESS:
       return {

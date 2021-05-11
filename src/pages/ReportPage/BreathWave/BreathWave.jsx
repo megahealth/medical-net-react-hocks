@@ -557,7 +557,7 @@ class BreathWave extends Component {
     const { t } = this.props;
 
     return (
-      <div className={`block  ${fullscreen?'full-screen':''}`}>
+      <div className={`block print-echart-resize ${fullscreen?'full-screen':''}`}>
         <Title level={2}>{t('Breath Wave Trend')}</Title>
         <div className="short-line center">
           <span></span>

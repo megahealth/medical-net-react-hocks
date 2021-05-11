@@ -40,7 +40,7 @@ class StageChart extends Component {
     const option = {
       animation: false,
       grid: {
-        left: '-1%',
+        left: '-3%',
         right: '3%',
         bottom: '8%',
         top: '25%',
@@ -228,7 +228,7 @@ class StageChart extends Component {
 
   render() {
     return (
-      <div className="block">
+      <div className="block print-echart-resize">
         <ReactEcharts option={this.getOption()}  style={{ height:'2.6rem' }} />
         <div style={{ padding:'0 0.6rem'}}>
           <span style={{ fontSize:'0.16rem',marginRight:'0.2rem' }}>W：清醒期</span>

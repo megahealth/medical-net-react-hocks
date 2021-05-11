@@ -130,8 +130,8 @@ class StagePieChart extends Component {
 
   render() {
     return (
-      <div className="block">
-        <ReactEcharts option={this.getOption()} style={{ height: '1.6rem' }} />
+      <div className="block print-echart-resize">
+        <ReactEcharts className='stage-pie' option={this.getOption()} style={{ height: '2rem' }} />
       </div>
     );
   }

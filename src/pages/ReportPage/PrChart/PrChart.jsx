@@ -6,7 +6,7 @@ import ReactEcharts from 'echarts-for-react';
 import { withTranslation } from 'react-i18next';
 
 class PrChart extends Component {
-
+  echartsReact = React.createRef()
   getOption = () => {
     const {
       startSleepTime,
@@ -166,8 +166,14 @@ class PrChart extends Component {
 
   render() {
     return (
-      <div className="block">
-        <ReactEcharts option={this.getOption()}  style={{ height:'2.6rem' }} />
+      <div className="block print-echart-resize">
+        <ReactEcharts 
+          className='echart'
+          ref={(e) => {this.echartsReact = e }}
+          lazyUpdate={true}
+          option={this.getOption()} 
+          style={{ height:'2.6rem' }}
+        />
       </div>
     );
   }

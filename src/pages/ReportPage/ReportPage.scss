@@ -201,4 +201,21 @@ h2 {
   .container-report-background{
     background-image: none;
   }
+  .print-echart-resize{
+    // width: 120%;
+    .echarts-for-react{
+      div{
+        canvas{
+          width: 130%!important;
+        }
+      }
+    }
+    .stage-pie{
+      div{
+        canvas{
+          height: 300px!important;
+        }
+      }
+    }
+  } 
 }

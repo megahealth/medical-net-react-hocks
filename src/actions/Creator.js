@@ -52,8 +52,8 @@ Creator.setLocale = (language) => ({
 // 获取全部报告
 Creator.getAllReportsData = asyncActionFactory(
   ['GET_ALL_REPORTS_DATA', 'GET_ALL_REPORTS_DATA_SUCCESS', 'GET_ALL_REPORTS_DATA_FAILED'],
-  (getting, success, fail, limit, current, filter) => async (dispatch) => {
-    dispatch(getting());
+  (getting, success, fail, limit, current, filter, loadMore) => async (dispatch) => {
+    dispatch(getting({ loadMore }));
 
     const Reports = new AV.Query('Reports');
     // 筛选条件

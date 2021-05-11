@@ -1,4 +1,5 @@
 .mine{
+  position: relative;
   .mine-info{
     font-size: 0.42rem;
     height: 1.32rem;
@@ -15,8 +16,8 @@
     height: 1rem;
     width: 9.17rem;
     position: absolute;
-    bottom: 2rem;
-    left: 0.42rem;
+    bottom: -2rem;
+    left: 0.21rem;
     .am-button{
       border-radius: 12px;
       height: 1rem;

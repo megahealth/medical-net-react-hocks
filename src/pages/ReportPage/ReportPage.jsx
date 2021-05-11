@@ -30,9 +30,8 @@ import StageChart from './StageChart/StageChart';
 import BreathWave from './BreathWave/BreathWave';
 import BodyMoveTimeChart from './BodyMoveTimeChart/BodyMoveTimeChart';
 import moment from 'moment';
-
 import Creator from '../../actions/Creator';
-var mPlusObject;
+import echarts from 'echarts';
 class ReportPage extends Component {
   constructor(props) {
     super(props);
@@ -41,6 +40,7 @@ class ReportPage extends Component {
 
   state = {
     size: 'large',
+    isResize: false
   };
 
   componentDidMount() {
@@ -70,18 +70,37 @@ class ReportPage extends Component {
 
   print = () => {
     const { report } = this.props;
-    console.log('cccccccc',report);
     const { startSleepTime, endStatusTimeMinute } = report.data;
     const time = startSleepTime + endStatusTimeMinute * 60 * 1000;
     const reportDay = moment(time).format('YYYY-MM-DD');
     document.title = report.patientInfo&&report.patientInfo.name ? (reportDay + "-" + report.patientInfo.name) : (reportDay + "-未填写");
     let reportId = report.id;
-    if (typeof (mPlusObject) === 'undefined') {
-        window.print();
-    } else {
-        mPlusObject.printReport(reportId);
+    if(typeof (window.mPlusObject) === 'undefined'){
+      // this.resize_echart(750)
+    }else{
+      // this.resize_echart(750)
     }
+    
+    
+    setTimeout(() => {
+      if (typeof (window.mPlusObject) === 'undefined') {
+          window.print();
+      } else {
+        window.mPlusObject&&window.mPlusObject.printReport(reportId);
+      }
+      this.resize_echart('auto')
+    }, 0);
     document.title = '睡眠呼吸评估报告';
+  }
+  // 调整打印时图表的宽度
+  resize_echart(width){
+    const echartArr = document.querySelectorAll('.print-echart-resize .echarts-for-react');
+    console.log('aaaaaaaaaaaa',echartArr);
+    echartArr.forEach((item)=>{
+      echarts.getInstanceByDom(item).resize({
+        width:width
+      })
+    })
   }
 
   render() {
@@ -94,7 +113,6 @@ class ReportPage extends Component {
       const { prArr, Spo2Arr } = report.alreadyDecodedData;
       if(prArr.length>0&&Spo2Arr.length>0) isShow = true;
     }
-    
     return (
       <div className="container-report container-report-background">
         <div className="wrapper">
@@ -125,7 +143,7 @@ class ReportPage extends Component {
                   </div>
                   :
                   <div className="hide-print option-btns">
-                    <Button shape="round" icon={<PrinterOutlined />} size={size} onClick={this.print}> {t('Print')} </Button>
+                    <Button shape="round" icon={<PrinterOutlined />} size={size} onClick={this.print}> {t('Print')}</Button>
                     <Button 
                       shape="round" icon={<EditOutlined />} 
                       size={size} 
