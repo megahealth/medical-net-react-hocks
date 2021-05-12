@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Table.scss';
 import AV from 'leancloud-storage';
+import { Spin } from 'antd'
 import { createHashHistory } from 'history';
 import normal_png from '../../assets/normal.png'
 import middle_png from '../../assets/middle.png'
@@ -20,7 +21,8 @@ class Table extends Component {
     history.push(`/app/device/${id}`);
   }
   render() {
-    const { type, dataSource, pagination, loadMore, btnClick } = this.props;
+    const { type, dataSource, pagination, loadMore, btnClick, loading } = this.props;
+    console.log('cccccccc',loading);
     const user = AV.User.current();
     const roleType = user.attributes.roleType;
     return (
@@ -91,9 +93,16 @@ class Table extends Component {
             </div>
         }
         <div>
-          <div className='more-btn' onClick={() => loadMore(pagination)}>
-            <span>加载更多</span>
-          </div>
+          {
+            loading?
+            <div className='more-loading'>
+              <Spin size="large" tip='加载中...'/>
+            </div>
+            :<div className='more-btn' onClick={() => loadMore(pagination)}>
+              <span>加载更多</span>
+            </div>
+          }
+          
         </div>
       </div>
 

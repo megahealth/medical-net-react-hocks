@@ -46,12 +46,14 @@ const allReports = (state = DefaultState.allReports, action) => {
     case TYPES.GET_ALL_REPORTS_DATA:
       return {
         ...state,
-        loading: action.payload.loadMore?false:true
+        loading: action.payload.loadMore?false:true,
+        loadMoreing: action.payload.loadMore?true:false
       };
     case TYPES.GET_ALL_REPORTS_DATA_SUCCESS:
       return {
         ...state,
         loading: false,
+        loadMoreing: false,
         reportsData: action.payload.reports,
         pagination: {
           ...state.pagination,

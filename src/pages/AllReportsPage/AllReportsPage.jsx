@@ -136,6 +136,7 @@ class AllReportsPage extends Component {
               <div className="content-r-c">
                 <Table
                   type='reportList'
+                  loading={ allReports.loadMoreing }
                   dataSource={allReports.reportsData}
                   pagination={allReports.pagination}
                   loadMore={res => getAllReportsData( (res.pageSize + 10), res.current, allReports.filter,true)}
@@ -159,6 +160,7 @@ class AllReportsPage extends Component {
 AllReportsPage.propTypes = {
   allReports: PropTypes.shape({
     loading: PropTypes.bool,
+    loadMoreing: PropTypes.bool,
     error: PropTypes.bool,
     reportsData: PropTypes.array,
     pagination: PropTypes.object,

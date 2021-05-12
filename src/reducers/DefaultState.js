@@ -16,6 +16,7 @@ const DefaultState = {
   },
   allReports: {
     loading: false,
+    loadMoreing:false,
     error: false,
     reportsData: [],
     pagination: {

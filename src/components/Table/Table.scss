@@ -23,6 +23,17 @@
     font-weight: 500;
     color: #ffffff;
   }
+  .more-loading{
+    height: 1.8rem;
+    // line-height: 1.8rem;
+    text-align: center;
+    .ant-spin{
+      font-size: 0.3rem!important;
+      .ant-spin-dot{
+        font-size: 0.3rem;
+      }
+    }
+  }
 
 }
 .table-report{
