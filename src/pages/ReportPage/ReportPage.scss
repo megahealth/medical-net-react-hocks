@@ -18,12 +18,13 @@ body {
   background: #fff;
 }
 .container-report{
-  padding-top: 0.6rem;
+  padding-top: 0rem;
   width: 100%;
 }
 .wrapper {
   width: 9.3rem;
-  margin: 20px auto;
+  margin: 0 auto;
+  margin-bottom: 20px;
 }
 
 .print-page {
@@ -120,6 +121,7 @@ h2 {
 }
 
 .option {
+  padding-top: 0.6rem;
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
