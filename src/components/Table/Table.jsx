@@ -22,7 +22,6 @@ class Table extends Component {
   }
   render() {
     const { type, dataSource, pagination, loadMore, btnClick, loading } = this.props;
-    console.log('cccccccc',loading);
     const user = AV.User.current();
     const roleType = user.attributes.roleType;
     return (

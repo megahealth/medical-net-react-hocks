@@ -162,6 +162,7 @@ const DefaultState = {
     id:'',
     oldEdition:{},
     oldPatientInfo:{},
+    reportTitle:'睡眠呼吸报告'
   },
   account: {
     pagination:{

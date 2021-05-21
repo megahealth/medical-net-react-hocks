@@ -134,6 +134,7 @@ const report = (state = DefaultState.report, action) => {
         adviceData: action.payload.adviceData || {},
         reportNum: action.payload.reportNum,
         id: action.payload.id,
+        reportTitle: action.payload.reportTitle
       };
     case TYPES.GET_REPORT_DATA_FAILED:
       return {

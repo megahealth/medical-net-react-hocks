@@ -83,7 +83,7 @@ class ReportHeader extends Component {
     handleInputChange(data)
   }
   render() {
-    const { deviceSN, t, reportNum, showInput, reportTitle, isEditting } = this.props;
+    const { deviceSN, t, reportNum, showInput, reportTitle, isEditting, reportTitle2 } = this.props;
     return (
       <div className="header">
         <div className="header-info">
@@ -114,11 +114,11 @@ class ReportHeader extends Component {
           {
             isEditting?
             <Input
-              value={ reportTitle }
+              value={ reportTitle || reportTitle2 }
               name = "reportTitle"
               onChange={ this.handleChange }
             />
-            :<Title>{reportTitle}</Title>
+            :<Title>{reportTitle || reportTitle2}</Title>
           }
           
           <span>
@@ -153,6 +153,7 @@ const mapStateToProps = state => (
     idModifiedReport: state.report.data.idModifiedReport,
     id: state.report.id,
     reportTitle: state.report.adviceData.reportTitle,
+    reportTitle2: state.report.reportTitle,
     isEditting: state.report.isEditting,
   }
 );

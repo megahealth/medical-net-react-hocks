@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as TYPES from './Types';
 import moment from 'moment';
 import { Toast } from 'antd-mobile';
+import { message } from '_antd@4.15.5@antd';
 
 const Creator = {};
 /*
@@ -119,7 +120,7 @@ Creator.getAllReportsData = asyncActionFactory(
         let idDevice = item.get('idDevice') && (item.get('idDevice').id || '--');
         let idReport = item.get('idReport') || '';
         let ahi = (item.get('editedData')&&parseFloat(item.get('editedData').ahi)) || item.get('AHI').toFixed(1)
-        const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute, } = item.attributes;
+        const { startSleepTime, startStatusTimeMinute, endStatusTimeMinute } = item.attributes;
         const start = startSleepTime;
         const sleepStageStart = start + (startStatusTimeMinute === -1 ? 0 : startStatusTimeMinute) * 60 * 1000;
         const sleepStageEnd = start + (endStatusTimeMinute === -1 ? 0 : endStatusTimeMinute) * 60 * 1000;
@@ -131,7 +132,7 @@ Creator.getAllReportsData = asyncActionFactory(
           'sn': sn,
           'idDevice': idDevice,
           'name': (arrname || idname) || '未登记',
-          'date': moment(item.get('startSleepTime')).format('YYYY-MM-DD'),
+          'date': moment((startSleepTime+endStatusTimeMinute*60000)).format('YYYY-MM-DD'),
           'AHI': ahiDegree(ahi),
           'time': `${totalMilliseconds.hours()}时${totalMilliseconds.minutes()}分`,
         }
@@ -211,6 +212,18 @@ Creator.getReportData = asyncActionFactory(
     Reports.include('idModifiedReport')
     const result = await Reports.get(id)
     let data = result.attributes;
+    // 查询hotel表获取报告标题
+    let reportTitle = '睡眠呼吸报告'
+    try {
+      const queryHotel = new AV.Query('Hotel');
+      queryHotel.equalTo("idBaseOrg",data.idBaseOrg);
+      const hotelResult = await queryHotel.find();
+      reportTitle = (hotelResult[0]&&hotelResult[0].get('reportTitle')) || '睡眠呼吸报告'
+    } catch (error) {
+      console.log(error);
+      message.error('获取报告标题出错！')
+    }
+
     const reportNum = data.idModifiedReport ? data.idModifiedReport.get('reportNumber') : '';
     const { ringData, tempSleepId, idRingReportFile } = data;
     const fileid = idRingReportFile && idRingReportFile.id;
@@ -293,7 +306,7 @@ Creator.getReportData = asyncActionFactory(
           timeStart: 0,
         }
       }
-      dispatch(success({ data, alreadyDecodedData, waveData, adviceData, reportNum, id }));
+      dispatch(success({ data, alreadyDecodedData, waveData, adviceData, reportNum, id, reportTitle }));
     }, (err) => {
       dispatch(fail({ errorcode: err }));
     });
@@ -843,7 +856,7 @@ function getSleepTime(data, alreadyDecodedData) {
   const sleepEfficiency = (getSleepPercent(data, alreadyDecodedData).totalSleepMilliseconds * 100 / (sleepStageEnd - sleepStageStart)).toFixed(1);
   return {
     ahi: data.AHI.toFixed(1),
-    reportTitle: (data.idModifiedReport&&data.idModifiedReport.get('reportTitle')) || '睡眠呼吸报告',
+    reportTitle: (data.idModifiedReport&&data.idModifiedReport.get('reportTitle')) || '',
     fallAsleep: moment(start).format('HH:mm'),
     getUp: moment(end).format('HH:mm'),
     secStart: moment(sleepStageStart).format('HH:mm'),
