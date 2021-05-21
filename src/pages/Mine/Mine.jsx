@@ -92,6 +92,7 @@ class Mine extends Component {
                 type="text" 
                 value={editReportTitle} 
                 className="reportTitle-input" 
+                maxlength = "20"
                 onFocus = {()=>this.setState({ isFocus:true })}
                 onChange = {(e)=>{this.setState({ editReportTitle:e.target.value })}}
               />

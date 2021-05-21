@@ -43,16 +43,20 @@ class Header extends Component {
       <div className={ title=='当前设备'||title == '设备列表'?'header-container-2':'header-container-1' } >
         <div className='header-cont'>
           {
-            this.props.title == '当前设备'?
+            title == '当前设备'?
               <span onClick={this.headerLeft} style={{ paddingRight:'0.5rem' }}>
                 <img style={{ width:'0.45rem',height:'0.75rem' }} src={back_png} alt=""/>
               </span>
               :null
           }
-          <span className='header-title'>{this.props.title}</span>
-          <span
-            onClick={this.refresh}
-          >刷新</span>
+          <span className='header-title'>{title}</span>
+          {
+            title=='报告列表' || title == '设备列表'
+            ?<span
+              onClick={this.refresh}
+              >刷新</span>
+            :null
+          }
         </div>
       </div>
     );
