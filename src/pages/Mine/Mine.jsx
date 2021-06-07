@@ -90,9 +90,9 @@ class Mine extends Component {
               <label>报告名</label>
               <input 
                 type="text" 
-                value={editReportTitle} 
+                value={editReportTitle!=undefined?editReportTitle : ''} 
                 className="reportTitle-input" 
-                maxlength = "20"
+                maxLength = "20"
                 onFocus = {()=>this.setState({ isFocus:true })}
                 onChange = {(e)=>{this.setState({ editReportTitle:e.target.value })}}
               />

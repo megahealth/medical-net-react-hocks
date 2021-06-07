@@ -288,6 +288,11 @@ const deviceDetail = (state = DefaultState.deviceDetail, action) => {
           modeType: action.payload.modeType,
         }
       })
+    case TYPES.RESET_RING_LIST:
+      return ({
+        ...state,
+        ringArr:[],
+      })
     default:
       return state;
   }

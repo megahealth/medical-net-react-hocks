@@ -19,7 +19,8 @@ class LoginPage extends Component {
     this.state = {
       username: '',
       password: '',
-      showPw: false
+      showPw: false,
+      loading: false,
     };
   }
   componentDidMount(){
@@ -62,8 +63,11 @@ class LoginPage extends Component {
     if (!password) {
       return Toast.info(t('Pls Enter Password'));
     }
-
+    this.setState({
+      loading:true
+    })
     AV.User.logIn(username, password).then(user => {
+      // this.state.loading = false
       const history = createHashHistory();
       if(user.id === '5b73f33cfe88c2005b88dc8a'){
         history.push('/addaccount');
@@ -112,7 +116,11 @@ class LoginPage extends Component {
               <span className={classnames('eye', { show: showPw })} onClick={this.showOrHidePw.bind(this)}></span>
             </div>
             <div>
-              <button onClick={this.login.bind(this)}>{t('Login')}</button>
+              {
+                this.state.loading?
+                <button disabled style={{ backgroundColor:'#999' }}> 登录中... </button>
+                :<button onClick={this.login.bind(this)}>{t('Login')}</button>
+              }
             </div>
           </div>
         </div>

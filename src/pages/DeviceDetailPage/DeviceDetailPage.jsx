@@ -28,6 +28,7 @@ class DeviceDetailPage extends Component {
     this.id = props.match.params.id;
   }
   async componentDidMount() {
+    this.props.resetRingList()
     this.props.getDeviceDetail(this.id);
     intervalGetRingArr = setInterval(() => {
       this.props.getDeviceDetail(this.id);
@@ -396,6 +397,7 @@ DeviceDetailPage.propTypes = {
   changeLED: PropTypes.func.isRequired,
   changeMonitorAndMode: PropTypes.func.isRequired,
   setHeader: PropTypes.func.isRequired,
+  resetRingList: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => (
@@ -417,6 +419,9 @@ const mapDispatchToProps = dispatch => (
     },
     setHeader(title) {
       dispatch(Creator.setHeader(title));
+    },
+    resetRingList(){
+      dispatch(Creator.resetRingList())
     }
   }
 );

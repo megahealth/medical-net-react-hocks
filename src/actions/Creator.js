@@ -489,12 +489,21 @@ Creator.getRingArr = asyncActionFactory(
       }))
     } catch (error) {
       console.log('getRing',error)
+      // message.error('获取戒指失败！IP:'+device.localIP+'，信息:'+JSON.stringify(error.message))
       dispatch(fail({
         errorcode:error
       }))
     }
   }
 )
+// 重置戒指列表
+Creator.resetRingList = () => {
+  return ({
+    type: TYPES.RESET_RING_LIST,
+    payload: {}
+  })
+}
+
 // 设备详情页呼吸灯开关
 Creator.changeLED = asyncActionFactory(
   ['CHANGE_DEVICE_LED', 'CHANGE_DEVICE_LED_SUCCESS', 'CHANGE_DEVICE_LED_FAILED'],

@@ -70,3 +70,5 @@ export const CHANGE_ACCOUNT_MODAL_STATUS = '开关模态框';
 
 export const CLEAR_DEVICE_STATE = '退出登录清除设备state';
 export const CLEAR_REPORT_STATE = '退出登录清除报告state';
+
+export const RESET_RING_LIST = '重置戒指列表'
