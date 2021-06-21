@@ -5,6 +5,9 @@ import * as TYPES from './Types';
 import moment from 'moment';
 import { Toast } from 'antd-mobile';
 import { message } from '_antd@4.15.5@antd';
+import { Debugout } from 'debugout.js';
+
+const bugout = new Debugout();
 
 const Creator = {};
 /*
@@ -253,6 +256,7 @@ Creator.getReportData = asyncActionFactory(
     const waveData = waveRes && waveRes.data;
     decodeRingData(id, ringData, tempSleepId, fileid).then((alreadyDecodedData) => {
       const adviceData = DataToEditData(data, alreadyDecodedData)
+      console.log('cccccccccccccc',alreadyDecodedData);
       if (!alreadyDecodedData) {
         alreadyDecodedData = {
           AHI: 0,

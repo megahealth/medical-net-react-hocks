@@ -32,7 +32,7 @@ class DeviceDetailPage extends Component {
     this.props.getDeviceDetail(this.id);
     intervalGetRingArr = setInterval(() => {
       this.props.getDeviceDetail(this.id);
-    }, 5000);
+    }, 30*1000);
     this.props.setHeader('当前设备')
   }
   componentWillUnmount() {
@@ -259,8 +259,8 @@ class DeviceDetailPage extends Component {
               <div className='card-contrl'>
                 <div className='card-contrl-tr'>
                   <div>
-                    <span>监测模式：</span>
-                    <span style={{ color:'#4274e2' }}>定时监测</span>
+                    <span>wifi名称：</span>
+                    <span style={{ color:'#4274e2' }}>{device.wifiName}</span>
                   </div>
                   <div>
                     <span>呼吸灯开关：</span>

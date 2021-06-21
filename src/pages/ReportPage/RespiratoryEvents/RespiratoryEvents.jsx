@@ -56,7 +56,7 @@ class RespiratoryEvents extends Component {
     return {
       BEMeanlen: breathList.length!=0?parseInt((total / breathList.length).toFixed(0), 10):BEMeanlen,
       BEMaxlen: max,
-      BEMaxlentime: (startSleepTime + maxDuration * 1000),
+      BEMaxlentime: maxDuration*1000,
       BEOHCnt: breathTypeEnt.t2 + breathTypeEnt.t3,
       BECCnt: breathTypeEnt.t1,
       BEMCnt: breathTypeEnt.t0,
@@ -83,7 +83,7 @@ class RespiratoryEvents extends Component {
     } else {
       events.BEMeanlen = BEMeanlen;
       events.BEMaxlen = BEMaxlen;
-      events.BEMaxlentime = BEMaxlentime;
+      events.BEMaxlentime = BEMaxlentime*1000;
       events.BEOHCnt = BEOHCnt;
       events.BECCnt = BECCnt;
       events.BEMCnt = BEMCnt;
