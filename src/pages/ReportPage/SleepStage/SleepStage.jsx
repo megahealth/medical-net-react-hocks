@@ -67,7 +67,7 @@ class SleepStage extends Component {
           <span>
             <span>{t('Sleep Stage')}</span>
             <span>{t('Sleep Stage Duration')}</span>
-            <span>{t('Total proportion (%)')}</span>
+            <span>{t('Sleep Stage Percent')}</span>
           </span>
           <span>
             <span>{t('Awake')}</span>

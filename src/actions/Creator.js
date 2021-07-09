@@ -899,7 +899,14 @@ function _parseRingInfo(ringArr) {
   return ringArr.map(item => {
     const ringInfo = item;
     var typeOfSN = ringInfo.sn.slice(0, 4);
-    var newTypeOfRing = typeOfSN == 'P11B' ? 'Ceramics' : 'Metal';
+    var sizeOfRing =  ringInfo.sn.slice(4, 5);
+    var newTypeOfRing;
+    sizeNumber = formatRingSize(typeOfSN, sizeOfRing)
+    if(typeOfSN == 'C11E'){
+      newTypeOfRing = typeOfSN + sizeOfRing +"(" + sizeNumber + ")";
+    }else{
+      newTypeOfRing = 'ZG-'+ typeOfSN + "(" + sizeNumber + ")";
+    }
     var ringStatus;
     if(ringInfo.active){
       if(ringInfo.connectStatus == 2){
@@ -919,6 +926,88 @@ function _parseRingInfo(ringArr) {
     item.ringStatus = ringStatus
     return item
   })
+}
+// 设备型号尺寸
+function formatRingSize(typeOfRing,sizeOfRing){
+  var sizeNumber;
+  if(typeOfRing=='P11B' || typeOfRing=='E11D'){
+    switch(sizeOfRing){
+        case ('1'):
+            sizeNumber = '18.5';
+            break;
+        case ('2'):
+            sizeNumber = '20';
+            break; 
+        case ('3'):
+            sizeNumber = '21.5';
+            break;
+        case ('4'):
+            sizeNumber = '22.5';
+            break;
+        default:
+            sizeNumber = '---';
+
+    }
+  }else if(typeOfRing == 'P11E' || typeOfRing == 'P11F'){
+    console.log('sdfaa');
+    
+    switch (sizeOfRing) {
+      case '1':
+        sizeNumber = '18';
+        break;
+      case '2':
+        sizeNumber = '20';
+        break;
+      default:
+        sizeNumber = '---';
+        break;
+    }
+  }else if(typeOfRing == 'C11E'){
+    switch(sizeOfRing){
+      case ('2'): case ('7'):
+          sizeNumber = 'S';
+          break; 
+      case ('3'): case ('8'):
+          sizeNumber = 'L';
+          break;
+      case ('4'): case ('9'):
+          sizeNumber = 'XL';
+          break;
+      default:
+          sizeNumber = '---';
+    }
+  }else {
+      switch(sizeOfRing){
+          case ('1'):
+              sizeNumber = '17';
+              break;
+          case ('2'):
+              sizeNumber = '18';
+              break; 
+          case ('3'):
+              sizeNumber = '18.5';
+              break;
+          case ('4'):
+              sizeNumber = '19.25';
+              break;
+          case ('5'):
+              sizeNumber = '20';
+              break;
+          case ('6'):
+              sizeNumber = '20.75';
+              break;
+          case ('7'):
+              sizeNumber = '21.5';
+              break;
+          case ('8'):
+              sizeNumber = '22.5';
+              break;
+          default:
+              sizeNumber = '---';
+
+      }
+  }
+  return sizeNumber
 }
 
 // AHI程度
