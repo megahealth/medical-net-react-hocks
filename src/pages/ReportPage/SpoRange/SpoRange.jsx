@@ -74,14 +74,14 @@ SpoRange.propTypes = {
 const mapStateToProps = state => (
   {
     sleepData: state.report.data.sleepData,
-    spo2Less95TimePercent: state.report.alreadyDecodedData.spo2Less95TimePercent,
-    spo2Less90TimePercent: state.report.alreadyDecodedData.spo2Less90TimePercent,
-    spo2Less85TimePercent: state.report.alreadyDecodedData.spo2Less85TimePercent,
-    spo2Less80TimePercent: state.report.alreadyDecodedData.spo2Less80TimePercent,
-    spo2Less95Time: state.report.alreadyDecodedData.spo2Less95Time,
-    spo2Less90Time: state.report.alreadyDecodedData.spo2Less90Time,
-    spo2Less85Time: state.report.alreadyDecodedData.spo2Less85Time,
-    spo2Less80Time: state.report.alreadyDecodedData.spo2Less80Time,
+    spo2Less95TimePercent: state.report.adviceData.spo2Less95TimePercent,
+    spo2Less90TimePercent: state.report.adviceData.spo2Less90TimePercent,
+    spo2Less85TimePercent: state.report.adviceData.spo2Less85TimePercent,
+    spo2Less80TimePercent: state.report.adviceData.spo2Less80TimePercent,
+    spo2Less95Time: state.report.adviceData.spo2Less95Time,
+    spo2Less90Time: state.report.adviceData.spo2Less90Time,
+    spo2Less85Time: state.report.adviceData.spo2Less85Time,
+    spo2Less80Time: state.report.adviceData.spo2Less80Time,
   }
 );
 

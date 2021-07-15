@@ -15,7 +15,7 @@ class SpoAbstract extends Component {
   handleChange = (e) => {
     var value = e.target.value.split('.');
     var data = {};
-    const { handleInputChange } = this.props;
+    const { handleInputChange,spoArr,sleepData } = this.props;
     if(value.length == 1){
       data = {
         [e.target.name]: value[0]?parseInt(value[0]):null
@@ -25,7 +25,38 @@ class SpoAbstract extends Component {
         [e.target.name]: parseFloat(e.target.value)
       }
     }
-    handleInputChange(data)
+    let spo2Less95Time,spo2Less90Time,spo2Less85Time,spo2Less80Time,spo2Less95TimePercent,spo2Less90TimePercent,spo2Less85TimePercent,spo2Less80TimePercent,total;
+    spo2Less95Time=spo2Less90Time=spo2Less85Time=spo2Less80Time=spo2Less95TimePercent=spo2Less90TimePercent=spo2Less85TimePercent=spo2Less80TimePercent=total=0;
+    for (let i = 0; i < sleepData.length; i++) {
+      if(sleepData[i]<=4 && sleepData[i]>=2){
+        for (let j = 0; j < 60; j++) {
+          let item = spoArr[i*60+j];
+          total++;
+          if(item<data.spo2Min){
+            item = data.spo2Min
+          }
+          if(item < 95) spo2Less95Time++;
+          if(item < 90) spo2Less90Time++;
+          if(item < 85) spo2Less85Time++;
+          if(item < 80) spo2Less80Time++;
+        }
+      }
+    }
+    spo2Less95TimePercent = parseFloat((spo2Less95Time*100/total).toFixed(1));
+    spo2Less90TimePercent = parseFloat((spo2Less90Time*100/total).toFixed(1));
+    spo2Less85TimePercent = parseFloat((spo2Less85Time*100/total).toFixed(1));
+    spo2Less80TimePercent = parseFloat((spo2Less80Time*100/total).toFixed(1));
+    handleInputChange({
+      ...data,
+      spo2Less95TimePercent,
+      spo2Less90TimePercent,
+      spo2Less85TimePercent,
+      spo2Less80TimePercent,
+      spo2Less95Time,
+      spo2Less90Time,
+      spo2Less85Time,
+      spo2Less80Time,
+    })
   }
   render() {
     const { spo2Avg, spo2Min, diffThdLge3Cnts, diffThdLge3Pr, t, isEditting, alreadyDecodedData, handleInputChange } = this.props;
@@ -80,6 +111,8 @@ SpoAbstract.propTypes = {
   diffThdLge3Cnts: PropTypes.number,
   diffThdLge3Pr: PropTypes.number,
   isEditting: PropTypes.bool,
+  spoArr: PropTypes.array.isRequired,
+  sleepData: PropTypes.array.isRequired,
   alreadyDecodedData: PropTypes.object.isRequired,
   handleInputChange: PropTypes.func.isRequired,
 };
@@ -92,6 +125,8 @@ const mapStateToProps = state => (
     diffThdLge3Pr: state.report.alreadyDecodedData.diffThdLge3Pr,
     isEditting: state.report.isEditting,
     alreadyDecodedData: state.report.alreadyDecodedData,
+    spoArr: state.report.alreadyDecodedData.Spo2Arr,
+    sleepData: state.report.data.sleepData,
   }
 );
 
