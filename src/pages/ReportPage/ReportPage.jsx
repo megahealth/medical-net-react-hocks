@@ -7,7 +7,8 @@ import {
   EditOutlined,
   PrinterOutlined,
   SaveOutlined,
-  CloseSquareOutlined
+  CloseSquareOutlined,
+  RedoOutlined
 } from '@ant-design/icons';
 import { withTranslation } from 'react-i18next';
 import './ReportPage.scss';
@@ -103,10 +104,16 @@ class ReportPage extends Component {
     })
   }
 
+  // 重置报告，丢弃修改内容
+  resetEditData = () =>{
+    this.props.resetEditData(this.id)
+  }
+
   render() {
     const { report, t, changeEditStatus } = this.props;
     const reportConfig = report.data.idBaseOrg&&report.data.idBaseOrg.get('reportConfig');
     const { isEditting } = report
+    const { hasEdited } = report.data
     const { size } = this.state;
     let isShow = false;
     if(report.alreadyDecodedData){
@@ -149,6 +156,15 @@ class ReportPage extends Component {
                       size={size} 
                       onClick={changeEditStatus} 
                     > {t('Edit')} </Button>
+                    {
+                      hasEdited?<Button 
+                      type='primary'
+                      shape="round" icon={<RedoOutlined />} 
+                      size={size} 
+                      onClick={this.resetEditData} 
+                      danger
+                    > 重置 </Button>:null
+                    }
                   </div>
               }
             </div>
@@ -254,7 +270,10 @@ const mapDispatchToProps = dispatch => ({
   },
   saveUpdate(data, id) {
     dispatch(Creator.saveUpdate(data, id))
-  }
+  },
+  resetEditData(id) {
+    dispatch(Creator.resetEditData(id))
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(ReportPage));

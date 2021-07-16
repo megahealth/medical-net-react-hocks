@@ -332,6 +332,18 @@ Creator.cancelUpdate = () => ({
   type: TYPES.CANCEL_UPDATE,
 })
 
+// 重置报告
+Creator.resetEditData = asyncActionFactory( 
+  [],
+  (getting, success, fail, id) => async (dispatch) => {
+    const reset = AV.Object.createWithoutData('Reports', id);
+    reset.unset('editedData')
+    reset.set('hasEdited', false);
+    await reset.save();
+    dispatch(Creator.getReportData(id))
+  }
+)
+
 // 保存修改
 Creator.saveUpdate = asyncActionFactory(
   ['SAVE_UPDATE', 'SAVE_UPDATE_SUCCESS', 'SAVE_UPDATE_FAILED'],

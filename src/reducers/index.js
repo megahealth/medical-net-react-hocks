@@ -179,6 +179,14 @@ const report = (state = DefaultState.report, action) => {
           idModifiedReport: action.payload.idModifiedReport,
         },
       }
+    case  TYPES.SAVE_UPDATE_SUCCESS:
+      return{
+        ...state,
+        data:{
+          ...state.data,
+          hasEdited:true
+        }
+      }
     default:
       return state;
   }
