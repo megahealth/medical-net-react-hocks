@@ -12,7 +12,7 @@ import {
 } from '@ant-design/icons';
 import { withTranslation } from 'react-i18next';
 import './ReportPage.scss';
-
+import { Modal } from 'antd-mobile';
 import ReportHeader from './Header/ReportHeader';
 import UserInfo from './UserInfo/UserInfo';
 import AbstractData from './Abstract/AbstractData';
@@ -33,6 +33,7 @@ import BodyMoveTimeChart from './BodyMoveTimeChart/BodyMoveTimeChart';
 import moment from 'moment';
 import Creator from '../../actions/Creator';
 import echarts from 'echarts';
+const alert = Modal.alert;
 class ReportPage extends Component {
   constructor(props) {
     super(props);
@@ -161,7 +162,10 @@ class ReportPage extends Component {
                       type='primary'
                       shape="round" icon={<RedoOutlined />} 
                       size={size} 
-                      onClick={this.resetEditData} 
+                      onClick={()=>{alert('重置将删除所有已修改的内容，确定要重置吗？', null, [
+                        { text: '取消', onPress: () => { } },
+                        { text: '确定', onPress: () => { this.resetEditData(); } }
+                      ])}} 
                       danger
                     > 重置 </Button>:null
                     }
