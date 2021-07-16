@@ -55,7 +55,6 @@ class Mine extends Component {
     ]);
   }
   onSave = async () => {
-    console.log('ccccccccc',this.state);
     const { editReportTitle, hotelID } = this.state;
     if(hotelID){
       const todo = AV.Object.createWithoutData('Hotel', hotelID);

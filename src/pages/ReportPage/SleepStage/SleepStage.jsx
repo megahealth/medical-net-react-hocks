@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Typography } from 'antd';
+import { Typography, Input } from 'antd';
 import { withTranslation } from 'react-i18next';
+import Creator from '../../../actions/Creator';
 import './SleepStage.scss';
 
 const { Title } = Typography;
@@ -54,8 +55,16 @@ class SleepStage extends Component {
   //   };
   // }
 
+  handleChange = (e) => {
+    const { handleInputChange } = this.props;
+    var data = {[e.target.name]:e.target.value};
+    handleInputChange({
+      ...data,
+    })
+  }
+
   render() {
-    const { t,adviceData } = this.props;
+    const { t,adviceData,isEditting } = this.props;
     return (
       <div className="block">
         <Title level={2}>{t('Sleep Stage Statistics')}</Title>
@@ -70,23 +79,95 @@ class SleepStage extends Component {
           </span>
           <span>
             <span>{t('Awake')}</span>
-            <span className="table-value">{ adviceData.wakeTime }</span>
-            <span className="table-value">{ adviceData.wakeTimePer }</span>
+            <span className="table-value">
+              { isEditting?
+                <Input 
+                  type="string" 
+                  name="wakeTime"
+                  value={ adviceData.wakeTime }
+                  onChange={ this.handleChange }
+                />:adviceData.wakeTime 
+              }
+            </span>
+            <span className="table-value">
+              { isEditting?
+                <Input 
+                  type="string" 
+                  name="wakeTimePer"
+                  value={ adviceData.wakeTimePer }
+                  onChange={ this.handleChange }
+                />:adviceData.wakeTimePer 
+              }
+            </span>
           </span>
           <span>
             <span>{t('REM')}</span>
-            <span className="table-value">{ adviceData.remSleep }</span>
-            <span className="table-value">{ adviceData.remSleepPercent }</span>
+            <span className="table-value">
+              { isEditting?
+                <Input 
+                  type="string" 
+                  name="remSleep"
+                  value={ adviceData.remSleep }
+                  onChange={ this.handleChange }
+                />:adviceData.remSleep 
+              }
+            </span>
+            <span className="table-value">
+              { isEditting?
+                <Input 
+                  type="string" 
+                  name="remSleepPercent"
+                  value={ adviceData.remSleepPercent }
+                  onChange={ this.handleChange }
+                />:adviceData.remSleepPercent 
+              }
+            </span>
           </span>
           <span>
             <span>{t('Light')}</span>
-            <span className="table-value">{ adviceData.lightSleep }</span>
-            <span className="table-value">{ adviceData.lightSleepPercent }</span>
+            <span className="table-value">
+              { isEditting?
+                <Input 
+                  type="string" 
+                  name="lightSleep"
+                  value={ adviceData.lightSleep }
+                  onChange={ this.handleChange }
+                />:adviceData.lightSleep 
+              }
+            </span>
+            <span className="table-value">
+              { isEditting?
+                <Input 
+                  type="string" 
+                  name="lightSleepPercent"
+                  value={ adviceData.lightSleepPercent }
+                  onChange={ this.handleChange }
+                />:adviceData.lightSleepPercent 
+              }
+            </span>
           </span>
           <span>
             <span>{t('Deep')}</span>
-            <span className="table-value">{ adviceData.deepSleep }</span>
-            <span className="table-value">{ adviceData.deepSleepPercent }</span>
+            <span className="table-value">
+              { isEditting?
+                <Input 
+                  type="string" 
+                  name="deepSleep"
+                  value={ adviceData.deepSleep }
+                  onChange={ this.handleChange }
+                />:adviceData.deepSleep 
+              }
+            </span>
+            <span className="table-value">
+              { isEditting?
+                <Input 
+                  type="string" 
+                  name="deepSleepPercent"
+                  value={ adviceData.deepSleepPercent }
+                  onChange={ this.handleChange }
+                />:adviceData.deepSleepPercent 
+              }
+            </span>
           </span>
         </div>
       </div>
@@ -97,18 +178,22 @@ class SleepStage extends Component {
 SleepStage.propTypes = {
   sleepData: PropTypes.array.isRequired,
   adviceData: PropTypes.object.isRequired,
+  isEditting: PropTypes.bool,
 };
 
 const mapStateToProps = state => (
   {
     sleepData: state.report.data.sleepData,
     adviceData: state.report.adviceData,
+    isEditting: state.report.isEditting,
   }
 );
 
 const mapDispatchToProps = dispatch => (
   {
-
+    handleInputChange(data){
+      dispatch(Creator.handleInputChange(data,{}))
+    }
   }
 );
 

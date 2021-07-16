@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Typography } from 'antd';
+import { Typography,Input } from 'antd';
 import { withTranslation } from 'react-i18next';
-
+import Creator from '../../../actions/Creator';
 const { Title } = Typography;
 
 class SleepTime extends Component {
@@ -65,8 +65,16 @@ class SleepTime extends Component {
   //   };
   // }
 
+  handleChange = (e) => {
+    const { handleInputChange } = this.props;
+    var data = {[e.target.name]:e.target.value};
+    handleInputChange({
+      ...data,
+    })
+  }
+
   render() {
-    const { t, sleepData } = this.props;
+    const { t, sleepData,isEditting } = this.props;
     return (
       <div className="block">
         <Title level={2}>{t('Sleep Time Statistics')}</Title>
@@ -75,28 +83,68 @@ class SleepTime extends Component {
         </div>
         <div className="table-data">
           <span>
-            <span>{ sleepData.secStart || '--' }</span>
-            {/* <span>{ this.getSleepTime().sleepStageStart }</span> */}
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="secStart"
+                  value={ sleepData.secStart }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ sleepData.secStart || '--' }</span>
+            }
             <span>{t('Recording Start Time')}</span>
           </span>
           <span>
-          <span>{ sleepData.secEnd  || '--' }</span>
-            {/* <span>{ this.getSleepTime().sleepStageEnd }</span> */}
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="secEnd"
+                  value={ sleepData.secEnd }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ sleepData.secEnd  || '--' }</span>
+            }
             <span>{t('Recording End Time')}</span>
           </span>
           <span>
-          <span>{ sleepData.totalRecord  || '--' }</span>
-            {/* <span>{ this.getSleepTime().totalRecordTime }</span> */}
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="totalRecord"
+                  value={ sleepData.totalRecord }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ sleepData.totalRecord  || '--' }</span>
+            }
             <span>{t('Total Tecord Duration')}</span>
           </span>
           <span>
-          <span>{ sleepData.totalRecordTime  || '--' }</span>
-            {/* <span>{ this.getSleepTime().totalSleepTime }</span> */}
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="totalRecordTime"
+                  value={ sleepData.totalRecordTime }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ sleepData.totalRecordTime  || '--' }</span>
+            }
             <span>{t('Total Sleep Duration')}</span>
           </span>
           <span>
-          <span>{ sleepData.sleepEfficiency  || '--' }</span>
-            {/* <span>{ this.getSleepTime().sleepPercent }</span> */}
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="sleepEfficiency"
+                  value={ sleepData.sleepEfficiency }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ sleepData.sleepEfficiency  || '--' }</span>
+            }
             <span>{t('Sleep Efficiency')}(%)</span>
           </span>
         </div>
@@ -110,6 +158,7 @@ SleepTime.propTypes = {
   // startStatusTimeMinute: PropTypes.number.isRequired,
   // endStatusTimeMinute: PropTypes.number.isRequired,
   // extraCheckTimeMinute: PropTypes.number.isRequired,
+  isEditting: PropTypes.bool,
   sleepData: PropTypes.object,
 };
 
@@ -120,12 +169,15 @@ const mapStateToProps = state => (
     // endStatusTimeMinute: state.report.data.endStatusTimeMinute,
     // extraCheckTimeMinute: state.report.data.extraCheckTimeMinute,
     sleepData: state.report.adviceData,
+    isEditting: state.report.isEditting,
   }
 );
 
 const mapDispatchToProps = dispatch => (
   {
-
+    handleInputChange(data){
+      dispatch(Creator.handleInputChange(data,{}))
+    }
   }
 );
 

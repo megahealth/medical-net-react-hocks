@@ -38,11 +38,27 @@ class PrAbstract extends Component {
         </div>
         <div className="table-data">
           <span>
-            <span>{ prAvg }</span>
+            {
+              isEditting?
+              <Input 
+              value={ prAvg }
+              name = "prAvg"
+              onChange={ this.handleChange }
+              />
+              :<span>{ prAvg }</span>
+            }
             <span>{t('Average HR')}</span>
           </span>
           <span>
-            <span>{ prMax }</span>
+            {
+              isEditting?
+              <Input 
+              value={ prMax }
+              name = "prMax"
+              onChange={ this.handleChange }
+              />
+              :<span>{ prMax }</span>
+            }
             <span>{t('Highest HR')}</span>
           </span>
           <span>

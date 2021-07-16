@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Typography } from 'antd';
+import { Typography,Input } from 'antd';
 import { withTranslation } from 'react-i18next';
 import './RespiratoryEvents.scss';
+import Creator from '../../../actions/Creator';
 
 const { Title } = Typography;
 
@@ -56,7 +57,7 @@ class RespiratoryEvents extends Component {
     return {
       BEMeanlen: breathList.length!=0?parseInt((total / breathList.length).toFixed(0), 10):BEMeanlen,
       BEMaxlen: max,
-      BEMaxlentime: maxDuration*1000,
+      BEMaxlentime: moment(maxDuration*1000).format('HH:mm'),
       BEOHCnt: breathTypeEnt.t2 + breathTypeEnt.t3,
       BECCnt: breathTypeEnt.t1,
       BEMCnt: breathTypeEnt.t0,
@@ -65,11 +66,19 @@ class RespiratoryEvents extends Component {
       BETotalrate: total!=0?parseFloat((total / 60 / (endStatusTimeMinute - startStatusTimeMinute) * 100).toFixed(1), 10):BETotalrate,
     };
   }
+  handleChange = (e) => {
+    const { handleInputChange } = this.props;
+    var data = {[e.target.name]:e.target.value};
+    handleInputChange({
+      ...data,
+    })
+  }
 
   render() {
-    const { BECCnt, BECnt, BEMCnt, BEMaxlen, BEMaxlentime, BEMeanlen, BEOHCnt, BETotalTime, BETotalrate, SPOVER, t } = this.props;
+    const { t,adviceData,isEditting } = this.props;
+    const { mixBreathNum,totalBreathNum,centralBreathNum,max,maxDuration,average,eventCnt,totalDuration,validInTotal } = adviceData
     const events = {};
-    if (SPOVER === 'NONE') {
+    if (!mixBreathNum&!totalBreathNum&!centralBreathNum&!max&!maxDuration&!average&!eventCnt&!totalDuration&!validInTotal) {
       // console.log(this.countRespiratoryEvents());
       events.BEMeanlen = this.countRespiratoryEvents().BEMeanlen;
       events.BEMaxlen = this.countRespiratoryEvents().BEMaxlen;
@@ -81,15 +90,15 @@ class RespiratoryEvents extends Component {
       events.BETotalTime = this.countRespiratoryEvents().BETotalTime;
       events.BETotalrate = parseFloat(this.countRespiratoryEvents().BETotalrate).toFixed(1);
     } else {
-      events.BEMeanlen = BEMeanlen;
-      events.BEMaxlen = BEMaxlen;
-      events.BEMaxlentime = BEMaxlentime*1000;
-      events.BEOHCnt = BEOHCnt;
-      events.BECCnt = BECCnt;
-      events.BEMCnt = BEMCnt;
-      events.BECnt = BECnt;
-      events.BETotalTime = BETotalTime;
-      events.BETotalrate = parseFloat(BETotalrate).toFixed(1);
+      events.BEMeanlen = average;
+      events.BEMaxlen = max;
+      events.BEMaxlentime = maxDuration;
+      events.BEOHCnt = eventCnt;
+      events.BECCnt = mixBreathNum;
+      events.BEMCnt = centralBreathNum;
+      events.BECnt = totalBreathNum;
+      events.BETotalTime = totalDuration;
+      events.BETotalrate = parseFloat(validInTotal).toFixed(1);
     }
     return (
       <div className="block">
@@ -99,27 +108,108 @@ class RespiratoryEvents extends Component {
         </div>
         <div className="table-data table-event">
           <span>
-            <span>{ events.BEMeanlen }</span>
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="average"
+                  value={ events.BEMeanlen }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ events.BEMeanlen }</span>
+            }
             <span>{t('BEMeanlen')}</span>
-            <span>{ events.BECnt }</span>
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="totalBreathNum"
+                  value={ events.BECnt }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ events.BECnt }</span>
+            }
             <span>{t('BECnt')}</span>
-            <span>{ events.BEOHCnt }</span>
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="eventCnt"
+                  value={ events.BEOHCnt }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ events.BEOHCnt }</span>
+            }
             <span>{t('BEOHCnt')}</span>
           </span>
           <span>
-            <span>{ events.BEMaxlen }</span>
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="max"
+                  value={ events.BEMaxlen }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ events.BEMaxlen }</span>
+            }
             <span>{t('BEMaxlen')}</span>
-            <span>{ events.BETotalTime }</span>
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="totalDuration"
+                  value={ events.BETotalTime }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ events.BETotalTime }</span>
+            }
             <span>{t('BETotalTime')}</span>
-            <span>{ events.BECCnt }</span>
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="mixBreathNum"
+                  value={ events.BECCnt }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ events.BECCnt }</span>
+            }
             <span>{t('BECCnt')}</span>
           </span>
           <span>
-            <span>{ moment(events.BEMaxlentime).format("HH:mm") }</span>
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="maxDuration"
+                  value={ events.BEMaxlentime }
+                  onChange={ this.handleChange }
+                />
+              :<span>{events.BEMaxlentime}</span>
+            }
             <span>{t('BEMaxlentime')}</span>
-            <span>{ events.BETotalrate }</span>
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="validInTotal"
+                  value={ events.BETotalrate }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ events.BETotalrate }</span>
+            }
             <span>{t('BETotalrate')}</span>
-            <span>{ events.BEMCnt }</span>
+            {
+              isEditting?
+                <Input 
+                  type="string" 
+                  name="centralBreathNum"
+                  value={ events.BEMCnt }
+                  onChange={ this.handleChange }
+                />
+              :<span>{ events.BEMCnt }</span>
+            }
             <span>{t('BEMCnt')}</span>
           </span>
         </div>
@@ -143,6 +233,8 @@ RespiratoryEvents.propTypes = {
   startStatusTimeMinute: PropTypes.number.isRequired,
   endStatusTimeMinute: PropTypes.number.isRequired,
   breathList: PropTypes.array.isRequired,
+  isEditting: PropTypes.bool,
+  adviceData: PropTypes.object,
 };
 
 const mapStateToProps = state => (
@@ -161,12 +253,16 @@ const mapStateToProps = state => (
     startStatusTimeMinute: state.report.data.startStatusTimeMinute,
     endStatusTimeMinute: state.report.data.endStatusTimeMinute,
     breathList: state.report.data.breathList,
+    adviceData: state.report.adviceData,
+    isEditting: state.report.isEditting,
   }
 );
 
 const mapDispatchToProps = dispatch => (
   {
-
+    handleInputChange(data){
+      dispatch(Creator.handleInputChange(data,{}))
+    }
   }
 );
 

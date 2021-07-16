@@ -256,7 +256,6 @@ Creator.getReportData = asyncActionFactory(
     const waveData = waveRes && waveRes.data;
     decodeRingData(id, ringData, tempSleepId, fileid).then((alreadyDecodedData) => {
       const adviceData = DataToEditData(data, alreadyDecodedData)
-      console.log('cccccccccccccc',alreadyDecodedData);
       if (!alreadyDecodedData) {
         alreadyDecodedData = {
           AHI: 0,
@@ -738,15 +737,54 @@ function DataToEditData(data, alreadyDecodedData) {
     // 暂不使用编辑数据替代原有数据
     // if (false) {
     const sleepTimeObj = getSleepTime(data,alreadyDecodedData)
-    obj = {
-      ...sleepTimeObj,
-      ...data.editedData,
+    // 由于新版可编辑改动导致旧版的这部分数据无法正常使用，因此需要处理。等新版本使用时间长了，可以删除这部分，只保留else里的内容
+    let {spo2Less95Time,spo2Less90Time,spo2Less85Time,spo2Less80Time,spo2Less95TimePercent,spo2Less90TimePercent,spo2Less85TimePercent,spo2Less80TimePercent} = data.editedData
+    if(typeof spo2Less95Time == 'number'){
+      spo2Less80Time = parseFloat(alreadyDecodedData.spo2Less80Time / 60, 10).toFixed(1);
+      spo2Less80TimePercent = parseFloat(alreadyDecodedData.spo2Less80TimePercent).toFixed(1);
+      spo2Less85Time = parseFloat(alreadyDecodedData.spo2Less85Time / 60, 10).toFixed(1);
+      spo2Less85TimePercent = parseFloat(alreadyDecodedData.spo2Less85TimePercent).toFixed(1);
+      spo2Less90Time = parseFloat(alreadyDecodedData.spo2Less90Time / 60, 10).toFixed(1);
+      spo2Less90TimePercent = parseFloat(alreadyDecodedData.spo2Less90TimePercent).toFixed(1);
+      spo2Less95Time = parseFloat(alreadyDecodedData.spo2Less95Time / 60, 10).toFixed(1);
+      spo2Less95TimePercent = parseFloat(alreadyDecodedData.spo2Less95TimePercent).toFixed(1);
+      obj = {
+        ...sleepTimeObj,
+        ...data.editedData,
+        spo2Less80Time,
+        spo2Less80TimePercent,
+        spo2Less85Time,
+        spo2Less85TimePercent,
+        spo2Less90Time,
+        spo2Less90TimePercent,
+        spo2Less95Time,
+        spo2Less95TimePercent,
+      }
+    }else{
+      obj = {
+        ...sleepTimeObj,
+        ...data.editedData,
+      }
     }
     if (!obj.totalRecord) {
       obj.totalRecord = sleepTimeObj.totalRecord
     }
   } else {
     if (alreadyDecodedData) {
+      let spo2Less95Time,spo2Less90Time,spo2Less85Time,spo2Less80Time,spo2Less95TimePercent,spo2Less90TimePercent,spo2Less85TimePercent,spo2Less80TimePercent;
+      spo2Less95Time=spo2Less90Time=spo2Less85Time=spo2Less80Time=spo2Less95TimePercent=spo2Less90TimePercent=spo2Less85TimePercent=spo2Less80TimePercent=0;
+      try {
+        spo2Less80Time = parseFloat(alreadyDecodedData.spo2Less80Time / 60, 10).toFixed(1);
+        spo2Less80TimePercent = parseFloat(alreadyDecodedData.spo2Less80TimePercent).toFixed(1);
+        spo2Less85Time = parseFloat(alreadyDecodedData.spo2Less85Time / 60, 10).toFixed(1);
+        spo2Less85TimePercent = parseFloat(alreadyDecodedData.spo2Less85TimePercent).toFixed(1);
+        spo2Less90Time = parseFloat(alreadyDecodedData.spo2Less90Time / 60, 10).toFixed(1);
+        spo2Less90TimePercent = parseFloat(alreadyDecodedData.spo2Less90TimePercent).toFixed(1);
+        spo2Less95Time = parseFloat(alreadyDecodedData.spo2Less95Time / 60, 10).toFixed(1);
+        spo2Less95TimePercent = parseFloat(alreadyDecodedData.spo2Less95TimePercent).toFixed(1);
+      } catch (error) {
+        
+      }
       obj = {
         ahiAdvice: null,
 
@@ -762,7 +800,7 @@ function DataToEditData(data, alreadyDecodedData) {
 
         average: alreadyDecodedData.BEMeanlen,
         max: alreadyDecodedData.BEMaxlen,
-        maxDuration: moment(alreadyDecodedData.BEMaxlentime).format('HH:mm'),
+        maxDuration: moment(alreadyDecodedData.BEMaxlentime.length>10?alreadyDecodedData.BEMaxlentime:alreadyDecodedData.BEMaxlentime*1000).format('HH:mm'),
         totalBreathNum: alreadyDecodedData.BECnt,
         totalDuration: alreadyDecodedData.BETotalTime,
         validInTotal: alreadyDecodedData.BETotalrate,
@@ -779,14 +817,14 @@ function DataToEditData(data, alreadyDecodedData) {
         diffThdLge3Cnts: alreadyDecodedData.diffThdLge3Cnts,
         diffThdLge3Pr: alreadyDecodedData.diffThdLge3Pr,
 
-        spo2Less80Time: alreadyDecodedData.spo2Less80Time,
-        spo2Less80TimePercent: alreadyDecodedData.spo2Less80TimePercent,
-        spo2Less85Time: alreadyDecodedData.spo2Less85Time,
-        spo2Less85TimePercent: alreadyDecodedData.spo2Less85TimePercent,
-        spo2Less90Time: alreadyDecodedData.spo2Less90Time,
-        spo2Less90TimePercent: alreadyDecodedData.spo2Less90TimePercent,
-        spo2Less95Time: alreadyDecodedData.spo2Less95Time,
-        spo2Less95TimePercent: alreadyDecodedData.spo2Less95TimePercent,
+        spo2Less80Time,
+        spo2Less80TimePercent,
+        spo2Less85Time,
+        spo2Less85TimePercent,
+        spo2Less90Time,
+        spo2Less90TimePercent,
+        spo2Less95Time,
+        spo2Less95TimePercent,
       }
     }
     const sleepTimeObj = getSleepTime(data, alreadyDecodedData)
