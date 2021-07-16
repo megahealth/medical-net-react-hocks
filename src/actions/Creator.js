@@ -901,7 +901,7 @@ function _parseRingInfo(ringArr) {
     var typeOfSN = ringInfo.sn.slice(0, 4);
     var sizeOfRing =  ringInfo.sn.slice(4, 5);
     var newTypeOfRing;
-    sizeNumber = formatRingSize(typeOfSN, sizeOfRing)
+    let sizeNumber = formatRingSize(typeOfSN, sizeOfRing)
     if(typeOfSN == 'C11E'){
       newTypeOfRing = typeOfSN + sizeOfRing +"(" + sizeNumber + ")";
     }else{
